@@ -19,7 +19,7 @@ interface  TabType {
 }
 
 const  tabs = ref<TabType[]>([
-  {title:"首页",name:"home"},
+  {title:"首页",name:"home"}
 ])
 function check(item:TabType){
   router.push({

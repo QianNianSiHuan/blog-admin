@@ -1,28 +1,61 @@
 <script setup lang="ts">
+import {reactive, ref} from "vue";
+import {emailLoginApi, type emailLoginRequest} from "@/api/user_api.ts";
+import {Message} from "@arco-design/web-vue";
+import {userStores} from "@/stores/user_store.ts";
+import router from "@/router";
+import {useRoute} from "vue-router";
+  const  form = reactive<emailLoginRequest>({
+        val:"",
+        password:""
+      })
+const route =useRoute()
+const formRef =ref()
+const userStore =userStores()
+async function emailLogin(){
+  const val = await formRef.value.validate()
+  if(val)return
+  const res = await emailLoginApi(form)
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
 
+  Message.success("登陆成功")
+  //1.解析token获取信息 2.掉用户信息接口
+  userStore.saveUserInfo(res.data)
+  const redirect = route.query.redirect
+  if(redirect){
+    router.push(redirect as string)
+    return
+  }
+  router.push({name:"web"})
+}
 </script>
 
 <template>
   <div class="login_view">
     <div class="login_mask">
-      <a-form :label-col-props="{span:0}" :wrapper-col-props="{span:24}">
+      <a-form ref="formRef" :model="form" :label-col-props="{span:0}" :wrapper-col-props="{span:24}">
         <div class="title">用户登录</div>
-        <a-form-item label="用户名">
-          <a-input placeholder="用户名" >
+        <a-form-item label="用户名" field="val"
+                     :rules="[{required:true,message:'请输入用户名'},{minLength:5,maxLength:16,message:'用户名长度为5-16个字符'}]">
+          <a-input placeholder="请输入用户名" v-model = form.val >
             <template #prefix>
               <icon-user/>
             </template>
           </a-input>
         </a-form-item>
-        <a-form-item label="密码">
-          <a-input placeholder="密码">
+        <a-form-item label="密码" field="password"
+                     :rules="[{required:true,message:'请输入密码'},{minLength:5,maxLength:16,message:'密码长度为5-16个字符'}]">
+          <a-input placeholder="请输入密码" type="password" v-model="form.password">
             <template #prefix>
             <icon-lock/>
             </template>
           </a-input>
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" long>登录</a-button>
+          <a-button type="primary" @click="emailLogin" @keyup.enter="emailLogin" long>登录</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -31,7 +64,7 @@
 
 <style lang="less">
 .login_view{
-  background: url(http://qiniuyun.starletter.cn/picture/202411251703921.jpg) 50% / cover no-repeat;
+  background: url(http://qiniuyun.starletter.cn/picture/20241226144246567.png) 50% / cover no-repeat;
   position: relative;
   height: 100vh;
   .login_mask{

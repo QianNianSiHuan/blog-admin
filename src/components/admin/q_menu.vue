@@ -2,34 +2,37 @@
 import {ref, watch} from "vue";
 import type {Component} from "vue";
 import {IconHome,IconUser,IconSettings}from"@arco-design/web-vue/es/icon"
-import QComponent from "@/components/common/q-component.vue";
 import {collapsed} from "@/components/admin/q_menu.ts";
 import router from "@/router";
 import {useRoute} from "vue-router";
+import {userStores} from "@/stores/user_store";
+import Q_menu_item from "@/components/admin/q_menu_item.vue";
 
+const userStore = userStores()
 const route = useRoute()
 interface MenuType {
   title:string
   name:string
   icon?:string|Component
   children?:MenuType[]
+  role?:number
 }
 
 const menuList:MenuType[] = [
   {
     title:"首页",name:"home",icon:IconHome
   },
-  {title:"个人中心",name:"userCenter",icon:IconUser,children:[
+  {title:"个人中心",role:1,name:"userCenter",icon:IconUser,children:[
       {title:"个人信息",name:"userInfo"}
     ]
   },
   {
-    title:"用户管理",name:"userManage",icon:IconUser,children:[
+    title:"用户管理",role:1,name:"userManage",icon:IconUser,children:[
       {title:"用户列表",name:"userList"}
     ]
   },
   {
-    title: "系统设置", name: "settingsManage", icon: IconSettings, children: [
+    title: "系统设置",role:1, name: "settingsManage", icon: IconSettings, children: [
       {title: "系统信息", name: "settingsList"}
     ]
   },
@@ -53,6 +56,8 @@ watch(()=>route.name,()=>{
 },{immediate:true})
 
 </script>
+
+
 <template>
   <div class="q_menu" :class="{collapsed:collapsed}">
     <div class="q_menu_inner">
@@ -63,25 +68,8 @@ watch(()=>route.name,()=>{
           v-model:open-keys="openKeys"
           v-model:selected-keys="selectedKeys"
         show-collapse-button>
-      <template v-for="menu in menuList">
-        <a-menu-item :key="menu.name" v-if="!menu.children">
-          <template #icon>
-            <component :is="menu.icon"></component>
-          </template>
-          {{menu.title}}
-        </a-menu-item>
-        <a-sub-menu v-else :key="menu.name" :title="menu.title">
-          <template #icon>
-            <q-component :is="menu.icon"/>
-          </template>
-          <a-menu-item :key="sub.name" v-for="sub in menu.children">
-            <template #icon>
-              <q-component :is="sub.icon"/>
-            </template>
-            {{sub.title}}
-          </a-menu-item>
-        </a-sub-menu>
-      </template>
+
+    <q_menu_item :list="menuList"/>
     </a-menu>
     </div>
   </div>

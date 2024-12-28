@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import {userStores} from "@/stores/user_store";
+const store =userStores()
+store.loadUserInfo()
 </script>
 
 <template>

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev1": "vite --mode dev1",
+    "mock": "vite --mode .env.mock",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.2.6",
     "swiper": "^11.1.15",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@arco-design/web-vue": "^2.56.3",
     "@tsconfig/node22": "^22.0.0",
+    "@types/mockjs": "^1.0.10",
     "@types/node": "^22.9.3",
     "@types/nprogress": "^0.2.3",
     "@vitejs/plugin-vue": "^5.2.1",

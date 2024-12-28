@@ -1,12 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NProgress from "nprogress"; // 导入 nprogress模块
+import NProgress from "nprogress";
+import {userStores} from "@/stores/user_store.ts";
+import {Message} from "@arco-design/web-vue"; // 导入 nprogress模块
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
       {
         name:"web",
         path:"/",
-        redirect:"/admin"
+          component:()=>import("@/views/web/index.vue")
+        //redirect:"/admin"
       },
       {
         name:"login",
@@ -17,7 +20,8 @@ const router = createRouter({
         name:"admin",
         path:"/admin",
           meta:{
-              title:"首页"
+              title:"首页",
+              role:[1,2,3]
           },
         component:()=>import("@/views/admin/index.vue"),
           children:[
@@ -25,7 +29,8 @@ const router = createRouter({
                   name:"home",
                   path:"home",
                   meta:{
-                      title:"首页"
+                      title:"首页",
+                      role:[1,2,3]
                   },
                   component:()=>import("@/views/admin/home/index.vue")
               },
@@ -33,7 +38,8 @@ const router = createRouter({
                   name:"userCenter",
                   path:"user_center",
                   meta:{
-                      title:"个人中心"
+                      title:"个人中心",
+                      role:[1,2]
                   },
                   children:[
                       {
@@ -50,7 +56,8 @@ const router = createRouter({
                   name:"userManage",
                   path:"user_manage",
                   meta:{
-                      title:"用户管理"
+                      title:"用户管理",
+                      role:[1]
                   },
                   children:[
                       {
@@ -67,7 +74,8 @@ const router = createRouter({
                   name:"settingsManager",
                   path:"settings_manager",
                   meta:{
-                      title:"系统配置"
+                      title:"系统配置",
+                      role:[1]
                   },
                   children:[
                       {
@@ -86,6 +94,27 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    if(to.meta.role){
+        const store = userStores()
+
+        if (!store.isLogin) {
+            // 没有登陆
+            Message.warning("需要登陆")
+            router.push({
+                name: "login", query: {
+                    redirect: to.path // 方便登录完之后跳转回原地址
+                }
+            })
+            return
+        }
+
+        if (!to.meta.role.includes(store.userInfo.role)){
+            //不在
+            Message.warning("权限不足")
+            router.push(from.path)
+            return
+        }
+    }
     NProgress.start();//开启进度条
     next()
 })

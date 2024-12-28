@@ -9,7 +9,8 @@ import {EnvMeta} from "./env";
 const envDir:string ="./"//env文件的目录
 // https://vite.dev/config/
 export default defineConfig((config)=>{
-  const env =  loadEnv(config.mode,envDir) as  EnvMeta
+  const env =  loadEnv(config.mode,envDir) as EnvMeta
+    console.log(env.VITE_SERVER_URL)
     return{
         plugins: [
             vue(),
@@ -37,7 +38,8 @@ export default defineConfig((config)=>{
             port: 80,
             proxy:{
                 "/api":{
-                    target:env.VITE_SERVER_URL
+                    target:env.VITE_SERVER_URL,
+                    changeOrigin: true
                 }
             }
         }

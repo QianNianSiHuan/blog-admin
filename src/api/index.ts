@@ -1,15 +1,31 @@
 import axios from "axios";
 import {Message} from "@arco-design/web-vue";
+import {userStores} from "@/stores/user_store.ts"
+export interface baseResponse<T>{
+    code:number
+    msg:string
+    data:T
+}
+
+export interface listResponse<T>{
+        list:T[]
+        count:number
+}
+
+export interface paramsType{
+    type:1
+}
 
 export const useAxios =axios.create(
     {
         timeout:6000,
-        baseURL: "", //在使用前段代理的情况下，必须留空，不然会跨域
+        baseURL: "", //在使用前端代理的情况下，必须留空，不然会跨域
     }
 )
 
 useAxios.interceptors.request.use((config)=> {
-    config.headers.set("token","测试token")
+    const userStore = userStores()
+    config.headers.set("token",userStore.userInfo.token)
     return config
 })
 
@@ -19,5 +35,5 @@ useAxios.interceptors.response.use((res) =>{
     }
     return res
 },(res)=>{
-    Message.error(res.error)
+    Message.error(res.message)
 })

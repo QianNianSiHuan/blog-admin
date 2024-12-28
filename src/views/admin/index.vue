@@ -9,6 +9,10 @@ import router from "@/router";
 import Q_tabs from "@/components/admin/q_tabs.vue";
 import Q_logo from "@/components/admin/q_logo.vue";
 
+import {userStores} from "@/stores/user_store";
+const store =userStores()
+store.loadUserInfo()
+
 function goHome(){
   router.push({name:"web"})
 }
@@ -118,7 +122,7 @@ function goHome(){
       .q_base_view{
         background-color: var(--color-bg-1);
         border-radius: 5px;
-        height: 1000px;
+        min-height: calc(100vh - 130px);
       }
     }
   }
