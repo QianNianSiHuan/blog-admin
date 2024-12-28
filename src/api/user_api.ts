@@ -42,6 +42,7 @@ export interface userListType{
     "userNickname": string,
     "userAvatar": string
 }
-export function  userListApi(params?:paramsType):Promise<baseResponse<listResponse<userListType>>>{
+export function userListApi(params:paramsType):Promise<baseResponse<listResponse<userListType>>>{
+    console.log(params)
     return useAxios.get("/api/user/login",{params})
 }

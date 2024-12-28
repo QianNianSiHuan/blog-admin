@@ -20,7 +20,7 @@ const params =reactive<paramsType>({
 
 
 async function getList() {
-  const res = await props.url()
+  const res = await props.url(params)
 
   if (res.code) {
     Message.error(res.msg)
@@ -29,7 +29,7 @@ async function getList() {
   data.list = res.data.list || []
   data.count = res.data.count
 }
-
+getList()
 
 </script>
 

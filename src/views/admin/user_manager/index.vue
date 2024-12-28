@@ -4,9 +4,9 @@ import Q_list from "@/components/admin/q_list.vue";
 import {userListApi} from "@/api/user_api.ts";
 const columns =[
   {title:"ID",dataIndex:"id"},
-  {title:"IP",dataIndex:"ip"},
-  {title:"addr",dataIndex:"addr"},
-  {title:"ua",dataIndex:"ua"},
+  {title:"IP",dataIndex:"IP"},
+  {title:"ADDR",dataIndex:"addr"},
+  {title:"UA",dataIndex:"ua"},
 ]
 </script>
 
