@@ -13,7 +13,10 @@ export interface listResponse<T>{
 }
 
 export interface paramsType{
-    type:1
+    limit?:number
+    page?:number
+    key?:string
+    type?:number
 }
 
 export const useAxios =axios.create(
@@ -37,3 +40,7 @@ useAxios.interceptors.response.use((res) =>{
 },(res)=>{
     Message.error(res.message)
 })
+
+export function defaultDeleteApi(url:string,idList:number[]):Promise<baseResponse<string>>{
+    return useAxios.delete(url,{data: {idList}})
+}

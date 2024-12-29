@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import {loadEnv} from "vite";
-import {EnvMeta} from "./env";
+import {type EnvMeta} from "./env";
 
 const envDir:string ="./"//env文件的目录
 // https://vite.dev/config/
