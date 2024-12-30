@@ -108,6 +108,18 @@ for(const val of props.filterGroup||[]){
   }else {
     val.options = val.source
   }
+  //判断有无callback情况
+  if (!val.callback){
+    //如果没有callback则设置默认行为
+    val.callback = (value)=>{
+      if(val.column){
+        const p:{[key:string]:any} ={}
+        p[val.column] =value
+        getList(p)
+      }
+    }
+  }
+
   filterGroups.value.push(val)
 }
 }
@@ -126,8 +138,11 @@ const params =reactive<paramsType>({
 })
 
 //获取列表
-async function getList() {
+async function getList(newParams?:paramsType) {
   loading.value =true
+  if (newParams){
+    Object.assign(params,newParams)
+  }
   const res = await props.url(params)
   loading.value =false
   if (res.code) {
@@ -167,7 +182,7 @@ async function baseDelete(keyList:number[]) {
     return
   }
   Message.success(res.msg)
-  getList()
+  await getList()
 }
 
 
@@ -235,7 +250,7 @@ getList()
       <a-input-search :placeholder="searchPlaceholder" @search="search" v-model="params.key"></a-input-search>
     </div>
     <div class="action_filter">
-     <a-select v-for="item in filterGroups" :placeholder="item.label" :options="item.options"></a-select>
+     <a-select v-for="item in filterGroups" style="width: 140px" :placeholder="item.label" @change="item.callback as any" :options="item.options"></a-select>
     </div>
     <div class="action_search_slot">
       <slot name="search_other">
@@ -300,6 +315,15 @@ getList()
       align-items: center;
       button{
         margin-left: 10px;
+      }
+    }
+
+    .action_filter{
+      .arco-select{
+        margin-right: 10px;
+        &:last-child{
+          margin-right: 0;
+        }
       }
     }
     .action_flush{

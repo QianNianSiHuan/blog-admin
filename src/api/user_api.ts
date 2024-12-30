@@ -1,4 +1,4 @@
-import {type baseResponse, type listResponse, type paramsType, useAxios} from "@/api/index.ts";
+import {type baseResponse, type listResponse, type optionsType, type paramsType, useAxios} from "@/api/index.ts";
 
 export interface emailLoginRequest {
     val:string
@@ -42,7 +42,10 @@ export interface userListType{
     "userNickname": string,
     "userAvatar": string
 }
-export function userListApi(params:paramsType):Promise<baseResponse<listResponse<userListType>>>{
-    console.log(params)
+export function userListApi(params?:paramsType):Promise<baseResponse<listResponse<userListType>>>{
     return useAxios.get("/api/user/login",{params})
+}
+
+export function articleCategoryOptionsApi(params?:paramsType):Promise<baseResponse<optionsType[]>>{
+    return useAxios.get("/api/categorys")
 }

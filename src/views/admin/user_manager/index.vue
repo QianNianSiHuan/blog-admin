@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import Q_list, {type filterGroupType} from "@/components/admin/q_list.vue";
-import {userListApi, type userListType} from "@/api/user_api.ts";
+import {articleCategoryOptionsApi, userListApi, type userListType} from "@/api/user_api.ts";
 import type {columnType} from "@/components/admin/q_list.vue";
 const columns:columnType[] =[
   {title:"ID",dataIndex:"id"},
@@ -20,8 +20,30 @@ const filters:filterGroupType[]=[
       {label:"用户",value:2},
       {label:"游客",value:3},
     ],
-    column:"role"
-  }
+    column:"role",
+    // callback:(value)=>{
+    //   console.log("fu")
+    // }
+  },
+  {
+    label:"ip过滤",
+    source:[
+      {label:"内网",value:1},
+      {label:"外网",value:2},
+    ],
+    column:"ip",
+    // callback:(value)=>{
+    //   console.log("fu")
+    // }
+  },
+  {
+    label:"ip过滤",
+    source:articleCategoryOptionsApi,
+    column:"ip",
+    // callback:(value)=>{
+    //   console.log("fu")
+    // }
+  },
 ]
 
 

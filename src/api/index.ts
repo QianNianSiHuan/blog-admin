@@ -18,6 +18,7 @@ export interface paramsType{
     key?:string
     sort?:string
     type?:number
+    [key:string]:any
 }
 
 export const useAxios =axios.create(
