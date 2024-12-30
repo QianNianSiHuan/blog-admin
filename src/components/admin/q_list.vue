@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import {type baseResponse, defaultDeleteApi, type listResponse, type paramsType} from "@/api";
+import {
+  type baseResponse,
+  defaultDeleteApi,
+  type listResponse,
+  type optionsFunc,
+  type optionsType,
+  type paramsType
+} from "@/api";
 import {reactive, ref} from "vue";
 import {Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue";
 import {dataTemFormat, type dateTemType} from "@/utils/data.ts";
@@ -9,27 +16,41 @@ import {dataTemFormat, type dateTemType} from "@/utils/data.ts";
 export interface columnType extends TableColumnData{
   dateFormat?:dateTemType
 }
-
+//动作组结构
+export interface actionGroupType{
+  label:string
+  value?:number
+  callback:(keyList:number[])=>void
+}
+//过滤组结构
+export interface filterGroupType{
+  label:string
+  source:optionsType[] | optionsFunc
+  options?:optionsType[]
+  column?:string
+  params?:paramsType
+  callback?:(value:number|string)=>void
+}
 
 interface Props{
   url:(params:paramsType)=>Promise<baseResponse<listResponse<any>>>
-  columns:columnType[]
+  columns:columnType[]//列类型
   rowKey?: string //删除字段
   noDefaultDelete?:boolean//不器用默认删除
   noAdd?:boolean//是否显示创建
-  noEdit?:boolean
-  noDelete?:boolean
-  searchPlaceholder?:string
-  addLabel?:string
-  editLabel?:string
-  deleteLabel?:string
-  noActionGroup?:boolean
-  noCheck?:boolean
+  noEdit?:boolean//编辑按钮开关
+  noDelete?:boolean//删除按钮开关
+  noBatchDelete?:boolean //是否没有批量
+  searchPlaceholder?:string//标签
+  addLabel?:string//添加按钮标签
+  editLabel?:string//编辑按钮标签
+  deleteLabel?:string//删除按钮标签
+  noActionGroup?:boolean//动作组开关
+  noCheck?:boolean //复选框开关
+  actionGroup?:actionGroupType[]//动作组
+  filterGroup?:filterGroupType[]//过滤组
 }
-const actionGroupOptions =[
-    {label:"批量删除",value:1}
-]
-
+const actionGroupOptions =ref<actionGroupType[]>([])
 
 
 const  props = defineProps<Props>()
@@ -41,19 +62,70 @@ const {
   editLabel="编辑",
   deleteLabel="删除",
 }= props
+//加载动画
 const loading =ref(false)
 
+
+//初始化操作组
+function initActionGroup() {
+  let index = 0
+  //默认删除全部动作组
+  if(!props.noBatchDelete){
+    actionGroupOptions.value.push({
+      label:"批量删除",
+      value:1,
+      callback:(keyList:number[])=>{
+        baseDelete(keyList)
+        selectedKeys.value=[]
+    }
+    })
+    index =1
+  }
+  //为自定义行为组设置对应的编号和回调函数
+  index ++
+  const actionGroup =props.actionGroup||[]
+  for(const action of actionGroup){
+    actionGroupOptions.value.push({
+      label:action.label,
+      value:index,
+      callback:action.callback
+    })
+  }
+}
+initActionGroup()
+
+//初始化过滤组
+const filterGroups = ref<filterGroupType[]>([])
+async function initFilterGroup(){
+for(const val of props.filterGroup||[]){
+  if(typeof  val.source === "function"){
+    const  res = await val.source(val.params)
+    if (res.code){
+      Message.error(res.msg)
+      continue
+    }
+    val.options = res.data
+  }else {
+    val.options = val.source
+  }
+  filterGroups.value.push(val)
+}
+}
+initFilterGroup()
+
+//列表的数据结构
 const data =reactive<listResponse<any>>({
   list:[],
   count:5,
 })
+//分页信息
 const params =reactive<paramsType>({
   type:1,
   limit:10,
   page:1,
 })
 
-
+//获取列表
 async function getList() {
   loading.value =true
   const res = await props.url(params)
@@ -72,12 +144,13 @@ const emit = defineEmits<{
 }>()
 
 
-
+//默认单个删除
 async function remove(record:any) {
 const key =record[rowKey]
   baseDelete([key])
 }
 
+//默认批量删除
 async function baseDelete(keyList:number[]) {
   if(noDefaultDelete){
     emit("delete",keyList)
@@ -98,37 +171,41 @@ async function baseDelete(keyList:number[]) {
 }
 
 
-
+//添加
 function add(){
   emit("add")
 }
+//编辑
 function edit(record:any){
   emit("edit",record)
 }
+//更新
 function update(record:any){
 
 }
+//刷新
 function refresh() {
   getList()
   Message.success("刷新成功")
 }
-
+//表格复选框绑定的主键值
 const selectedKeys =ref([])
 
+//复选框配置
 const rowSelection =reactive<TableRowSelection>({
   type:"checkbox",
   showCheckedAll:true,
   onlyCurrent:false
 })
+
+//动作对应的标记值
 const actionValue = ref()
 function actionGroupAction() {
-  console.log(actionValue.value)
-if (actionValue.value ===1){
-  //批量删除
-  baseDelete(selectedKeys.value)
-  selectedKeys.value=[]
-  return
-}
+  //执行选择动作对应的回调函数
+const action = actionGroupOptions.value.find((value)=>value.value===actionValue.value)
+  if (action){
+    action.callback(selectedKeys.value)
+  }
 }
 
 function pageChange(){
@@ -155,7 +232,10 @@ getList()
       <a-button type="primary" status="warning" @click="actionGroupAction" v-if="actionValue">执行</a-button>
     </div>
     <div class="action_search">
-      <a-input-search :placeholder="searchPlaceholder" @search="search" v-model="params.key">搜素</a-input-search>
+      <a-input-search :placeholder="searchPlaceholder" @search="search" v-model="params.key"></a-input-search>
+    </div>
+    <div class="action_filter">
+     <a-select v-for="item in filterGroups" :placeholder="item.label" :options="item.options"></a-select>
     </div>
     <div class="action_search_slot">
       <slot name="search_other">

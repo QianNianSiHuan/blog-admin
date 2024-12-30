@@ -16,6 +16,7 @@ export interface paramsType{
     limit?:number
     page?:number
     key?:string
+    sort?:string
     type?:number
 }
 
@@ -44,3 +45,10 @@ useAxios.interceptors.response.use((res) =>{
 export function defaultDeleteApi(url:string,idList:number[]):Promise<baseResponse<string>>{
     return useAxios.delete(url,{data: {idList}})
 }
+
+export interface optionsType{
+    label:string
+    value:number|string
+}
+
+export type optionsFunc = (params?:paramsType)=>Promise<baseResponse<optionsType[]>>
