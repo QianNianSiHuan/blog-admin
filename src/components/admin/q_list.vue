@@ -8,7 +8,7 @@ import {
   type paramsType
 } from "@/api";
 import {reactive, ref} from "vue";
-import {Message, type TableColumnData, type TableRowSelection} from "@arco-design/web-vue";
+import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
 import {dataTemFormat, type dateTemType} from "@/utils/data.ts";
 
 
@@ -40,6 +40,7 @@ interface Props{
   noAdd?:boolean//是否显示创建
   noEdit?:boolean//编辑按钮开关
   noDelete?:boolean//删除按钮开关
+  noPage?:boolean//分页开关
   noBatchDelete?:boolean //是否没有批量
   searchPlaceholder?:string//标签
   addLabel?:string//添加按钮标签
@@ -49,6 +50,7 @@ interface Props{
   noCheck?:boolean //复选框开关
   actionGroup?:actionGroupType[]//动作组
   filterGroup?:filterGroupType[]//过滤组
+  limit?:number//默认页数量
 }
 const actionGroupOptions =ref<actionGroupType[]>([])
 
@@ -61,6 +63,7 @@ const {
   addLabel="添加",
   editLabel="编辑",
   deleteLabel="删除",
+  limit=10,
 }= props
 //加载动画
 const loading =ref(false)
@@ -133,8 +136,7 @@ const data =reactive<listResponse<any>>({
 //分页信息
 const params =reactive<paramsType>({
   type:1,
-  limit:10,
-  page:1,
+  limit:props.noPage?-1:limit,
 })
 
 //获取列表
@@ -152,10 +154,12 @@ async function getList(newParams?:paramsType) {
   data.list = res.data.list || []
   data.count = res.data.count
 }
+//抛出方法
 const emit = defineEmits<{
   delete:[keyList:number[]|string[]]
   add:[]
   edit:[record:any]
+  "row-click":[record:any]
 }>()
 
 
@@ -184,7 +188,10 @@ async function baseDelete(keyList:number[]) {
   Message.success(res.msg)
   await getList()
 }
-
+//行点击
+function RowClick(record:TableData,ev:Event){
+  emit("row-click",record)
+}
 
 //添加
 function add(){
@@ -232,6 +239,14 @@ function search(){
 }
 getList()
 
+defineExpose({
+  getList,
+  data,
+})
+
+
+
+
 </script>
 
 <template>
@@ -250,11 +265,10 @@ getList()
       <a-input-search :placeholder="searchPlaceholder" @search="search" v-model="params.key"></a-input-search>
     </div>
     <div class="action_filter">
-     <a-select v-for="item in filterGroups" style="width: 140px" :placeholder="item.label" @change="item.callback as any" :options="item.options"></a-select>
+     <a-select v-for="item in filterGroups" style="width: 140px" allow-clear :placeholder="item.label" @change="item.callback as any" :options="item.options"></a-select>
     </div>
     <div class="action_search_slot">
       <slot name="search_other">
-
       </slot>
     </div>
     <div class="action_flush" @click="refresh">
@@ -264,7 +278,7 @@ getList()
   <div class="q_list_body">
     <a-spin :loading="loading">
       <div class="q_list_table">
-        <a-table :data="data.list" :row-key="rowKey" v-model:selected-keys="selectedKeys" :row-selection="props.noCheck?undefined:rowSelection" :pagination="false">
+        <a-table :data="data.list" @row-click="RowClick" :row-key="rowKey" v-model:selected-keys="selectedKeys" :row-selection="props.noCheck?undefined:rowSelection" :pagination="false">
           <template #columns>
             <template v-for="col in props.columns" >
               <a-table-column v-if="col.dataIndex" v-bind="col"></a-table-column>
@@ -288,8 +302,8 @@ getList()
           </template>
         </a-table>
       </div>
-      <div class="q_list_page">
-       <a-pagination :total="data.count" @change="pageChange" v-model:current="params.page" :page-size="params.limit"></a-pagination>
+      <div class="q_list_page" v-if="!noPage">
+      <a-pagination :total="data.count" @change="pageChange" v-model:current="params.page" :page-size="params.limit"></a-pagination>
       </div>
     </a-spin>
   </div>
