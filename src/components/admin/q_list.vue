@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   type baseResponse,
-  defaultDeleteApi,
+  defaultDeleteApi, defaultPostApi, defaultPutApi,
   type listResponse,
   type optionsFunc,
   type optionsType,
@@ -10,6 +10,7 @@ import {
 import {reactive, ref} from "vue";
 import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
 import {dataTemFormat, type dateTemType} from "@/utils/data.ts";
+import Q_modal_form, {type emitFnType, type formListType} from "@/components/admin/q_modal_form.vue";
 
 
 
@@ -51,6 +52,9 @@ interface Props{
   actionGroup?:actionGroupType[]//动作组
   filterGroup?:filterGroupType[]//过滤组
   limit?:number//默认页数量
+  formList?:formListType[]
+  addFormLabel?:string
+  editFormLabel?:string
 }
 const actionGroupOptions =ref<actionGroupType[]>([])
 
@@ -195,16 +199,21 @@ function RowClick(record:TableData,ev:Event){
 
 //添加
 function add(){
+  if(props.formList?.length){
+    visible.value=true
+  }
   emit("add")
 }
 //编辑
+const modalFormRef =ref()
 function edit(record:any){
+  if(props.formList?.length){
+    modalFormRef.value.setForm(record)
+    visible.value=true
+  }
   emit("edit",record)
 }
-//更新
-function update(record:any){
 
-}
 //刷新
 function refresh() {
   getList()
@@ -244,13 +253,52 @@ defineExpose({
   data,
 })
 
+const visible =ref(false)
 
 
+async function create(form:any,fn?:emitFnType){
+  const array = /\"(.*?)\"/.exec(props.url.toString())
+  if (array?.length !==2){
+    return
+  }
+  const url =array[1]
+  const res = await defaultPostApi(url,form)
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
+  Message.success("创建成功")
+  await getList()
+  fn(true)
+}
+
+async function update (form:any,fn?:emitFnType){
+  console.log("create")
+  const array = /\"(.*?)\"/.exec(props.url.toString())
+  if (array?.length !==2){
+    return
+  }
+  const url =array[1]
+  const res = await defaultPutApi(url,form)
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
+  Message.success("更新成功")
+  await getList()
+  fn(true)
+}
 
 </script>
 
 <template>
 <div class="q_list_com">
+  <q_modal_form @create="create"  @update="update" v-if="props.formList?.length"
+                ref="modalFormRef"
+                v-model:visible="visible"
+                :form-list="props.formList"
+                :add-label="props.addFormLabel as string"
+                :edit-label="props.editFormLabel as string"></q_modal_form>
   <div class="q_list_head">
     <slot name="action_add">
       <div class="action_creat" v-if="!noAdd">

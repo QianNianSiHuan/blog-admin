@@ -3,8 +3,7 @@
 import Q_list, {type filterGroupType} from "@/components/admin/q_list.vue";
 import {articleCategoryOptionsApi, userListApi, type userListType} from "@/api/user_api.ts";
 import type {columnType} from "@/components/admin/q_list.vue";
-import {reactive, ref} from "vue";
-import Q_modal_form, {type formListType} from "@/components/admin/q_modal_form.vue";
+import { ref} from "vue";
 const columns:columnType[] =[
   {title:"ID",dataIndex:"id"},
   {title:"IP",dataIndex:"IP"},
@@ -66,37 +65,31 @@ function RowClick(record:any){
 
 const formList:formListType[]=[
   {
-    label:"创建用户",field:"nick_name",type:"input",rules:{required:true},validateTrigger:"blur",
+    label:"ID",field:"id",type:"input",rules:{required:true},validateTrigger:"blur",
   },
   {
-    label:"角色",field:"role",type:"select",rules:{required:true},validateTrigger:"blur",source:[
+    label:"角色",field:"IP",type:"select",rules:{required:true},validateTrigger:"blur",source:[
       {label:"管理员",value:1},
       {label:"用户",value:2},
     ],
     multiple:true,
-    autoSize:{minRows:3,maxRows:10}
   },
 ]
-
-const visible =ref(false)
-
-function ok(form:object,fn:(val:boolean)=>void ){
-  console.log(form)
-  fn(true)
-}
-
-
 
 </script>
 
 <template>
 <div>
-  <q_modal_form @ok="ok" title="创建用户" v-model:visible="visible" :form-list="formList">
-    <template #role_help="data">
-{{data}}
-    </template>
-  </q_modal_form>
-  <q_list @add="visible=true" ref="fListRef" :url="userListApi" @row-click="RowClick"  :columns="columns" :filter-group="filters" :actionGroup="actionGroup" >
+  <q_list @add="visible=true"
+          ref="fListRef"
+          :url="userListApi"
+          @row-click="RowClick"
+          :columns="columns"
+          :filter-group="filters"
+          :actionGroup="actionGroup"
+          add-form-label="创建用户"
+          edit-form-label="编辑用户"
+          :form-list="formList">
     <template #ua="{ record }:{record:userListType}"}>
       {{record.ua}}
     </template>
