@@ -29,9 +29,9 @@ const props=defineProps<Props>()
     padding: 20px;
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: @q_border;
+    border-bottom: @q_border;
   }
-  .bottom{
+  .body{
     padding: 20px;
   }
 }

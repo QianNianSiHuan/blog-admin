@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {Component} from "vue";
-import QComponent from "@/components/common/q-component.vue";
+import QComponent from "@/components/common/q_component.vue";
 import {userStores} from "@/stores/user_store.ts";
 const userStore =userStores()
 

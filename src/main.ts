@@ -8,9 +8,8 @@ import '@arco-design/web-vue/dist/arco.css';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import "@/assets/public.less";
 import "nprogress/nprogress.css";
-import {apiMock} from "./mocks";
+import {apiMock} from "@/mocks";
 const app = createApp(App)
-
 
 apiMock()
 app.use(createPinia())

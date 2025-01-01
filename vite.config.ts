@@ -6,10 +6,13 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import {loadEnv} from "vite";
 import {type EnvMeta} from "./env";
 
+
 const envDir:string ="./"//env文件的目录
 // https://vite.dev/config/
+
 export default defineConfig((config)=>{
-  const env =  loadEnv(config.mode,envDir) as EnvMeta
+    console.log(config)
+    const env =  loadEnv(config.mode,envDir) as EnvMeta
     console.log(env.VITE_SERVER_URL)
     return{
         plugins: [
@@ -39,7 +42,6 @@ export default defineConfig((config)=>{
             proxy:{
                 "/api":{
                     target:env.VITE_SERVER_URL,
-                    changeOrigin: true
                 }
             }
         }
