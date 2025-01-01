@@ -28,7 +28,6 @@ import User_login_echars from "@/components/echarts/user_login_echars.vue";
 .home_view{
   background-color: inherit!important;
 
-
   .bottom{
     width: 100%;
     display: flex;

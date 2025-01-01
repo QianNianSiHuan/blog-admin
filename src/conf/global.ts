@@ -1,0 +1,5 @@
+export const title = "都是假象后台管理系统"
+export const slogan = "都是假象"
+export const enSlogan = "doushijiaxiang"
+export const ico = "http://qiniuyun.starletter.cn/picture/20241211171339922.jpg"
+// export const ico = "http://qiniuyun.starletter.cn/picture/20241211171339922.jpg"

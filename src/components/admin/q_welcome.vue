@@ -58,7 +58,7 @@ const welcomeTitle =computed(()=>{
   background-color: var(--color-bg-1);
   border-radius: 5px;
   margin-bottom: 20px;
-  background-image: url("@/assets/home_bg/img.svg");
+  background-image: url("@/assets/image/home_bg.svg");
   background-size: 430px;
   background-repeat: no-repeat;
   background-position: right center;

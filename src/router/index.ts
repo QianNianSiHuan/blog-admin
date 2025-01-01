@@ -8,8 +8,14 @@ const router = createRouter({
       {
         name:"web",
         path:"/",
-          component:()=>import("@/views/web/index.vue")
-        //redirect:"/admin"
+          component:()=>import("@/views/web/web_home.vue"),
+          children:[
+              {
+                  name:"web_home",
+                  path:"/web_home",
+                  component:()=>import("@/views/web/web_home.vue")
+              },
+          ]
       },
       {
         name:"login",
@@ -89,6 +95,11 @@ const router = createRouter({
                   ]
               },
           ]
+      },
+      {
+          name:"notfound",
+          path:"/:match(.*)",
+          component:()=>import("@/views/web/404.vue")
       }
   ],
 })
