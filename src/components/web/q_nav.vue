@@ -15,16 +15,12 @@ interface Props{
 const props= defineProps<Props>()
 const {noScroll =false,scrollTop=200}=props
 
-const isShow =ref(false)
+const isShow =ref(noScroll)
 
 if(!noScroll){
   window.onscroll =function (){
     const  top = document.documentElement.scrollTop
-    if(top>=scrollTop){
-      isShow.value=true
-    }else {
-      isShow.value=false
-    }
+    isShow.value = top >= scrollTop;
   }
 }
 

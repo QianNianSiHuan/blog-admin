@@ -5,6 +5,7 @@ import {Message} from "@arco-design/web-vue";
 import {userStores} from "@/stores/user_store.ts";
 import router from "@/router";
 import {useRoute} from "vue-router";
+
   const  form = reactive<emailLoginRequest>({
         val:"",
         password:""
@@ -31,6 +32,14 @@ async function emailLogin(){
   }
   router.push({name:"web"})
 }
+
+const keyDown = (e:any) => {
+  if (e.keyCode == 13 || e.keyCode == 100) {
+    emailLogin()
+  }
+}
+
+
 </script>
 
 <template>
@@ -55,7 +64,7 @@ async function emailLogin(){
           </a-input>
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" @click="emailLogin" @keyup.enter="emailLogin" long>登录</a-button>
+          <a-button type="primary" @click="emailLogin" @keyup.enter="keyDown" long>登录</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -70,7 +79,7 @@ async function emailLogin(){
   .login_mask{
     width: 400px;
     height: 100vh;
-    background-color: rgba(white,0.8);
+    background-color: var(--login-bg);
     position: absolute;
     right: 0;
     top: 0;
@@ -88,5 +97,11 @@ async function emailLogin(){
       margin-bottom: 20px;
     }
   }
+}
+:root {
+  --login-bg: rgba(255, 255, 255,0.6);
+}
+[arco-theme ='dark'] {
+  --login-bg: rgba(0, 0, 0,0.6);
 }
 </style>

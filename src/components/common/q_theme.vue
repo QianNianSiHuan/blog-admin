@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {setTheme,theme,loadTheme} from "@/components/common/q_theme.ts";
-loadTheme()
 </script>
 
 <template>
