@@ -32,8 +32,12 @@ const menuList:MenuType[] = [
     ]
   },
   {
-    title: "系统设置",role:1, name: "settingsManage", icon: IconSettings, children: [
-      {title: "系统信息", name: "settingsList"}
+    title: "系统管理",role:1, name: "settingsManage", icon: IconSettings, children: [
+      {title: "站点配置", name: "siteMange",children:[
+          {title:"网站设置",name:"siteMangeSite"},
+          {title:"邮箱设置",name:"siteMangeEmail"}
+        ]},
+      {title: "日志列表", name: "logList"}
     ]
   },
 ]

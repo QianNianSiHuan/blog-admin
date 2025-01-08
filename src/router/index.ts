@@ -78,19 +78,44 @@ const router = createRouter({
               },
               {
                   name:"settingsManager",
-                  path:"settings_manager",
+                  path:"settings",
                   meta:{
-                      title:"系统配置",
+                      title:"系统管理",
                       role:[1]
                   },
                   children:[
                       {
-                          name:"settingsList",
-                          path:"settings_list",
+                          name:"siteMange",
+                          path:"site",
                           meta:{
-                              title:"用户信息"
+                              title:"站点设置"
                           },
-                          component:()=>import("@/views/admin/settings_manager/index.vue"),
+                          children:[
+                              {
+                                  name:"siteMangeSite",
+                                  path:"site",
+                                  meta:{
+                                      title:"网站设置"
+                                  },
+                                  component:()=>import("@/views/admin/settings_manager/site_manage/site.vue"),
+                              },
+                              {
+                                  name:"siteMangeEmail",
+                                  path:"email",
+                                  meta:{
+                                      title:"邮箱设置"
+                                  },
+                                  component:()=>import("@/views/admin/settings_manager/site_manage/email.vue"),
+                              }
+                          ]
+                      },
+                      {
+                          name:"logList",
+                          path:"log_list",
+                          meta:{
+                              title:"日志列表"
+                          },
+                          component:()=>import("@/views/admin/settings_manager/log_list.vue"),
                       }
                   ]
               },
