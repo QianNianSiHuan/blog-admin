@@ -2,8 +2,9 @@
 import Q_title from "@/components/admin/q_title.vue";
 import {reactive, ref} from "vue";
 import Q_image_upload from "@/components/common/q_image_upload.vue";
-import type {TreeNodeData} from "@arco-design/web-vue";
 import Q_index_right from "@/components/admin/site/q_index_right.vue";
+import {siteApi} from "@/api/site_api.ts";
+import {Message} from "@arco-design/web-vue";
 
 const form = reactive(
 {
@@ -53,9 +54,16 @@ const form = reactive(
 }
 })
 
+async function getData(){
+  const res =await  siteApi("site")
+  if(res.code){
+    Message.error(res.msg)
+    return
+  }
+  Object.assign(form,res.data)
+}
 
-
-
+getData()
 
 </script>
 
