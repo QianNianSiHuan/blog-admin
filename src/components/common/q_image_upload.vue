@@ -7,11 +7,14 @@ interface Props{
   modelValue: string
   placeholder?: string
   shape?:string
+  width?:number
+  height?:number
 }
 
 const props =defineProps<Props>()
 const emits =defineEmits(["update:modelValue"])
-const {shape="circle"} = props
+const {shape="circle",width=60,
+  height=60} = props
 function inputHandler(val:string){
   emits("update:modelValue",val)
 }
@@ -35,7 +38,7 @@ Message.success(res.msg)
   <a-input :model-value="props.modelValue" @input="inputHandler" :placeholder="props.placeholder"></a-input>
   <a-upload action="/api/images" :show-file-list="false" name="fileTool" :headers="{token:userStore.userInfo.token}" @success="fileUploadCallBack">
     <template #upload-button>
-      <a-image :src="props.modelValue" :shape="shape" :height="60" :width="60" ></a-image>
+      <a-image :src="props.modelValue" :preview="false" :class="shape"  :height="height" :width="width" ></a-image>
     </template>
   </a-upload>
 </div>

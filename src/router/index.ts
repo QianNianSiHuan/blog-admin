@@ -106,6 +106,30 @@ const router = createRouter({
                                       title:"邮箱设置"
                                   },
                                   component:()=>import("@/views/admin/settings_manager/site_manage/email.vue"),
+                              },
+                              {
+                                  name:"siteMangeQQ",
+                                  path:"qq",
+                                  meta:{
+                                      title:"QQ设置"
+                                  },
+                                  component:()=>import("@/views/admin/settings_manager/site_manage/qq.vue"),
+                              },
+                              {
+                                  name:"siteMangeAI",
+                                  path:"ai",
+                                  meta:{
+                                      title:"AI设置"
+                                  },
+                                  component:()=>import("@/views/admin/settings_manager/site_manage/ai.vue"),
+                              },
+                              {
+                                  name:"siteMangeQiniu",
+                                  path:"qiniu",
+                                  meta:{
+                                      title:"七牛云设置"
+                                  },
+                                  component:()=>import("@/views/admin/settings_manager/site_manage/qiniu.vue"),
                               }
                           ]
                       },

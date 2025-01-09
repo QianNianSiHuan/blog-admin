@@ -35,7 +35,10 @@ const menuList:MenuType[] = [
     title: "系统管理",role:1, name: "settingsManage", icon: IconSettings, children: [
       {title: "站点配置", name: "siteMange",children:[
           {title:"网站设置",name:"siteMangeSite"},
-          {title:"邮箱设置",name:"siteMangeEmail"}
+          {title:"邮箱设置",name:"siteMangeEmail"},
+          {title:"QQ设置",name:"siteMangeQQ"},
+          {title:"AI设置",name:"siteMangeAI"},
+          {title:"七牛云设置",name:"siteMangeQiniu"},
         ]},
       {title: "日志列表", name: "logList"}
     ]
@@ -49,9 +52,14 @@ function menuItemClick(key:string){
 const openKeys = ref<string[]>([])
 const selectedKeys =ref<string[]>([])
 function initRoute(){
-  if (route.matched.length === 3){
-    openKeys.value =[route.matched[1].name as string]
+  if (route.matched.length >= 3) {
+    // 把中间的 name加到 openKeys
+    // 1 length - 1
+    for (let i = 1; i < route.matched.length - 1; i++) {
+      openKeys.value.push(route.matched[i].name as string)
+    }
   }
+
 selectedKeys.value= [route.name as string]
 }
 
