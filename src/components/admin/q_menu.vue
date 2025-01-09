@@ -27,8 +27,8 @@ const menuList:MenuType[] = [
     ]
   },
   {
-    title:"用户管理",role:1,name:"userManage",icon:IconUser,children:[
-      {title:"用户列表",name:"userList"}
+    title:"文章管理",role:1,name:"articleManage",icon:IconUser,children:[
+      {title:"文章列表",name:"articleList"}
     ]
   },
   {
@@ -40,7 +40,8 @@ const menuList:MenuType[] = [
           {title:"AI设置",name:"siteMangeAI"},
           {title:"七牛云设置",name:"siteMangeQiniu"},
         ]},
-      {title: "日志列表", name: "logList"}
+      {title: "日志列表", name: "logList"},
+      {title: "banner管理", name: "bannerList"},
     ]
   },
 ]

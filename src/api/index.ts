@@ -43,14 +43,14 @@ useAxios.interceptors.response.use((res) =>{
     Message.error(res.message)
 })
 
-export function defaultPostApi(url:string,idList:number[]):Promise<baseResponse<string>>{
-    return useAxios.post(url,{data: {idList}})
+export function defaultDeleteApi(url:string,idList:number[]):Promise<baseResponse<string>>{
+    return useAxios.delete(url,{data: {idList}})
 }
 export function defaultPutApi(url:string,data:any):Promise<baseResponse<string>>{
     return useAxios.put(url,{data:data})
 }
-export function defaultDeleteApi(url:string,data:any):Promise<baseResponse<string>>{
-    return useAxios.delete(url,data)
+export function defaultPostApi(url:string,data:any):Promise<baseResponse<string>>{
+    return useAxios.post(url,data)
 }
 export interface optionsType{
     label:string

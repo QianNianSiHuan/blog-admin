@@ -59,6 +59,23 @@ const router = createRouter({
                   ]
               },
               {
+                  name:"articleManage",
+                  path:"article",
+                  meta:{
+                      title:"文章管理",
+                  },
+                  children:[
+                      {
+                          name:"articleList",
+                          path:"article_list",
+                          meta:{
+                              title:"文章列表",
+                          },
+                          component:()=>import("@/views/admin/article_manage/article_list.vue")
+                      },
+                  ]
+              },
+              {
                   name:"userManage",
                   path:"user_manage",
                   meta:{
@@ -140,6 +157,14 @@ const router = createRouter({
                               title:"日志列表"
                           },
                           component:()=>import("@/views/admin/settings_manager/log_list.vue"),
+                      },
+                      {
+                          name:"bannerList",
+                          path:"banner_list",
+                          meta:{
+                              title:"banner管理"
+                          },
+                          component:()=>import("@/views/admin/settings_manager/banner_list.vue"),
                       }
                   ]
               },

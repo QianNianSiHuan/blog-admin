@@ -11,11 +11,15 @@ import {reactive, ref} from "vue";
 import {Message, type TableColumnData, type TableData, type TableRowSelection} from "@arco-design/web-vue";
 import {dataTemFormat, type dateTemType} from "@/utils/data.ts";
 import Q_modal_form, {type emitFnType, type formListType} from "@/components/admin/q_modal_form.vue";
+import {articleStatusOptions, type optionsColorType} from "@/options/options.ts";
+import Q_label from "@/components/admin/q_label.vue";
 
 
 
 export interface columnType extends TableColumnData{
   dateFormat?:dateTemType
+  type?:"date"|"options"|"switch"
+  options?:optionsColorType
 }
 //动作组结构
 export interface actionGroupType{
@@ -55,6 +59,7 @@ interface Props{
   formList?:formListType[]
   addFormLabel?:string
   editFormLabel?:string
+  defaultParams?:object
 }
 const actionGroupOptions =ref<actionGroupType[]>([])
 
@@ -145,6 +150,10 @@ const params =reactive<paramsType>({
 
 //获取列表
 async function getList(newParams?:paramsType) {
+  //判断有没有默认的params
+  if (props.defaultParams){
+   Object.assign(params,props.defaultParams)
+  }
   loading.value =true
   if (newParams){
     Object.assign(params,newParams)
@@ -155,6 +164,7 @@ async function getList(newParams?:paramsType) {
     Message.error(res.msg)
     return
   }
+  console.log(res.data)
   data.list = res.data.list || []
   data.count = res.data.count
 }
@@ -180,10 +190,14 @@ async function baseDelete(keyList:number[]) {
     return
   }
   const array = /\"(.*?)\"/.exec(props.url.toString())
+  console.log(array)
+  console.log(array?.length)
+  console.log(keyList)
   if (array?.length !==2){
     return
   }
   const url =array[1]
+  console.log(url)
   const res = await defaultDeleteApi(url,keyList)
   if (res.code){
     Message.error(res.msg)
@@ -329,7 +343,22 @@ async function update (form:any,fn?:emitFnType){
         <a-table :data="data.list" @row-click="RowClick" :row-key="rowKey" v-model:selected-keys="selectedKeys" :row-selection="props.noCheck?undefined:rowSelection" :pagination="false">
           <template #columns>
             <template v-for="col in props.columns" >
-              <a-table-column v-if="col.dataIndex" v-bind="col"></a-table-column>
+              <a-table-column v-if="col.type==='date'" v-bind="col">
+                <template #cell="data">
+                  {{dataTemFormat(data.record[col.dataIndex],col.dateFormat)}}
+                </template>
+              </a-table-column>
+              <a-table-column v-else-if="col.type==='options'" v-bind="col">
+                <template #cell="data">
+                  <q_label :options="col.options" :value="data.record[col.dataIndex]" ></q_label>
+                </template>
+              </a-table-column>
+              <a-table-column v-else-if="col.type==='switch'" v-bind="col">
+                <template #cell="data">
+                 <a-switch :model-value="data.record[col.dataIndex]"></a-switch>
+                </template>
+              </a-table-column>
+              <a-table-column v-else-if="col.dataIndex" v-bind="col"></a-table-column>
               <a-table-column v-else-if="col.slotName" v-bind="col">
                 <template #cell="data">
                   <div class="col_action" v-if="col.slotName==='action'">
@@ -340,7 +369,7 @@ async function update (form:any,fn?:emitFnType){
                     </a-popconfirm>
                     <slot v-bind="data" name ="action_right"></slot>
                   </div>
-                  <div v-if="col.slotName === 'created_at'">
+                  <div v-if="col.slotName === 'CreatedAt'">
                       {{dataTemFormat(data.record[col.slotName],col.dateFormat)}}
                   </div>
                   <slot v-else :name="col.slotName" v-bind="data"></slot>
