@@ -1,7 +1,6 @@
 import {mock,type MockjsRequestOptions} from "mockjs";
 
 export function userMock() {
-    console.log("userMockStart")
     mock(/.*?\/api\/user\/login/, function (options: MockjsRequestOptions) {
         console.log("userMockStart1")
         return {

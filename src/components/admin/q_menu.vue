@@ -26,6 +26,10 @@ const menuList:MenuType[] = [
       {title:"个人信息",name:"userInfo"}
     ]
   },
+  {title:"用户管理",role:1,name:"userManage",icon:IconUser,children:[
+      {title:"用户列表",name:"userList"}
+    ]
+  },
   {
     title:"文章管理",role:1,name:"articleManage",icon:IconUser,children:[
       {title:"文章列表",name:"articleList"}

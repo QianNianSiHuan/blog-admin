@@ -89,7 +89,7 @@ const router = createRouter({
                           meta:{
                               title:"用户列表"
                           },
-                          component:()=>import("@/views/admin/user_manager/index.vue"),
+                          component:()=>import("@/views/admin/user_manager/user_list.vue"),
                       }
                   ]
               },

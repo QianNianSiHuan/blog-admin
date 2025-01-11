@@ -74,8 +74,6 @@ export const userStores = defineStore('userStore', {
       }
       const payload = parseToken(this.userInfo.token)
       const nowTime = new Date().getTime()
-      console.log(payload.exp * 1000)
-      console.log(nowTime)
       if(payload.exp * 1000-nowTime<0){
         Message.warning("登录过期,请重新登录")
         localStorage.removeItem("userInfo")

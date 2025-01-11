@@ -19,7 +19,7 @@ import Q_label from "@/components/admin/q_label.vue";
 export interface columnType extends TableColumnData{
   dateFormat?:dateTemType
   type?:"date"|"options"|"switch"
-  options?:optionsColorType
+  options?:optionsColorType[]
 }
 //动作组结构
 export interface actionGroupType{
@@ -164,7 +164,6 @@ async function getList(newParams?:paramsType) {
     Message.error(res.msg)
     return
   }
-  console.log(res.data)
   data.list = res.data.list || []
   data.count = res.data.count
 }
