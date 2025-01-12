@@ -7,7 +7,7 @@ import {logLevelOptions} from "@/options/options.ts";
 import {Message} from "@arco-design/web-vue";
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
-
+import {theme} from "@/components/common/q_theme.ts";
 
 const params =reactive<logListParams>({
   logType:2,
@@ -28,6 +28,7 @@ const columnsDict = reactive({
         {title: "ID", dataIndex: 'id'},
         {title: "地址", slotName: 'addr'},
         {title: "用户", slotName: 'user'},
+        {title: "方法", slotName: 'method'},
         {title: "等级", dataIndex: 'level', type:"options",options:logLevelOptions},
         {title: "标题", slotName: 'title'},
         {title: "时间", dataIndex: 'createdAt', type: "date"},
@@ -68,10 +69,15 @@ if(!record.isRead){
     Message.error(res.msg)
     return
   }
+  record.isRead = true
 }
   content.value =record.content
   visible.value=true
-  nextTick(()=>{
+  await nextTick(()=>{
+    const dom =document.querySelector(".log_modal_body")
+    if(dom){
+      dom.classList.add("scrollbar")
+    }
     jsonParse()
   })
 }
@@ -82,7 +88,7 @@ function jsonParse() {
     const jsonData = (value as HTMLPreElement).innerText
     const data = JSON.parse(jsonData)
     // 生成虚拟dom
-    const vNode = h(VueJsonPretty, {data: data, deep:1})
+    const vNode = h(VueJsonPretty, {data: data, deep:1 ,theme:theme.value})
     // 创建app
     const app = createApp({
       render: ()=>vNode
@@ -108,9 +114,9 @@ function jsonParse() {
     >
       <template #search_other>
         <a-radio-group v-model="params.logType" @change="logTypeChange">
-          <a-radio value="1">登录日志</a-radio>
-          <a-radio value="2">操作日志</a-radio>
-          <a-radio value="3">运行日志</a-radio>
+          <a-radio :value="1">登录日志</a-radio>
+          <a-radio :value="2">操作日志</a-radio>
+          <a-radio :value="3">运行日志</a-radio>
         </a-radio-group>
       </template>
       <template #addr="{record}:{record:logListType}">
@@ -126,6 +132,12 @@ function jsonParse() {
       </template>
       <template #title="{record}:{record:logListType}">
         <a href="javascript:void 0" @click="logRead(record)" :class="{is_read:record.isRead}">{{record.title}}</a>
+      </template>
+      <template #method="{record}:{record:logListType}">
+        <a-tag v-if="record.method === 'GET'" color="blue">{{ record.method }}</a-tag>
+        <a-tag v-else-if="record.method==='POST'" color="orange">{{ record.method }}</a-tag>
+        <a-tag v-else-if="record.method==='PUT'" color="yellow">{{ record.method }}</a-tag>
+        <a-tag v-else color="red">{{ record.method }}</a-tag>
       </template>
     </q_list>
   </div>

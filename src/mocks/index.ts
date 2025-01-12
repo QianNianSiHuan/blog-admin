@@ -4,6 +4,5 @@ export function apiMock() {
     if (env.VITE_MOCK !== "true"){
         return
     }
-    console.log(6666)
     userMock()
 }

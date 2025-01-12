@@ -4,4 +4,5 @@
 
 [arco-theme ='dark'] {
     --login-bg: rgb(0, 0, 0);
+    color-scheme: dark;
 }

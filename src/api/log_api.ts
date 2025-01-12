@@ -1,5 +1,4 @@
 import {type baseResponse, type paramsType, useAxios} from "@/api/index.ts";
-import {userUpdateAdminApi} from "@/api/user_api.ts";
 
 export interface logListType{
     "id": number
@@ -10,10 +9,11 @@ export interface logListType{
     "content": string
     "level":number
     "userID": number
+    "method":string
     "ip": string
     "addr": string
-    "isRead": false,
-    "loginStatus": false,
+    "isRead": boolean,
+    "loginStatus": boolean,
     "username": string
     "pwd": string
     "loginType": number
@@ -30,5 +30,5 @@ export function logListApi(params:logListParams){
 return useAxios.get("/api/logs",{params})
 }
 export function logReadApi(id:number):Promise<baseResponse<string>>{
-    return useAxios.get("api/logs/"+id.toString())
+    return useAxios.get("/api/logs/"+id.toString())
 }
