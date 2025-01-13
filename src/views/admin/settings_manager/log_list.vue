@@ -108,6 +108,7 @@ function jsonParse() {
     <q_list ref="fListRef"
             :url="logListApi"
             no-add
+            no-edit
             :default-params="params"
             :columns="columnsDict[params.logType]"
             @edit="edit"

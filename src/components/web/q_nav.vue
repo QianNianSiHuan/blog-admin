@@ -4,6 +4,9 @@ import {enSlogan, slogan} from "@/conf/global.ts";
 import {ref} from "vue";
 import Q_user_dropdown from "@/components/common/q_user_dropdown.vue";
 import {userStores} from "@/stores/user_store.ts";
+import Q_point from "@/components/common/q_point.vue";
+import Q_nav_msg from "@/components/web/q_nav_msg.vue";
+import Q_nav_avatar from "@/components/web/q_nav_avatar.vue";
 
 const userStore =userStores()
 
@@ -28,22 +31,26 @@ if(!noScroll){
 </script>
 
 <template>
-<div class="q_nav" :class="{isShow:isShow}">
-  <div class="container">
-    <div class="slogan">
-      <div class="cnSlogan">{{slogan}}</div>
-      <div class="enSlogan">{{enSlogan}}</div>
-    </div>
-    <div class="left">
-      <router-link to="/">首页</router-link>
-    </div>
-    <div class="right">
-      <q_theme class="theme"></q_theme>
-      <q_user_dropdown v-if="userStore.isLogin"></q_user_dropdown>
-      <router-link :to="{name:'login'}" v-else>登录</router-link>
+  <div class="q_nav" :class="{isShow: isShow}">
+    <div class="container">
+      <div class="logo">
+        <a href="/">
+          <span class="n1">首页</span>
+          <span class="n2"></span>
+        </a>
+      </div>
+      <div class="center">
+        <i class="iconfont icon-dengpao"></i>
+        <a-input-search placeholder="搜索你喜欢的文章"></a-input-search>
+      </div>
+      <div class="right">
+        <q_nav_avatar></q_nav_avatar>
+        <q_nav_msg></q_nav_msg>
+        <a href="javascript:void 0">历史</a>
+        <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <style lang="less">
@@ -80,39 +87,64 @@ if(!noScroll){
     width: 1200px;
     display: flex;
     align-items: center;
-    .slogan{
-      width: 10%;
-      .cnSlogan{
-        font-size: 20px;
+    .logo{
+      width: 20%;
+      a{
+        .n1{
+          font-size: 16px;
+          color: var(--color-text-1);
+        }
+        .n2{
+          margin-left: 10px;
+          font-size: 14px;
+          color: var(--color-text-2);
+        }
       }
-      .enSlogan{
-        font-size: 12px;
-        transform: scale(0.96);
-        transform-origin: left center;
-      }
-
     }
-    .left{
-      width: 70%;
+    .center{
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      i{
+          margin-right: 20px;
+          font-size: 20px;
+          color:rgb(var(--arcoblue-6));
+          cursor:pointer;
+      }
+      .arco-input-wrapper{
+        width: 400px;
+        border-radius: 20px;
+      }
+    }
+
+    .arco-avatar{
+      margin-right: 20px;
     }
 
     .right{
       display: flex;
       align-items: center;
-      width: 20%;
-      .theme{
+      width: 30%;
+      justify-content: end;
+      >a{
         margin-right: 20px;
-        color: white;
       }
     }
-    a{
-      font-size: 16px;
-      text-decoration: none;
-      color: white;
+      .q_nav_mag_com{
+        margin-right: 20px;
+      }
+    .arco-btn{
+      border-radius: 200px;
+      font-size: 12px;
+    i{
+      font-size: 14px;
+      margin-right: 5px;
+      display: flex;
+      align-items: center;
     }
-    a.router-link-exact-active{
-      color: @primary-6!important;
     }
   }
 }
+
 </style>

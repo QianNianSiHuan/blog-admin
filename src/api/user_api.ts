@@ -3,29 +3,25 @@ import {type baseResponse, type listResponse, type optionsType, type paramsType,
 export interface emailLoginRequest {
     val:string
     password:string
+    captchaID: string,
+    captchaCode:string
 }
 export  function emailLoginApi(data:emailLoginRequest):Promise<baseResponse<string>>{
     return   useAxios.post("api/user/login",data)
 }
 export interface userInfoType{
     "userID": number,
-    "createdAt": string,
-    "username": string,
-    "nickname": string,
-    "avatar": string,
-    "abstract": string,
-    "registerSource": number,
     "codeAge": number,
-    "role": 1,
-    "likeTags": string[],
-    "updateUsernameTime": string,
-    "openCollect": boolean,
-    "openFollow": boolean,
-    "openFans": boolean,
-    "homeStyleID": number
+    "avatar": string,
+    "nickname": string,
+    "lookCount": number,
+    "articleCount": number,
+    "fansCount": number,
+    "followCount": number,
+    "place": string
 }
-export function userInfoApi():Promise<baseResponse<userInfoType>>{
-return useAxios.get("/api/user/detail")
+export function userInfoApi(userID:number):Promise<baseResponse<userInfoType>>{
+return useAxios.get("/api/user/base",{params:{id:userID}})
 }
 export function userLogoutApi():Promise<baseResponse<string>> {
     return useAxios.post("/api/user/logout")
@@ -76,3 +72,39 @@ export interface userUpdateAdminRequest{
 export function userUpdateAdminApi(data:userUpdateAdminRequest):Promise<baseResponse<string>> {
     return useAxios.put("/api/user/admin",data)
 }
+
+export interface userCreateByAdminRequest {
+    username:string
+    pwd:string
+}
+
+export function userCreateByAdminApi(data:userCreateByAdminRequest):Promise<baseResponse<string>>{
+    return useAxios.post("/api/user/admin",data)
+}
+
+export interface sendEmailType {
+    type:3
+    email:string
+    captchaID:string
+    captchaCode:string
+}
+
+export interface sendEmailResponse{
+    emailID:string
+}
+
+export function sendEmail(data:sendEmailType):Promise<baseResponse<sendEmailResponse>> {
+    return useAxios.post("/api/user/send_email",data)
+}
+
+export interface emailRegisterType{
+    "emailID":string
+    "emailCode":string
+    "pwd":string
+    rePwd:string
+}
+
+export function emailRegisterApi(data:emailRegisterType):Promise<baseResponse<string>>{
+    return useAxios.post("/api/user/email",data)
+}
+

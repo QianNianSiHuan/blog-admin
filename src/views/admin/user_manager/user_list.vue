@@ -2,7 +2,7 @@
 
 import Q_list, {type filterGroupType} from "@/components/admin/q_list.vue";
 import {
-  articleCategoryOptionsApi,
+  articleCategoryOptionsApi, userCreateByAdminApi, type userCreateByAdminRequest,
   userListApi,
   type userListType, userUpdateAdminApi,
   type userUpdateAdminRequest
@@ -13,6 +13,7 @@ import Q_user from "@/components/common/q_user.vue";
 import Q_image_upload from "@/components/common/q_image_upload.vue";
 import {Message} from "@arco-design/web-vue";
 import {roleOptions} from "@/options/options.ts";
+import Q_modal_form from "@/components/admin/q_modal_form.vue";
 const columns:columnType[] =[
   {title:"ID",dataIndex:"id"},
   {title:"头像",slotName:"avatar"},
@@ -26,6 +27,7 @@ const columns:columnType[] =[
 
 const fListRef =ref()
 const visible = ref(false)
+const visibleCreate = ref(false)
 const form = reactive<userUpdateAdminRequest>({
   userID:0,
   username:"",
@@ -34,6 +36,20 @@ const form = reactive<userUpdateAdminRequest>({
   abstract:"",
   role:0,
 })
+
+const createForm = reactive<userCreateByAdminRequest>({
+  username:"",
+  pwd:""
+})
+
+
+function add(){
+  form.userID=0
+  createForm.username=""
+  createForm.pwd=""
+  visibleCreate.value=true
+}
+
 function edit(record:userListType){
   form.userID=record.id
   form.username=record.username
@@ -43,13 +59,29 @@ function edit(record:userListType){
   form.role=record.role
   visible.value=true
 }
+const refCreateForm =ref()
+
 async function handler(){
-  const res = await userUpdateAdminApi(form)
-  if(res.code){
-    Message.error(res.msg)
-    return
+  if (form.userID ===0){
+    const val = await refCreateForm.value.validate()
+    if(val){
+      Message.warning("请输入正确的账号或密码")
+      return
+    }
+    const res = await userCreateByAdminApi(createForm)
+    if(res.code){
+      Message.error(res.msg)
+      return
+    }
+    Message.success(res.msg)
+  }else {
+    const res = await userUpdateAdminApi(form)
+    if(res.code){
+      Message.error(res.msg)
+      return
+    }
+    Message.success(res.msg)
   }
-  Message.success(res.msg)
   fListRef.value.getList()
   return
 }
@@ -57,7 +89,21 @@ async function handler(){
 
 <template>
 <div>
-  <a-modal v-model:visible="visible" title="编辑用户信息" :on-before-ok="handler">
+  <a-modal v-model:visible="visibleCreate"  title="创建" :on-before-ok="handler">
+    <a-form :model="createForm" ref="refCreateForm" >
+      <a-form-item label="用户名" field="username"
+                   :rules="[{required:true,message:'请输入用户名'},{minLength:5,maxLength:16,message:'用户名长度为5-16个字符'}]"
+      >
+        <a-input v-model="createForm.username" placeholder="用户名"></a-input>
+      </a-form-item>
+      <a-form-item label="密码" field="pwd"
+                   :rules="[{required:true,message:'请输入密码'},{minLength:5,maxLength:16,message:'密码长度为5-16个字符'}]"
+      >
+        <a-input-password v-model="createForm.pwd" placeholder="密码">密码</a-input-password>
+      </a-form-item>
+    </a-form>
+  </a-modal>
+  <a-modal v-model:visible="visible" title="更新用户" :on-before-ok="handler">
     <a-form :model="form">
       <a-form-item label="昵称">
         <a-input placeholder="昵称" v-model="form.nickname"></a-input>
@@ -78,8 +124,8 @@ async function handler(){
   </a-modal>
   <q_list
           @edit="edit"
+          @add="add"
           ref="fListRef"
-          no-add
           :url="userListApi"
           :columns="columns">
     <template #avatar="{ record }:{record:userListType}"}>

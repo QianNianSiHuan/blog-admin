@@ -3,6 +3,7 @@ import {userInfoApi, userLogoutApi} from "@/api/user_api.ts";
 import {Message} from "@arco-design/web-vue";
 import {parseToken} from "@/utils/parse_token.ts";
 import router from '@/router';
+import {siteApi, type siteResponse} from "@/api/site_api.ts";
 
 interface userInfoType{
   userID:number
@@ -17,6 +18,7 @@ interface userInfoType{
 
 interface userStoreType{
   userInfo:userInfoType
+  siteInfo:siteResponse
 }
 
 
@@ -30,6 +32,48 @@ export const userStores = defineStore('userStore', {
         avatar:"",
         role:0,
         token:"",
+      },
+      siteInfo:{
+        qiNiu:{
+          enable:false
+        },
+        siteInfo: {
+          title: "",
+          logo: "",
+          beian: "",
+          mode: 1
+        },
+        project: {
+          title: "",
+          icon: "",
+          webPath: ""
+        },
+        seo: {
+          keywords: "",
+          description: ""
+        },
+        about: {
+          siteDate: "",
+          QQ: "",
+          wechat: "",
+          version: "10.0.1",
+          gitee: "",
+          bilibili: "",
+          gitHub: ""
+        },
+        login: {
+          qqLogin: false,
+          usernamePwdLogin: true,
+          emailLogin: false,
+          captcha: false
+        },
+        indexRight: {
+          List: []
+        },
+        article: {
+          noExamine: false,
+          commentLine: 3
+        }
       }
     }
   },
@@ -38,20 +82,21 @@ export const userStores = defineStore('userStore', {
       //传token，然后调用户信息
       this.userInfo.token= token
       const payload = parseToken(token)
-      this.userInfo.userID = payload.userID
+       console.log(payload)
+      this.userInfo.userID = payload.user_id
       this.userInfo.role =payload.role
 
-      userInfoApi().then(res =>{
+      userInfoApi(payload.user_id).then(res =>{
         if(res.code){
           Message.error(res.msg)
           return
         }
         this.userInfo={
           userID:res.data.userID,
-          userName:res.data.username,
+          userName:res.data.nickname,
           nickName:res.data.nickname,
           avatar:res.data.avatar,
-          role:res.data.role,
+          role:payload.role,
           token: token
         }
         //持久化
@@ -63,7 +108,6 @@ export const userStores = defineStore('userStore', {
     loadUserInfo() {
       const val = localStorage.getItem("userInfo")
       if (!val) {
-
         return
       }
       try {
@@ -97,6 +141,14 @@ export const userStores = defineStore('userStore', {
       router.push({
         name:"web"
       })
+    },
+    async loadSiteInfo(){
+      const res =await siteApi("site")
+      if(res.code){
+        Message.error(res.msg)
+        return
+      }
+      Object.assign(this.siteInfo,res.data)
     }
   },
   getters:{
