@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NProgress from "nprogress";
 import {userStores} from "@/stores/user_store.ts";
-import {Message} from "@arco-design/web-vue"; // 导入 nprogress模块
+import {Message} from "@arco-design/web-vue";
+import {showLogin} from "@/components/web/q_login.ts"; // 导入 nprogress模块
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -27,7 +28,7 @@ const router = createRouter({
         path:"/admin",
           meta:{
               title:"首页",
-              role:[1,2,3]
+              role:[1,3]
           },
         component:()=>import("@/views/admin/index.vue"),
           children:[
@@ -185,11 +186,8 @@ router.beforeEach((to, from, next) => {
         if (!store.isLogin) {
             // 没有登陆
             Message.warning("需要登陆")
-            router.push({
-                name: "login", query: {
-                    redirect: to.path // 方便登录完之后跳转回原地址
-                }
-            })
+            console.log(to.path)
+            showLogin({to:to.path,reload:true})
             return
         }
 

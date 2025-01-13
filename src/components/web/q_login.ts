@@ -1,13 +1,18 @@
 import Q_login_modal from "@/components/web/q_login_modal.vue";
 import {createApp, defineComponent, h, ref} from "vue";
-
 const visible = ref<boolean|undefined>(undefined)
-export function showLogin() {
+interface options{
+    to?:string
+    reload?:boolean//是否刷新页面
+}
+export function showLogin(options?:options) {
     if (visible.value === undefined){
         // 生成虚拟dom
         const component = defineComponent({
             render: ()=>h(Q_login_modal, {
                 visible: visible.value,
+                to: options?.to,
+                reload: options?.reload,
                 "onUpdate:visible": ()=>{
                     visible.value = false
                 },

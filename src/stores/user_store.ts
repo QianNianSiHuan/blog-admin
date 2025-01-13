@@ -12,6 +12,12 @@ interface userInfoType{
   avatar:string
   role:number
   token:string
+  "codeAge": number,
+  "lookCount": number,
+  "articleCount": number,
+  "fansCount": number,
+  "followCount": number,
+  "place": string
 }
 
 
@@ -32,6 +38,12 @@ export const userStores = defineStore('userStore', {
         avatar:"",
         role:0,
         token:"",
+        codeAge: 0,
+        lookCount: 0,
+        articleCount: 0,
+        fansCount:0,
+        followCount: 0,
+        place: ""
       },
       siteInfo:{
         qiNiu:{
@@ -82,7 +94,6 @@ export const userStores = defineStore('userStore', {
       //传token，然后调用户信息
       this.userInfo.token= token
       const payload = parseToken(token)
-       console.log(payload)
       this.userInfo.userID = payload.user_id
       this.userInfo.role =payload.role
 
@@ -97,7 +108,13 @@ export const userStores = defineStore('userStore', {
           nickName:res.data.nickname,
           avatar:res.data.avatar,
           role:payload.role,
-          token: token
+          token: token,
+          codeAge: res.data.codeAge,
+          lookCount: res.data.lookCount,
+          articleCount: res.data.articleCount,
+          fansCount:res.data.fansCount,
+          followCount: res.data.followCount,
+          place: res.data.place
         }
         //持久化
         localStorage.setItem("userInfo",JSON.stringify(this.userInfo))
@@ -137,6 +154,12 @@ export const userStores = defineStore('userStore', {
           avatar:"",
           role:0,
           token:"",
+        codeAge: 0,
+        lookCount: 0,
+        articleCount: 0,
+        fansCount:0,
+        followCount: 0,
+        place: ""
       }
       router.push({
         name:"web"

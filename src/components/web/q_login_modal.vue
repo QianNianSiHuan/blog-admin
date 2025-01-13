@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import {Message, Modal} from "@arco-design/web-vue";
-import {Button} from "@arco-design/web-vue";
-import {Form, FormItem, Input} from "@arco-design/web-vue";
-import {emailLoginApi, type emailLoginRequest} from "@/api/user_api.ts";
-import {reactive, ref} from "vue";
+import {ref} from "vue";
 import {userStores} from "@/stores/user_store.ts";
-import QLogin from "@/components/web/q-login.ts";
 import Q_pwd_login from "@/components/web/login/pwd_login.vue";
 import Email_login from "@/components/web/login/email_login.vue";
+import router from "@/router";
 
 interface Props {
   visible: boolean
+  to:string
+  reload?:boolean//是否刷新页面
 }
 
 const userStore = userStores()
@@ -32,6 +31,16 @@ async function handler(data:string) {
   Message.success("登录成功")
   userStore.saveUserInfo(data)
   emits("update:visible",false)
+  if (props.to){
+    //跳转到指定界面
+    console.log(props.to)
+    router.push(props.to)
+  }
+  if (props.reload){
+    setTimeout(()=>{
+      location.reload()
+    },500)
+  }
   setTimeout(()=>{
     emits("destruction")
   },1000)

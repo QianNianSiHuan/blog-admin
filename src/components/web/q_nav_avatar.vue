@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {userStores} from "@/stores/user_store.ts";
 import router from "@/router";
-import {showLogin} from "@/components/web/q-login.ts";
+import {showLogin} from "@/components/web/q_login.ts";
 
 const userStore =userStores()
 
@@ -21,22 +21,23 @@ router.push({
 <template>
   <a-avatar v-if="!userStore.isLogin" class="avatar_1"  :size="30" @click="showLogin">登录</a-avatar>
   <a-trigger v-else trigger="hover" animation-name="fade"  :unmount-on-close="false" class="q_nav_avatar_trigger">
-    <a-avatar class="avatar_1" :image-url="userStore.userInfo.avatar" :size="30"></a-avatar>
+    <a-avatar class="avatar_1" :image-url="userStore.userInfo.avatar" :size="30">{{userStore.userInfo.nickName[0]}}</a-avatar>
     <template #content>
       <div class="q_nav_avatar_com">
         <div class="avatar">
-          <a-avatar :image-url="userStore.userInfo.avatar" :size="60"></a-avatar>
+          <a-avatar :image-url="userStore.userInfo.avatar" :size="60">{{userStore.userInfo.nickName[0]}}</a-avatar>
         </div>
         <div class="nickname">admin</div>
         <div class="data">
-          <a-statistic extra="粉丝" :value="5" />
-          <a-statistic extra="关注" :value="5" />
-          <a-statistic extra="文章" :value="666"/>
+          <a-statistic extra="粉丝" :value="userStore.userInfo.fansCount" />
+          <a-statistic extra="关注" :value="userStore.userInfo.followCount" />
+          <a-statistic extra="文章" :value="userStore.userInfo.articleCount"/>
         </div>
         <div class="menu">
           <div class="item" @click="goRouter('userCenter')"><i class="iconfont icon-list"></i><span>个人中心</span></div>
           <div class="item" @click="goRouter('articleMange')"> <i class="iconfont icon-list"></i><span>文章管理</span></div>
           <div class="item" @click="goRouter('msgChat')"><i class="iconfont icon-list"></i><span>我的消息</span></div>
+          <div class="item" v-if="userStore.isAdmin" @click="goRouter('admin')"><i class="iconfont icon-list"></i><span>后台管理</span></div>
           <div class="exit" @click="goRouter('exit')">
             <div class="item"><i class="iconfont icon-list"></i><span>退出</span></div>
           </div>
@@ -49,6 +50,7 @@ router.push({
 <style lang="less">
 .avatar_1{
   cursor: pointer;
+  background: rgb(var(--arcoblue-6));
 }
 .q_nav_avatar_com {
   width: 180px;
@@ -63,6 +65,9 @@ router.push({
     top: -30px;
     left: 50%;
     transform: translateX(-50%);
+    .arco-avatar{
+      background: rgb(var(--arcoblue-6));
+    }
   }
 
   .nickname {

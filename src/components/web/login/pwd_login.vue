@@ -3,6 +3,7 @@ import {emailLoginApi, type emailLoginRequest} from "@/api/user_api.ts";
 import {Button, Form, FormItem, Input, Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
 import {userStores} from "@/stores/user_store.ts";
+import Q_captcha from "@/components/web/q_captcha.vue";
 
 const userStore =userStores()
 const form =reactive<emailLoginRequest>({
@@ -13,13 +14,14 @@ const form =reactive<emailLoginRequest>({
 })
 const formRef =ref()
 const emits =defineEmits(["ok"])
-
+const captchaRef =ref()
 async function handler() {
   const  val=await formRef.value.validate()
   if(val)return
   const res = await emailLoginApi(form)
   if(res.code){
     Message.error(res.msg)
+    captchaRef.value?.getData()
     return
   }
   emits("ok",res.data)
@@ -34,9 +36,9 @@ async function handler() {
     <FormItem field="password" :rules="[{required:true,message:'请输入密码'},{minLength:5,maxLength:16,message:'密码长度为5-16个字符'}]">
       <Input type="password" v-model="form.password" placeholder="密码">密码</Input>
     </FormItem>
-    <FormItem content-class="captcha_item" v-if="userStore.siteInfo.login.captcha">
-      <Input  placeholder="图形验证码" v-model="form.captchaCode">验证码</Input>
-      <img src="http://qiniuyun.starletter.cn/picture/20241226144106619.png" alt="">
+    <FormItem content-class="captcha_item" field="captchaCode" v-if="userStore.siteInfo.login.captcha" :rules="[{required:true,message:'请输入图形验证码'}]">
+      <Input  ref="captchaRef" placeholder="图形验证码" v-model="form.captchaCode">验证码</Input>
+      <q_captcha v-model="form.captchaID"></q_captcha>
     </FormItem>
     <FormItem>
       <Button type="primary" @click="handler" long>登录</Button>
