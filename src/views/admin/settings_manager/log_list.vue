@@ -135,10 +135,10 @@ function jsonParse() {
         <a href="javascript:void 0" @click="logRead(record)" :class="{is_read:record.isRead}">{{record.title}}</a>
       </template>
       <template #method="{record}:{record:logListType}">
-        <a-tag v-if="record.method === 'GET'" color="blue">{{ record.method }}</a-tag>
-        <a-tag v-else-if="record.method==='POST'" color="orange">{{ record.method }}</a-tag>
-        <a-tag v-else-if="record.method==='PUT'" color="yellow">{{ record.method }}</a-tag>
-        <a-tag v-else color="red">{{ record.method }}</a-tag>
+        <a-tag v-if="record.method === 'GET'" color="#00CDCD">{{ record.method }}</a-tag>
+        <a-tag v-else-if="record.method==='POST'" color="#FFDEAD">{{ record.method }}</a-tag>
+        <a-tag v-else-if="record.method==='PUT'" color="#FFFFF0">{{ record.method }}</a-tag>
+        <a-tag v-else color="#FF6A6A">{{ record.method }}</a-tag>
       </template>
     </q_list>
   </div>

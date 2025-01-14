@@ -29,7 +29,7 @@ if(res.code){
 }
 console.log(res.data)
 Message.success(res.msg)
-  emits("update:modelValue","http://localhost:8080"+res.data)
+  emits("update:modelValue",res.data)
 }
 </script>
 

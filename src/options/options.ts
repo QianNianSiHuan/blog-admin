@@ -22,3 +22,10 @@ export const logLevelOptions:optionsColorType[]=[
     {label:"warn",value:2,color:"yellow"},
     {label:"error",value:3,color:"red"},
 ]
+
+export const registerSourceOptions:optionsColorType[]=[
+    {label:"邮箱注册",value:1,color:"#7FFFD4"},
+    {label:"QQ注册",value:2,color:"#FFFAFA"},
+    {label:"命令行注册",value:3,color:"#87CEEB"},
+    {label:"管理员注册",value:3,color:"#BEBEBE"},
+]

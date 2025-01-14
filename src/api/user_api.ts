@@ -108,3 +108,77 @@ export function emailRegisterApi(data:emailRegisterType):Promise<baseResponse<st
     return useAxios.post("/api/user/email",data)
 }
 
+
+export interface userDetailType{
+    "id": number,
+    "createdAt": string,
+    "username": string,
+    "nickname": string,
+    "avatar": string,
+    "abstract": string,
+    "registerSource": number,
+    "codeAge": number,
+    "role": number,
+    "userID": number,
+    "likeTags"?: string[],
+    "updateUsernameTime"?: string,
+    "openCollect": boolean,
+    "openFollow": boolean,
+    "openFans": boolean,
+    "homeStyleID": number
+    "email": string,
+    usePassword: boolean,
+}
+
+export function userDetailApi():Promise<baseResponse<userDetailType>>{
+    return useAxios.get("/api/user/detail")
+}
+export interface userDetailUpdateRequest{
+    "username": string,
+    "nickname": string,
+    "avatar": string,
+    "abstract": string,
+    "likeTags"?: string[],
+    "openCollect": boolean,
+    "openFollow": boolean,
+    "openFans": boolean,
+    "homeStyleID": number
+}
+export function userDetailUpdateApi(data:userDetailUpdateRequest):Promise<baseResponse<string>> {
+    return useAxios.put("/api/user",data)
+}
+
+export interface userPwdUpdateType{
+    oldPwd:string,
+    pwd:string
+    rePwd:string
+}
+export function userPwdUpdateApi(data:userPwdUpdateType):Promise<baseResponse<string>> {
+    return useAxios.put("/api/user/password",data)
+}
+
+export interface userEmailUpdateType{
+    emailID:string
+    emailCode:string
+}
+export function userEmailUpdateApi(data:userEmailUpdateType):Promise<baseResponse<string>> {
+    return useAxios.put("/api/user/email/bind",data)
+}
+
+export interface loginRecordType{
+    "id": number
+    "CreatedAt": string
+    "UpdatedAt": string
+    "userID":number
+    "IP": string
+    "addr": string
+    "ua": string
+}
+export interface loginRecordRequest extends paramsType{
+    type:1|2
+}
+
+
+export function loginRecordApi(params:loginRecordRequest):Promise<baseResponse<string>> {
+    return useAxios.get("/api/user/login",{params})
+}

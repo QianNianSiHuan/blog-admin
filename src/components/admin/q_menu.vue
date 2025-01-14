@@ -22,10 +22,6 @@ const menuList:MenuType[] = [
   {
     title:"首页",name:"home",icon:IconHome
   },
-  {title:"个人中心",role:1,name:"userCenter",icon:IconUser,children:[
-      {title:"个人信息",name:"userInfo"}
-    ]
-  },
   {title:"用户管理",role:1,name:"userManage",icon:IconUser,children:[
       {title:"用户列表",name:"userList"}
     ]

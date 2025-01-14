@@ -9,19 +9,36 @@ const router = createRouter({
       {
         name:"web",
         path:"/",
-          component:()=>import("@/views/web/web_home.vue"),
+          component:()=>import("@/views/web/index.vue"),
           children:[
               {
                   name:"web_home",
-                  path:"/web_home",
+                  path:"",
                   component:()=>import("@/views/web/web_home.vue")
               },
+              {
+                  name:"userCenter",
+                  path:"center",
+                  component:()=>import("@/views/web/user_center/index.vue"),
+                  children: [
+                      {
+                          name:"userCenterInfo",
+                          path:"info",
+                          component:()=>import("@/views/web/user_center/info.vue"),
+                      },
+                      {
+                          name:"userCenterAccount",
+                          path:"account",
+                          component:()=>import("@/views/web/user_center/account.vue"),
+                      },
+                      {
+                          name:"userCenterLoginRecord",
+                          path:"Login_record",
+                          component:()=>import("@/views/web/user_center/login_record.vue"),
+                      },
+                  ]
+              },
           ]
-      },
-      {
-        name:"login",
-        path:"/login",
-        component:()=>import("@/views/login/index.vue")
       },
       {
         name:"admin",
@@ -40,24 +57,6 @@ const router = createRouter({
                       role:[1,2,3]
                   },
                   component:()=>import("@/views/admin/home/index.vue")
-              },
-              {
-                  name:"userCenter",
-                  path:"user_center",
-                  meta:{
-                      title:"个人中心",
-                      role:[1,2]
-                  },
-                  children:[
-                      {
-                          name:"userInfo",
-                          path:"user_info",
-                          meta:{
-                              title:"个人信息"
-                          },
-                          component:()=>import("@/views/admin/user_center/index.vue"),
-                      }
-                  ]
               },
               {
                   name:"articleManage",
