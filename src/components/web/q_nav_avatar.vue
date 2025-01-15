@@ -35,7 +35,7 @@ router.push({
         </div>
         <div class="menu">
           <div class="item" @click="goRouter('userCenterInfo')"><i class="iconfont icon-list"></i><span>个人中心</span></div>
-          <div class="item" @click="goRouter('articleMange')"> <i class="iconfont icon-list"></i><span>文章管理</span></div>
+          <div class="item" @click="goRouter('platformArticle')"> <i class="iconfont icon-list"></i><span>文章管理</span></div>
           <div class="item" @click="goRouter('msgChat')"><i class="iconfont icon-list"></i><span>我的消息</span></div>
           <div class="item" v-if="userStore.isAdmin" @click="goRouter('admin')"><i class="iconfont icon-list"></i><span>后台管理</span></div>
           <div class="exit" @click="goRouter('exit')">

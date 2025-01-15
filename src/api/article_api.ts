@@ -1,6 +1,5 @@
 import type {baseResponse, listResponse, paramsType} from "@/api/index.ts";
 import {useAxios} from "@/api/index.ts";
-
 export interface articleListType{
     "id": number
     "CreatedAt":string
@@ -94,4 +93,17 @@ export function articleHistoryListApi(params:articleHistoryListRequest):Promise<
 
 export function articleHistoryRemoveApi(idList:number[]):Promise<baseResponse<string>> {
     return useAxios.delete("/api/article/history",{data:idList})
+}
+export interface articleAddType{
+    title: string
+    status: 1|2
+    content:string
+    categoryID?:number
+    cover:string
+    tagList:string[]
+    openComment: boolean
+}
+
+export function articleAddApi(data:articleAddType):Promise<baseResponse<string>> {
+    return useAxios.post("/api/article",data)
 }

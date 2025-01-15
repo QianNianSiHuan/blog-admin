@@ -53,6 +53,23 @@ const router = createRouter({
                       },
                   ]
               },
+              {
+                  name:"platform",
+                  path:"platform",
+                  component:()=>import("@/views/web/platform/index.vue"),
+                  children: [
+                      {
+                          name:"platformArticle",
+                          path:"article",
+                          component:()=>import("@/views/web/platform/article.vue"),
+                      },
+                      {
+                          name:"platformArticleAdd",
+                          path:"article_add",
+                          component:()=>import("@/views/web/platform/article_add.vue"),
+                      },
+                  ]
+              },
           ]
       },
       {

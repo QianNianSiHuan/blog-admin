@@ -75,7 +75,7 @@ const form = reactive<articleExamineRequest>({
 })
 
 async function handler() {
-  if (data.id != 2){
+  if (data.status != 2){
     return true
   }
   form.articleID=data.id

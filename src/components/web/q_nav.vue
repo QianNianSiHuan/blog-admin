@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import Q_theme from "@/components/common/q_theme.vue";
-import {enSlogan, slogan} from "@/conf/global.ts";
 import {ref} from "vue";
-import Q_user_dropdown from "@/components/common/q_user_dropdown.vue";
-import {userStores} from "@/stores/user_store.ts";
-import Q_point from "@/components/common/q_point.vue";
 import Q_nav_msg from "@/components/web/q_nav_msg.vue";
 import Q_nav_avatar from "@/components/web/q_nav_avatar.vue";
 
-const userStore =userStores()
 
 interface Props{
   noScroll?:boolean
@@ -47,7 +41,9 @@ if(!noScroll){
         <q_nav_avatar></q_nav_avatar>
         <q_nav_msg></q_nav_msg>
         <a href="javascript:void 0">历史</a>
-        <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
+        <router-link :to="{name: 'platformArticleAdd'}">
+          <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
+        </router-link>
       </div>
     </div>
   </div>
