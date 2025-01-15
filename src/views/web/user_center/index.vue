@@ -15,6 +15,8 @@ userCenterStore.getUserDetail()
       <router-link :to="{name:'userCenterInfo'}">个人资料</router-link>
       <router-link :to="{name:'userCenterAccount'}">账号设置</router-link>
       <router-link :to="{name:'userCenterPrivacy'}">隐私设置</router-link>
+      <router-link :to="{name:'userCenterHome'}">主页设置</router-link>
+      <router-link :to="{name:'userCenterHistory'}">历史浏览</router-link>
     </div>
     <div class="view">
       <router-view/>
@@ -31,6 +33,11 @@ userCenterStore.getUserDetail()
 
 <style lang="less">
 .user_center_view{
+  .q_main{
+    height: calc(100vh - 60px);
+  }
+
+
   .q_container{
     display: flex;
     justify-content: space-between;

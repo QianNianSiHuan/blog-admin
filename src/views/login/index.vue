@@ -8,7 +8,9 @@ import {useRoute} from "vue-router";
 
   const  form = reactive<emailLoginRequest>({
         val:"",
-        password:""
+        password:"",
+    captchaCode:"",
+    captchaID:"",
       })
 const route =useRoute()
 const formRef =ref()

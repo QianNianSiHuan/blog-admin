@@ -1,6 +1,6 @@
-import {createApp, defineComponent, h, ref} from "vue";
+import {createApp, defineComponent, h, type Ref, ref} from "vue";
 import Q_update_password from "./q_update_password.vue";
-const visible = ref<boolean|undefined>(undefined)
+const visible:Ref = ref<boolean|undefined>(undefined)
 
 export function showUpdatePwd() {
     if (visible.value === undefined){

@@ -1,5 +1,5 @@
-import {createApp, defineComponent, h, ref} from "vue";
-const visible = ref<boolean|undefined>(undefined)
+import {createApp, defineComponent, h, type Ref, ref} from "vue";
+const visible:Ref = ref<boolean|undefined>(undefined)
 import Q_update_email from "./q_update_email.vue";
 export function showUpdateEmail() {
     if (visible.value === undefined){
