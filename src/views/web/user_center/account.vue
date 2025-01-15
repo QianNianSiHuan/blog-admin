@@ -14,7 +14,7 @@ const  form =reactive({})
 <template>
 <div class="user_center_account_view">
   <q_card title="账号设置">
-    <a-form :label-col-props="{span:2}">
+    <a-form :label-col-props="{span:2}" :model="userCenterStore.userDetail">
       <a-form-item label="密码"  >
         <span v-if="userCenterStore.userDetail.usePassword">
             <span class="col">******</span> <a href="javascript:void 0" @click="showUpdatePwd"> 修改密码</a>

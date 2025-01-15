@@ -184,9 +184,6 @@ function updateTags(oldTags?:string[]) {
       padding: 10px 20px 20px  20px;
       color:var(--color-text-2);
 
-      .arco-form{
-
-      }
     }
   }
   .tags{

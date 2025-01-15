@@ -51,11 +51,11 @@ function coverBack(data:string){
         </a-form-item>
         <a-collapse :default-active-key="[1]" :bordered="false">
           <a-collapse-item header="更多设置"  :key="1">
-            <a-form  :model="form" class="form2" :label-col-props="{span:4}" :wrapper-col-props="{span:8}">
+            <a-form  :model="form" class="form2" label-align="left" :label-col-props="{span:4}" :wrapper-col-props="{span:8}">
               <a-form-item label="请选择文章分类">
-                <a-select placeholder="文章分类"></a-select>
+                <a-select placeholder="文章分类" v-model="form.categoryID"></a-select>
               </a-form-item>
-              <a-form-item label="文章封面" class="article_cover_col">
+              <a-form-item label="文章封面" content-class="article_cover_col">
                 <div class="up">
                   <q_cover_cutter @ok="coverBack" style="width: 100%">
                     <div class="cover_mask">
@@ -64,12 +64,12 @@ function coverBack(data:string){
                     </div>
                   </q_cover_cutter>
                 </div>
-                <div class="show">
+                <div class="show" v-if="form.cover">
                   <a-image :src="form.cover" :height="60"></a-image>
                 </div>
               </a-form-item>
               <a-form-item label="文章标签">
-                <a-input-tag placeholder="输入标签"></a-input-tag>
+                <a-input-tag v-model="form.tagList" placeholder="输入标签"></a-input-tag>
               </a-form-item>
               <a-form-item label="设置评论状态">
                 <a-radio-group v-model="form.openComment">
@@ -97,7 +97,9 @@ function coverBack(data:string){
       max-height: calc(100vh - 160px);
     }
   }
-
+  .arco-collapse{
+    margin-bottom: 10px;
+  }
   .arco-collapse-item {
     .arco-collapse-item-header{
       padding: 0;
@@ -117,6 +119,9 @@ function coverBack(data:string){
       display: flex;
       flex-direction: column;
     }
+    >div{
+      margin-bottom: 0;
+    }
     .cover_mask{
       width: 100%;
       height: 120px;
@@ -129,14 +134,13 @@ function coverBack(data:string){
       justify-content: center;
       color: var(--color-text-2);
       span{
-        font-size: 14px;
+        font-size: 12px;
       }
       svg{
         font-size: 30px;
       }
     }
     .article_cover_col{
-      width: 100%;
       flex-direction: column;
       >div{
         width: 100%;
@@ -149,7 +153,6 @@ function coverBack(data:string){
   .actions {
     .arco-btn{
       margin-right: 10px;
-      margin-top: 10px;
     }
   }
 }

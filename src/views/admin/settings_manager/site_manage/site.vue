@@ -53,7 +53,7 @@ import Q_site from "@/components/admin/site/q_site.vue";
                 <a-input placeholder="keywords" v-model="form.project.title"></a-input>
               </a-form-item>
               <a-form-item :label-col-props="{span:4}" :wrapper-col-props="{span:18}" label="description">
-                <a-textarea placeholder="description":auto-size="{minRows:2,maxRows:3}" v-model="form.project.webPath"></a-textarea>
+                <a-textarea placeholder="description":auto-size="{minRows:2,maxRows:3}" v-model="form.project.seo"></a-textarea>
               </a-form-item>
             </div>
           </div>
