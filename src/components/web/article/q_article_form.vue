@@ -1,35 +1,76 @@
 <script setup lang="ts">
-import {articleAddApi, type articleAddType} from "@/api/article_api";
+import {type articleAddType, articleDetailApi, articleTagOptionsApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
-import router from "@/router";
 import {reactive, ref} from "vue";
-import Q_card from "@/components/web/q_card.vue";
 import {MdEditor} from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import Q_cover_cutter from "@/components/web/q_cover_cutter.vue";
+import {getOptions, type optionsType} from "@/api";
+import {articleCategoryOptionsApi} from "@/api/article_api.ts";
+import {userStores} from "@/stores/user_store.ts";
+import {aiAnalysisApi, type aiType} from "@/api/ai_api.ts";
+import {onUploadImg} from "@/api/image_api.ts";
 
 const form =reactive<articleAddType>({
   title: "",
   status: 1,//1.草稿 2.发布
   content:"",
+  abstract:"",
   //categoryID?:null,
   cover:"",
   tagList:[],
   openComment: false
 })
 
-const formRef =ref()
-async function create(status: 1|2) {
-  const val = await formRef.value.validate()
-  if(val)return
-  form.status = status
-  const res = await articleAddApi(form)
+const aiData = reactive<aiType>({
+  title:"",
+  abstract:"",
+  category:"",
+  tag:[],
+})
+
+interface Props{
+  articleID?:number
+}
+const props =defineProps<Props>()
+
+async function getData() {
+  const res = await articleDetailApi(props.articleID as number);
   if (res.code) {
     Message.error(res.msg)
     return
   }
+  form.title=res.data.title
+  form.abstract=res.data.abstract
+  form.content=res.data.content
+  form.categoryID=res.data.categoryID
+  form.cover=res.data.cover
+  form.tagList=res.data.tagList
+  form.openComment=res.data.openComment
+
   Message.success(res.msg)
-  router.push({name: 'platformArticle'})
+}
+
+if(props.articleID){
+  getData()
+}
+
+const siteStore=userStores()
+const formRef =ref()
+const categoryOptions =ref<optionsType[]>([])
+const tagOptions =ref<optionsType[]>([])
+const emits = defineEmits(["ok"])
+
+
+getOptions(categoryOptions,articleCategoryOptionsApi)
+getOptions(tagOptions,articleTagOptionsApi)
+
+
+async function create(status: 1|2) {
+  form.status = status
+  const val = await formRef.value.validate()
+  if(val)return
+  emits("ok",form)
 }
 
 
@@ -37,26 +78,62 @@ function coverBack(data:string){
   form.cover=data
 }
 
+
+async function paste(e:ClipboardEvent){
+  if(!siteStore.siteInfo.ai.enable){
+    return
+  }
+  let file =e.clipboardData?.files[0];
+  if(file){
+    //粘贴的是图片
+    return
+  }
+  const  res = await aiAnalysisApi(form.content)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  Object.assign(aiData,res.data)
+  if(form.title==""){
+    form.title=aiData.title
+  }
+  if(form.abstract==""){
+    form.abstract=aiData.abstract
+  }
+  if(form.tagList.length===0){
+    form.tagList=aiData.tag
+  }
+}
+
+function removeCover(){
+  form.cover=""
+}
+
 </script>
 
 <template>
-  <div class="platform_article_add_view">
-    <q_card title="发布文章">
-      <a-form ref="formRef" :model="form" :label-col-props="{ span: 0}" :wrapper-col-props="{ span: 24 }">
+      <a-form class="q_article_form_com" ref="formRef" :model="form" :label-col-props="{ span: 0}" :wrapper-col-props="{ span: 24 }">
         <a-form-item field="title" validate-trigger="blur" :rules="[{required:true,message:'请输入文章标题'}]">
           <a-input v-model="form.title" placeholder="请输入标题"></a-input>
         </a-form-item>
+        <a-form-item>
+          <a-textarea v-model="form.abstract" :auto-size="{minRows:3,maxRows:4}" placeholder="请输入简介"></a-textarea>
+        </a-form-item>
         <a-form-item field="content" validate-trigger="blur" :rules="[{required:true,message:'请输入文章内容'}]">
-          <MdEditor v-model="form.content" placeholder="请输入文章内容"></MdEditor>
+          <MdEditor @onUploadImg="onUploadImg" @paste="paste" v-model="form.content" placeholder="请输入文章内容"></MdEditor>
         </a-form-item>
         <a-collapse :default-active-key="[1]" :bordered="false">
           <a-collapse-item header="更多设置"  :key="1">
             <a-form  :model="form" class="form2" label-align="left" :label-col-props="{span:4}" :wrapper-col-props="{span:8}">
               <a-form-item label="请选择文章分类">
-                <a-select placeholder="文章分类" v-model="form.categoryID"></a-select>
+                <a-select placeholder="文章分类" v-model="form.categoryID" :options="categoryOptions"></a-select>
+                <template #help>
+                  <span v-if="aiData.category">基于ai推荐分类:{{ aiData.category }}</span>
+                </template>
               </a-form-item>
               <a-form-item label="文章封面" content-class="article_cover_col">
-                <div class="up">
+                <div class="up" v-if="!form.cover">
                   <q_cover_cutter @ok="coverBack" style="width: 100%">
                     <div class="cover_mask">
                       <IconCamera></IconCamera>
@@ -65,11 +142,15 @@ function coverBack(data:string){
                   </q_cover_cutter>
                 </div>
                 <div class="show" v-if="form.cover">
-                  <a-image :src="form.cover" :height="60"></a-image>
+                  <a-image :src="form.cover" :height="108">
+                    <template #extra>
+                      <IconDelete @click="removeCover"></IconDelete>
+                    </template>
+                  </a-image>
                 </div>
               </a-form-item>
               <a-form-item label="文章标签">
-                <a-input-tag v-model="form.tagList" placeholder="输入标签"></a-input-tag>
+                <a-select  :options="tagOptions"  allow-create allow-clear multiple v-model="form.tagList" placeholder="输入标签"></a-select>
               </a-form-item>
               <a-form-item label="设置评论状态">
                 <a-radio-group v-model="form.openComment">
@@ -81,22 +162,15 @@ function coverBack(data:string){
           </a-collapse-item>
         </a-collapse>
         <div class="actions">
-          <a-button type="primary" @click="create(2)">发布文章</a-button>
+          <a-button type="primary" @click="create(2)">{{ props.articleID? '更新':'发布' }}</a-button>
           <a-button  @click="create(1)">存为草稿</a-button>
         </div>
       </a-form>
-    </q_card>
-  </div>
 </template>
 
 <style lang="less">
-.platform_article_add_view {
-  .q_card_com {
-    .body {
-      overflow-y: auto;
-      max-height: calc(100vh - 160px);
-    }
-  }
+.q_article_form_com {
+
   .arco-collapse{
     margin-bottom: 10px;
   }
@@ -123,8 +197,8 @@ function coverBack(data:string){
       margin-bottom: 0;
     }
     .cover_mask{
-      width: 100%;
-      height: 120px;
+      width: 192px;
+      height: 108px;
       cursor: pointer;
       border: @q_border;
       border-radius: 5px;
@@ -147,6 +221,17 @@ function coverBack(data:string){
       }
       .show{
         margin-top: 10px;
+        .arco-image-footer{
+          display: flex;
+          justify-content: center;
+          .arco-image-footer-extra{
+            padding-left: 0;
+            svg{
+              cursor: pointer;
+              font-size: 20px;
+            }
+          }
+        }
       }
     }
   }

@@ -11,3 +11,9 @@ export function imageUploadApi(file:File):Promise<baseResponse<string>> {
         }
     })
 }
+
+export async function onUploadImg(files:File[],callback:(urls:string[])=>void) {
+    const resList = await Promise.all(files.map(file=>imageUploadApi(file)))
+    const urlList = resList.map((item)=>item.data)
+    callback(urlList)
+}

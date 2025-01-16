@@ -20,7 +20,7 @@ async function cutDown(e: any) {
 </script>
 
 <template>
-  <ImgCutter @cutDown="cutDown" rate="3:2">
+  <ImgCutter @cutDown="cutDown" rate="1920:1080">
     <template #open>
       <slot></slot>
     </template>

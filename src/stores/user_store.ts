@@ -46,6 +46,9 @@ export const userStores = defineStore('userStore', {
         place: ""
       },
       siteInfo:{
+        ai:{
+          enable:false
+        },
         qiNiu:{
           enable:false
         },

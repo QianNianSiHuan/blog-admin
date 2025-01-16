@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import {reactive} from "vue";
-import type {listResponse} from "@/api";
-import {articleListApi, type articleListRequest, type articleListType} from "@/api/article_api.ts";
+import type {baseResponse, listResponse} from "@/api";
+import {
+  articleListApi,
+  type articleListRequest,
+  type articleListType,
+  articleRemoveApi
+} from "@/api/article_api.ts";
 import {Message} from "@arco-design/web-vue";
 import Q_a from "@/components/common/q_a.vue";
 import {dateCurrentFormat} from "@/utils/data.ts";
+import {goArticle} from "@/utils/go_router.ts";
+import router from "@/router";
+import {userArticleTopApi} from "@/api/user_api.ts";
 const data =reactive<listResponse<articleListType>>({
   list:[],
   count:0
@@ -28,7 +36,31 @@ function checkStatus(status: number) {
   params.status = status
   getData()
 }
-
+async function handleSelect(id:number,val:string){
+  if (val ==='platformArticleEdit') {
+    router.push({
+      name:val,
+      params:{id:id}
+    })
+    return
+  }
+  let res:baseResponse<string> ={code:0,msg:"",data:""}
+  if (val ==='delete'){
+    res = await articleRemoveApi(id)
+  }
+  if (val === 'cancelTop' || val==="top"){
+    res = await userArticleTopApi({
+    articleID:id,
+    type:1,
+    })
+  }
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  getData()
+}
 
 </script>
 
@@ -51,15 +83,23 @@ function checkStatus(status: number) {
         <q_a :class="{active: params.status === 3}" @click="checkStatus(3)">已发布</q_a>
         <q_a :class="{active: params.status === 2}" @click="checkStatus(2)">审核中</q_a>
         <q_a :class="{active: params.status === 1}" @click="checkStatus(1)">草稿箱</q_a>
+        <q_a :class="{active: params.status === 4}" @click="checkStatus(4)">未通过</q_a>
       </div>
       <div class="article_list">
         <div class="item" v-for="item in data.list">
           <div class="cover">
             <img @click="goArticle(item.id)" v-if="item.cover" :src="item.cover" alt="">
           </div>
+          <div v-if="item.userTop" class="user_top">
+            <a-tag color="blue">用户置顶</a-tag>
+          </div>
           <div class="info">
             <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
-            <div class="abs">{{ item.abstract }}</div>
+            <div class="abs">
+              <a-typography-text :ellipsis="{rows:2,css:true}">
+                {{item.abstract}}
+              </a-typography-text>
+            </div>
             <div class="data">
               <div class="look">
                 <IconEye></IconEye>
@@ -70,15 +110,22 @@ function checkStatus(status: number) {
                 <span>{{ item.commentCount }}</span>
               </div>
               <div class="tags">
-                <a-tag v-for="tag in item.tagList">{{ tag }}</a-tag>
+                <template v-if="item.tagList.length<=5">
+                  <a-tag class="tag" v-for="tag in item.tagList">{{ tag }}</a-tag>
+                </template>
+                <a-overflow-list v-else>
+                  <a-tag v-for="tag in item.tagList">{{ tag }}</a-tag>
+                </a-overflow-list>
               </div>
-              <div class="date">最后更新于{{ dateCurrentFormat(item.updatedAt) }}</div>
+              <div class="date">最后更新于{{ dateCurrentFormat(item.UpdatedAt) }}</div>
             </div>
             <div class="more">
-              <a-dropdown @select="handleSelect(item.id, $event)">
+              <a-dropdown @select="handleSelect(item.id, $event as string)">
                 <IconMore></IconMore>
                 <template #content>
                   <a-doption value="platformArticleEdit">编辑文章</a-doption>
+                  <a-doption v-if="!item.userTop" value="top">置顶文章</a-doption>
+                  <a-doption v-if="item.userTop" value="cancelTop">取消置顶</a-doption>
                   <a-doption value="delete" style="color: red">删除文章</a-doption>
                 </template>
               </a-dropdown>
@@ -102,6 +149,10 @@ function checkStatus(status: number) {
 .platform_article_view {
   background: var(--color-bg-1);
   border-radius: 5px;
+  > .body {
+    overflow-y: auto;
+    max-height: calc(100vh - 160px);
+  }
   .head{
     display: flex;
     justify-content: space-between;
@@ -125,8 +176,9 @@ function checkStatus(status: number) {
     }
   }
   .body{
-    padding: 10px 20px 20px 20px;
     .menu{
+      padding: 10px 20px 0 20px;
+
       a{
         color: var(--color-text-2);
         margin-right: 20px;
@@ -139,16 +191,33 @@ function checkStatus(status: number) {
       }
     }
     .article_list{
-      margin-top: 20px;
+      margin-top:10px;
+
       .item{
+        padding: 10px 20px;
         display: flex;
-        margin-bottom: 10px;
+        position: relative;
+
+        &:hover{
+          background-color: var(--color-fill-1);
+          .more{
+            opacity: 1;
+          }
+        }
         .cover{
+          cursor: pointer;
           img{
             width: 160px;
             margin-right: 10px;
           }
         }
+
+        .user_top{
+          position: absolute;
+          right: 10px;
+          top: 10px;
+        }
+
         .info{
           display: flex;
           flex-direction: column;
@@ -158,10 +227,10 @@ function checkStatus(status: number) {
             font-size: 15px;
             font-weight: 600;
             color: var(--color-text-1);
+            cursor: pointer;
           }
 
           .abs{
-            height: 2rem;
             margin: 5px 0;
           }
 
@@ -178,8 +247,9 @@ function checkStatus(status: number) {
 
             .tags{
               margin-right: 10px;
-              .arco-tag{
-                margin-right: 5px;
+              max-width: 400px;
+              .tag{
+                margin-right: 10px;
               }
             }
             .date{
@@ -188,6 +258,21 @@ function checkStatus(status: number) {
             }
           }
         }
+
+        .more{
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          cursor: pointer;
+          opacity: 0;
+        }
+      }
+      .page{
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
       }
     }
   }

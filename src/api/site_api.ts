@@ -4,6 +4,9 @@ import {useAxios} from "@/api/index.ts";
 export interface siteResponse {
     "qiNiu":{
         "enable":boolean
+    },
+    ai:{
+        "enable":boolean
     }
     "siteInfo": {
     "title": string,

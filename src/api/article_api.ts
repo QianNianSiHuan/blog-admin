@@ -1,4 +1,4 @@
-import type {baseResponse, listResponse, paramsType} from "@/api/index.ts";
+import type {baseResponse, listResponse, optionsType, paramsType} from "@/api/index.ts";
 import {useAxios} from "@/api/index.ts";
 export interface articleListType{
     "id": number
@@ -98,6 +98,7 @@ export interface articleAddType{
     title: string
     status: 1|2
     content:string
+    abstract:string
     categoryID?:number
     cover:string
     tagList:string[]
@@ -106,4 +107,27 @@ export interface articleAddType{
 
 export function articleAddApi(data:articleAddType):Promise<baseResponse<string>> {
     return useAxios.post("/api/article",data)
+}
+
+
+export function articleCategoryOptionsApi():Promise<baseResponse<optionsType[]>> {
+    return useAxios.get("/api/category/options")
+}
+
+export function articleTagOptionsApi():Promise<baseResponse<optionsType[]>> {
+    return useAxios.get("/api/article/tag/options")
+}
+
+
+export interface articleEditType extends articleAddType{
+    id:number
+}
+
+
+export function articleUpdateApi(data:articleEditType):Promise<baseResponse<string>>{
+    return useAxios.put("/api/article",data)
+}
+
+export function articleRemoveApi(id:number):Promise<baseResponse<string>> {
+    return useAxios.delete("/api/article/"+id.toString())
 }
