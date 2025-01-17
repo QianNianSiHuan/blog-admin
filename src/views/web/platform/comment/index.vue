@@ -1,12 +1,27 @@
 <script lang="ts" setup>
+import {ref} from "vue";
+import router from "@/router";
+import {useRoute} from "vue-router";
 
+const key = ref("")
+const route = useRoute()
+
+async function search() {
+  router.push({
+    name: route.name as string,
+    query: {
+      key: key.value,
+    }
+  })
+}
 </script>
 
 <template>
   <div class="comment_view">
     <div class="head">
       <div class="title">评论</div>
-      <a-input-search placeholder="搜索文章评论"></a-input-search>
+      <a-input-search v-model="key" placeholder="搜索文章评论" @search="search"
+                      @keydown.enter="search"></a-input-search>
     </div>
     <div class="body scrollbar">
       <div class="menu">
@@ -45,8 +60,9 @@
   }
 
   > .body {
-    padding: 10px 20px 20px 20px;
+    padding: 10px 20px 10px 20px;
     max-height: calc(100vh - 160px);
+    overflow-y: auto;
 
     .menu {
       a {
