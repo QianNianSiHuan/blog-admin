@@ -1,60 +1,58 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {reactive} from "vue";
 import type {baseResponse, listResponse} from "@/api";
-import {
-  articleListApi,
-  type articleListRequest,
-  type articleListType,
-  articleRemoveApi
-} from "@/api/article_api.ts";
+import {articleListApi, type articleListRequest, type articleListType, articleRemoveApi} from "@/api/article_api.ts";
 import {Message} from "@arco-design/web-vue";
 import Q_a from "@/components/common/q_a.vue";
 import {dateCurrentFormat} from "@/utils/data.ts";
 import {goArticle} from "@/utils/go_router.ts";
 import router from "@/router";
 import {userArticleTopApi} from "@/api/user_api.ts";
-const data =reactive<listResponse<articleListType>>({
-  list:[],
-  count:0
+
+const data = reactive<listResponse<articleListType>>({
+  list: [],
+  count: 0
 })
 const params = reactive<articleListRequest>({
-  type:2,
-  status:3,
+  type: 2,
+  status: 3,
 })
 
 async function getData() {
-  const res =await articleListApi(params)
-  if (res.code){
+  const res = await articleListApi(params)
+  if (res.code) {
     Message.error(res.msg)
     return
   }
-  Object.assign(data,res.data)
+  Object.assign(data, res.data)
 }
+
 getData()
 
 function checkStatus(status: number) {
   params.status = status
   getData()
 }
-async function handleSelect(id:number,val:string){
-  if (val ==='platformArticleEdit') {
+
+async function handleSelect(id: number, val: string) {
+  if (val === 'platformArticleEdit') {
     router.push({
-      name:val,
-      params:{id:id}
+      name: val,
+      params: {id: id}
     })
     return
   }
-  let res:baseResponse<string> ={code:0,msg:"",data:""}
-  if (val ==='delete'){
+  let res: baseResponse<string> = {code: 0, msg: "", data: ""}
+  if (val === 'delete') {
     res = await articleRemoveApi(id)
   }
-  if (val === 'cancelTop' || val==="top"){
+  if (val === 'cancelTop' || val === "top") {
     res = await userArticleTopApi({
-    articleID:id,
-    type:1,
+      articleID: id,
+      type: 1,
     })
   }
-  if (res.code){
+  if (res.code) {
     Message.error(res.msg)
     return
   }
@@ -74,8 +72,8 @@ async function handleSelect(id:number,val:string){
         </router-link>
       </div>
       <div class="right">
-        <a-input-search @search="getData" @keydown.enter="getData" v-model="params.key"
-                        placeholder="搜索文章"></a-input-search>
+        <a-input-search v-model="params.key" placeholder="搜索文章" @search="getData"
+                        @keydown.enter="getData"></a-input-search>
       </div>
     </div>
     <div class="body scrollbar">
@@ -86,9 +84,9 @@ async function handleSelect(id:number,val:string){
         <q_a :class="{active: params.status === 4}" @click="checkStatus(4)">未通过</q_a>
       </div>
       <div class="article_list">
-        <div class="item" v-for="item in data.list">
+        <div v-for="item in data.list" class="item">
           <div class="cover">
-            <img @click="goArticle(item.id)" v-if="item.cover" :src="item.cover" alt="">
+            <img v-if="item.cover" :src="item.cover" alt="" @click="goArticle(item.id)">
           </div>
           <div v-if="item.userTop" class="user_top">
             <a-tag color="blue">用户置顶</a-tag>
@@ -97,7 +95,7 @@ async function handleSelect(id:number,val:string){
             <div class="title" @click="goArticle(item.id)">{{ item.title }}</div>
             <div class="abs">
               <a-typography-text :ellipsis="{rows:2,css:true}">
-                {{item.abstract}}
+                {{ item.abstract }}
               </a-typography-text>
             </div>
             <div class="data">
@@ -111,7 +109,7 @@ async function handleSelect(id:number,val:string){
               </div>
               <div class="tags">
                 <template v-if="item.tagList.length<=5">
-                  <a-tag class="tag" v-for="tag in item.tagList">{{ tag }}</a-tag>
+                  <a-tag v-for="tag in item.tagList" class="tag">{{ tag }}</a-tag>
                 </template>
                 <a-overflow-list v-else>
                   <a-tag v-for="tag in item.tagList">{{ tag }}</a-tag>
@@ -126,18 +124,18 @@ async function handleSelect(id:number,val:string){
                   <a-doption value="platformArticleEdit">编辑文章</a-doption>
                   <a-doption v-if="!item.userTop" value="top">置顶文章</a-doption>
                   <a-doption v-if="item.userTop" value="cancelTop">取消置顶</a-doption>
-                  <a-doption value="delete" style="color: red">删除文章</a-doption>
+                  <a-doption style="color: red" value="delete">删除文章</a-doption>
                 </template>
               </a-dropdown>
             </div>
           </div>
         </div>
 
-        <div class="page" v-if="data.count">
-          <a-pagination @change="getData" v-model:current="params.page" :page-size="params.limit" :total="data.count"
-                        show-total></a-pagination>
+        <div v-if="data.count" class="page">
+          <a-pagination v-model:current="params.page" :page-size="params.limit" :total="data.count" show-total
+                        @change="getData"></a-pagination>
         </div>
-        <div class="no_data" v-if="data.list.length === 0">
+        <div v-if="data.list.length === 0" class="no_data">
           <a-empty></a-empty>
         </div>
       </div>
@@ -149,117 +147,134 @@ async function handleSelect(id:number,val:string){
 .platform_article_view {
   background: var(--color-bg-1);
   border-radius: 5px;
+
   > .body {
     overflow-y: auto;
     max-height: calc(100vh - 160px);
   }
-  .head{
+
+  .head {
     display: flex;
     justify-content: space-between;
     padding: 20px 20px 10px 20px;
     border-bottom: @q_border;
     align-items: center;
-    .left{
+
+    .left {
       display: flex;
       align-items: center;
-      .title{
+
+      .title {
         font-size: 14px;
         font-weight: 600;
         margin-right: 10px;
       }
-      .arco-btn{
+
+      .arco-btn {
         border-radius: 100px;
       }
     }
-    .arco-input-wrapper{
+
+    .arco-input-wrapper {
       border-radius: 100px;
     }
   }
-  .body{
-    .menu{
+
+  .body {
+    .menu {
       padding: 10px 20px 0 20px;
 
-      a{
+      a {
         color: var(--color-text-2);
         margin-right: 20px;
-        &:last-child{
+
+        &:last-child {
           margin-right: 0;
         }
       }
-      a.active{
+
+      a.active {
         color: rgb(var(--arcoblue-6));
       }
     }
-    .article_list{
-      margin-top:10px;
 
-      .item{
+    .article_list {
+      margin-top: 10px;
+
+      .item {
         padding: 10px 20px;
         display: flex;
         position: relative;
 
-        &:hover{
+        &:hover {
           background-color: var(--color-fill-1);
-          .more{
+
+          .more {
             opacity: 1;
           }
         }
-        .cover{
+
+        .cover {
           cursor: pointer;
-          img{
+
+          img {
             width: 160px;
             margin-right: 10px;
           }
         }
 
-        .user_top{
+        .user_top {
           position: absolute;
           right: 10px;
           top: 10px;
         }
 
-        .info{
+        .info {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
 
-          .title{
+          .title {
             font-size: 15px;
             font-weight: 600;
             color: var(--color-text-1);
             cursor: pointer;
           }
 
-          .abs{
+          .abs {
             margin: 5px 0;
           }
 
-          .data{
+          .data {
             display: flex;
             align-items: center;
             color: var(--color-text-2);
-            .look,.comment{
+
+            .look, .comment {
               margin-right: 10px;
-              span{
+
+              span {
                 margin-left: 5px;
               }
             }
 
-            .tags{
+            .tags {
               margin-right: 10px;
               max-width: 400px;
-              .tag{
+
+              .tag {
                 margin-right: 10px;
               }
             }
-            .date{
+
+            .date {
               font-size: 12px;
               color: var(--color-text-2);
             }
           }
         }
 
-        .more{
+        .more {
           position: absolute;
           right: 10px;
           top: 50%;
@@ -268,7 +283,8 @@ async function handleSelect(id:number,val:string){
           opacity: 0;
         }
       }
-      .page{
+
+      .page {
         display: flex;
         justify-content: center;
         margin-top: 10px;

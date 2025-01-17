@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import Q_site from "@/components/admin/site/q_site.vue";
 import Q_title from "@/components/admin/q_title.vue";
-import type {aiResponse, qiNiuResponse} from "@/api/site_api.ts";
-import Q_image_upload from "@/components/common/q_image_upload.vue";
+import type {qiNiuResponse} from "@/api/site_api.ts";
 </script>
 
 <template>
   <div class="email_view">
     <a-row>
       <a-col :span="8">
-        <q_site name="ai" v-slot="{form}:{form:qiNiuResponse}">
+        <q_site name="qiNiu" v-slot="{form}:{form:qiNiuResponse}">
           <q_title>七牛云设置</q_title>
           <div class="body">
             <a-form :label-col-props="{span: 4}" :wrapper-col-props="{span: 20}" :model="form">

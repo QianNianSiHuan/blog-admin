@@ -2,49 +2,49 @@ import type {baseResponse} from "@/api/index.ts";
 import {useAxios} from "@/api/index.ts";
 
 export interface siteResponse {
-    "qiNiu":{
-        "enable":boolean
+    "qiNiu": {
+        "enable": boolean
     },
-    ai:{
-        "enable":boolean
+    ai: {
+        "enable": boolean
     }
     "siteInfo": {
-    "title": string,
+        "title": string,
         "logo": string,
         "beian": string,
         "mode": number
-},
+    },
     "project": {
-    "title": string,
+        "title": string,
         "icon": string,
         "webPath": string,
-},
+    },
     "seo": {
-    "keywords": string,
-        "description":string
-},
+        "keywords": string,
+        "description": string
+    },
     "about": {
-    "siteDate": string,
+        "siteDate": string,
         "QQ": string,
         "wechat": string,
         "version": "10.0.1",
         "gitee": string,
         "bilibili": string,
         "gitHub": string
-},
+    },
     "login": {
-    "qqLogin": boolean,
+        "qqLogin": boolean,
         "usernamePwdLogin": boolean,
         "emailLogin": boolean,
         "captcha": boolean
-},
+    },
     "indexRight": {
-    "List": []
-},
+        "List": []
+    },
     "article": {
-    "noExamine": boolean,
+        "noExamine": boolean,
         "commentLine": number
-}
+    }
 }
 
 export interface emailResponse {
@@ -98,6 +98,18 @@ export function siteApi<T extends siteName>(name: T): Promise<baseResponse<siteB
     return useAxios.get("/api/site/" + name)
 }
 
-export function siteUpdateApi<T extends siteName>(name: T, data: siteBaseResponse[T]):Promise<baseResponse<string>>{
+export function siteUpdateApi<T extends siteName>(name: T, data: siteBaseResponse[T]): Promise<baseResponse<string>> {
     return useAxios.put("/api/site/" + name, data)
+}
+
+export interface qiniuUploadConfigType {
+    "token": string
+    "key": string
+    "region": string
+    "url": string
+    "size": number
+}
+
+export function qiniuUploadConfigApi(): Promise<baseResponse<qiniuUploadConfigType>> {
+    return useAxios.post("/api/images/qiniu")
 }

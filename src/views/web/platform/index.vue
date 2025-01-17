@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import Q_main from "@/components/web/q_main.vue";
 import Q_nav from "@/components/web/q_nav.vue";
@@ -10,10 +10,7 @@ import Q_nav from "@/components/web/q_nav.vue";
     <q_main>
       <div class="menu">
         <router-link :to="{name:'platformArticle'}">文章管理</router-link>
-        <router-link :to="{name:'platformArticleAdd'}">发布文章</router-link>
-        <router-link :to="{name:'userCenterPrivacy'}">隐私设置</router-link>
-        <router-link :to="{name:'userCenterHome'}">主页设置</router-link>
-        <router-link :to="{name:'userCenterHistory'}">历史浏览</router-link>
+        <router-link :to="{name:'platformComment'}">评论管理</router-link>
       </div>
       <div class="view">
         <router-view/>
@@ -23,19 +20,19 @@ import Q_nav from "@/components/web/q_nav.vue";
 </template>
 
 <style lang="less">
-.platform_view{
+.platform_view {
 
-  .q_main{
+  .q_main {
     height: calc(100vh - 60px);
   }
 
-  .q_container{
+  .q_container {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 
 
-    >.menu{
+    > .menu {
       width: 180px;
       max-height: 400px;
       background: var(--color-bg-1);
@@ -44,23 +41,26 @@ import Q_nav from "@/components/web/q_nav.vue";
       flex-direction: column;
       padding: 20px 0;
 
-      a{
+      a {
         height: 40px;
         display: flex;
         color: var(--color-text-2);
         justify-content: center;
         align-items: center;
       }
-      a:hover{
+
+      a:hover {
         background: var(--color-fill-1);
       }
-      a.router-link-active{
+
+      a.router-link-active {
         background: var(--color-fill-1);
         color: rgba(var(--arcoblue-6));
       }
     }
-    .view{
-      width:calc(100% - 200px);
+
+    .view {
+      width: calc(100% - 200px);
     }
   }
 }
