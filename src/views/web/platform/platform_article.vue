@@ -132,7 +132,8 @@ async function handleSelect(id: number, val: string) {
         </div>
 
         <div v-if="data.count" class="page">
-          <a-pagination v-model:current="params.page" :page-size="params.limit" :total="data.count" show-total
+          <a-pagination v-if="data.list.length" v-model:current="params.page" :page-size="params.limit"
+                        :total="data.count" show-total
                         @change="getData"></a-pagination>
         </div>
         <div v-if="data.list.length === 0" class="no_data">

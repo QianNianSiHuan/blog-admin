@@ -48,6 +48,7 @@ async function removeComment() {
     }
     Message.success(res.msg)
   })
+  checkIDList.value = []
   getData()
 }
 

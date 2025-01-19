@@ -90,9 +90,25 @@ const router = createRouter({
                                 }
                             ]
                         },
-
                     ]
                 },
+                {
+                    name: "user",
+                    path: "user/:id",
+                    component: () => import("@/views/web/user/index.vue"),
+                    children: [
+                        {
+                            name: "userArticle",
+                            path: "article",
+                            component: () => import("@/views/web/user/article_list.vue"),
+                        },
+                        {
+                            name: "userArticleCollect",
+                            path: "collect",
+                            component: () => import("@/views/web/user/collect_list.vue"),
+                        },
+                    ]
+                }
             ]
         },
         {
