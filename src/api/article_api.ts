@@ -58,6 +58,8 @@ export interface articleDetailType {
     "username": string
     "nickname": string
     "userAvatar": string
+    "isDigg": boolean
+    "isCollect": boolean
 }
 
 export function articleDetailApi(id: number): Promise<baseResponse<articleDetailType>> {
@@ -135,3 +137,21 @@ export function articleRemoveApi(id: number): Promise<baseResponse<string>> {
     return useAxios.delete("/api/article/" + id.toString())
 }
 
+
+export function articleDiggApi(id: number): Promise<baseResponse<string>> {
+    return useAxios.get("/api/article/digg/" + id.toString())
+}
+
+export interface articleCollectRequest {
+    articleID: number
+    collectID?: number
+}
+
+export function articleCollectApi(data: articleCollectRequest): Promise<baseResponse<string>> {
+    return useAxios.post("/api/article/collect", data)
+}
+
+
+export function articleLookApi(articleID: number): Promise<baseResponse<string>> {
+    return useAxios.post("/api/article/history", {articleID: articleID})
+}

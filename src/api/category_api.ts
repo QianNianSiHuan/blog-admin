@@ -18,7 +18,7 @@ export interface categoryListRequest extends paramsType {
 }
 
 export function categoryListApi(params: categoryListRequest): Promise<baseResponse<listResponse<categoryListType>>> {
-    return useAxios.get("/api/collect", {params})
+    return useAxios.get("/api/category", {params})
 }
 
 
@@ -28,9 +28,9 @@ export interface categoryCreateRequest {
 }
 
 export function categoryCreateApi(data: categoryCreateRequest): Promise<baseResponse<string>> {
-    return useAxios.post("/api/collect", data)
+    return useAxios.post("/api/category", data)
 }
 
 export function categoryRemoveApi(idList: number[]): Promise<baseResponse<string>> {
-    return useAxios.delete("/api/collect", {data: {idList}})
+    return useAxios.delete("/api/category", {data: {idList}})
 }

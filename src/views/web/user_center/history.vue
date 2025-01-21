@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import Q_card from "@/components/web/q_card.vue";
 import Q_user from "@/components/common/q_user.vue";
 import {reactive} from "vue";
@@ -11,52 +11,54 @@ import {
 import {Message} from "@arco-design/web-vue";
 import type {listResponse} from "@/api";
 import {dateFormat} from "@/utils/data.ts";
+import {goArticle} from "@/utils/go_router.ts";
 
-interface historyType{
-  date:string
-  articleList:articleHistoryListType[]
+interface historyType {
+  date: string
+  articleList: articleHistoryListType[]
 }
-const data =reactive<listResponse<historyType>>({
-  list:[],
-  count:0
+
+const data = reactive<listResponse<historyType>>({
+  list: [],
+  count: 0
 })
 const params = reactive<articleHistoryListRequest>({
-  type:1,
-  limit:10,
-  page:1
+  type: 1,
+  limit: 10,
+  page: 1
 })
 
 
 async function getData() {
-  const res =await articleHistoryListApi(params)
-  if (res.code){
+  const res = await articleHistoryListApi(params)
+  if (res.code) {
     Message.error(res.msg)
     return
   }
-  data.count=res.data.count
-  data.list=[]
-  const dateMap:Record<string, articleHistoryListType[]> ={}
-  for (const re of res.data.list){
-    const date=dateFormat(re.lookDate)
-    const item =dateMap[date]
-    if(item){
+  data.count = res.data.count
+  data.list = []
+  const dateMap: Record<string, articleHistoryListType[]> = {}
+  for (const re of res.data.list) {
+    const date = dateFormat(re.lookDate)
+    const item = dateMap[date]
+    if (item) {
       dateMap[date].push(re)
-    }else {
-      dateMap[date]=[re]
+    } else {
+      dateMap[date] = [re]
     }
   }
-  for(const key in dateMap){
+  for (const key in dateMap) {
     const value = dateMap[key]
     data.list.push({
-      date:key,
-      articleList:value
+      date: key,
+      articleList: value
     })
   }
 
-  data.list.sort((a,b)=>{
-    const ad =new Date(a.date).valueOf()
-    const bd =new Date(b.date).valueOf()
-    return bd-ad
+  data.list.sort((a, b) => {
+    const ad = new Date(a.date).valueOf()
+    const bd = new Date(b.date).valueOf()
+    return bd - ad
   })
 
   Message.success(res.msg)
@@ -64,14 +66,10 @@ async function getData() {
 
 getData()
 
-async function goArticle(articleID:number){
 
-}
-
-
-async function removeHistory(item:articleHistoryListType){
-      const res =await articleHistoryRemoveApi([item.articleID])
-  if (res.code){
+async function removeHistory(item: articleHistoryListType) {
+  const res = await articleHistoryRemoveApi([item.articleID])
+  if (res.code) {
     Message.error(res.msg)
     return
   }
@@ -88,27 +86,27 @@ async function removeHistory(item:articleHistoryListType){
           {{ date.date }}
           <template #label>
             <div class="article_list">
-              <div class="item" @click="goArticle(item.articleID)" v-for="item in date.articleList">
+              <div v-for="item in date.articleList" class="item" @click="goArticle(item.articleID)">
                 <div class="cover">
                   <img v-if="item.cover" :src="item.cover" alt="">
                 </div>
                 <div class="info">
                   <div class="title">{{ item.title }}</div>
                   <div class="user">
-                    <q_user :size="30" :nickname="item.nickname" :avatar="item.avatar"></q_user>
+                    <q_user :avatar="item.avatar" :nickname="item.nickname" :size="30"></q_user>
                   </div>
                 </div>
                 <div class="action">
-                  <a-button type="primary" @click.stop="removeHistory(item)" status="danger" size="mini">删除</a-button>
+                  <a-button size="mini" status="danger" type="primary" @click.stop="removeHistory(item)">删除</a-button>
                 </div>
               </div>
             </div>
           </template>
         </a-timeline-item>
       </a-timeline>
-      <div class="page" v-if="data.count > 0">
-        <a-pagination @change="getData" v-model:current="params.page" :page-size="params.limit" :total="data.count"
-                      show-total></a-pagination>
+      <div v-if="data.count > 0" class="page">
+        <a-pagination v-model:current="params.page" :page-size="params.limit" :total="data.count" show-total
+                      @change="getData"></a-pagination>
       </div>
 
     </q_card>
@@ -117,14 +115,15 @@ async function removeHistory(item:articleHistoryListType){
 
 <style lang="less">
 .user_center_history_view {
-  .q_card_com{
-    .body{
+  .q_card_com {
+    .body {
       overflow-y: auto;
       max-height: calc(100vh - 160px);
     }
   }
+
   .article_list {
-    .item{
+    .item {
       margin-bottom: 20px;
       padding: 10px;
       border-radius: 5px;
@@ -132,15 +131,16 @@ async function removeHistory(item:articleHistoryListType){
       position: relative;
       transition: all .3s;
 
-      &:hover{
+      &:hover {
         background: var(--color-fill-1);
 
-        .action{
+        .action {
           opacity: 1;
         }
 
       }
-      .action{
+
+      .action {
         position: absolute;
         right: 10px;
         top: 50%;
@@ -148,8 +148,9 @@ async function removeHistory(item:articleHistoryListType){
         opacity: 0;
         transition: all .3s;
       }
-      .cover{
-        img{
+
+      .cover {
+        img {
           width: 80px;
           border-radius: 5px;
           height: 100%;
@@ -157,25 +158,30 @@ async function removeHistory(item:articleHistoryListType){
           margin-right: 10px;
         }
       }
-      .info{
+
+      .info {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        .title{
+
+        .title {
           font-size: 15px;
           font-weight: 600;
           color: var(--color-text-1);
         }
-        .q_user_com{
+
+        .q_user_com {
           color: var(--color-text-2);
-          .text{
+
+          .text {
             margin-right: 5px;
           }
         }
       }
     }
   }
-  .page{
+
+  .page {
     display: flex;
     justify-content: center;
     margin-top: 10px;

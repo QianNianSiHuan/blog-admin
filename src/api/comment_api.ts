@@ -33,9 +33,40 @@ export function commentRemoveApi(id: number): Promise<baseResponse<string>> {
 export interface commentCreateRequest {
     content: string
     articleID: number
-    parentID: number
+    parentID?: number
 }
 
 export function commentCreateApi(data: commentCreateRequest): Promise<baseResponse<string>> {
     return useAxios.post("/api/comment", data)
 }
+
+
+export interface commentTreeType {
+    "id": number,
+    "createdAt": string,
+    "content": string,
+    "userID": number,
+    "userNickname": string,
+    "userAvatar": string,
+    "articleID": number,
+    "parentID": null,
+    "diggCount": number,
+    "applyCount": number,
+    "subComments": commentTreeType[]
+    isApply?: boolean
+    isDigg: boolean
+    applyContent?: string
+}
+
+export interface commentTreeRequest extends paramsType {
+    id: number
+}
+
+export function commentTreeApi(params: commentTreeRequest): Promise<baseResponse<listResponse<commentTreeType>>> {
+    return useAxios.get("/api/comment/tree/" + params.id.toString(), {params})
+}
+
+export function commentDiggApi(id: number): Promise<baseResponse<string>> {
+    return useAxios.get("/api/comment/digg/" + id.toString())
+}
+

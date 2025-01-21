@@ -4,18 +4,32 @@ import {useRoute} from "vue-router";
 import {userBaseStores} from "@/stores/user_base_store";
 import Q_article_list from "@/components/web/article/q_article_list.vue";
 import Q_collect_list from "@/components/web/article/q_collect_list.vue";
+import {collectArticleRemoveApi} from "@/api/collect_api.ts";
+import {Message} from "@arco-design/web-vue";
+import {ref} from "vue";
 
 const route = useRoute()
 
 const userBaseStore = userBaseStores()
+const articleListRef = ref()
 
+async function dispatchDelete(idList: number[]) {
+  const res = await collectArticleRemoveApi(idList)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  articleListRef.value.getData()
+}
 
 </script>
 
 <template>
   <div class="user_article_list_view">
     <q_collect_list :is-me="userBaseStore.isMe" :user-i-d="Number(route.params.id)"></q_collect_list>
-    <q_article_list></q_article_list>
+    <q_article_list ref="articleListRef" :is-check="userBaseStore.isMe"
+                    @dispatch-delete="dispatchDelete"></q_article_list>
   </div>
 </template>
 

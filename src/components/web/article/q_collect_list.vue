@@ -5,13 +5,8 @@ import {Message} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
 import Q_a from "@/components/common/q_a.vue";
 import router from "@/router";
-import {
-  collectCreatApi,
-  type collectCreatRequest,
-  collectListApi,
-  type collectListType,
-  collectRemoveApi
-} from "@/api/collect_api.ts";
+import {type collectCreatRequest, collectListApi, type collectListType, collectRemoveApi} from "@/api/collect_api.ts";
+import Q_collect_form_modal from "@/components/web/article/q_collect_form_modal.vue";
 
 const route = useRoute()
 
@@ -65,20 +60,6 @@ function addCategory() {
 
 const formRef = ref()
 
-async function addCollectHandler() {
-  const val = await formRef.value.validate()
-  if (val) return
-  console.log(2)
-  const res = await collectCreatApi(form)
-  if (res.code) {
-    Message.error(res.msg)
-    return
-  }
-  Message.success(res.msg)
-  getCollectData()
-}
-
-
 async function removeCollect(item: collectListType) {
   const res = await collectRemoveApi([item.id])
   if (res.code) {
@@ -119,18 +100,9 @@ getCollectData()
         创建
       </a-button>
     </div>
-    <a-modal v-model:visible="visible" :on-before-ok="addCollectHandler" :title="form.id?'编辑收藏夹':'创建收藏夹'"
-             width="20%">
-      <a-form ref="formRef" :label-col-props="{span:7}" :model="form" :wrapper-col-props="{span:17}">
-        <a-form-item :rules="[{required:true,message:'请输入收藏夹标题'}]" :validate-trigger="'blur'" field="title"
-                     label="收藏夹标题">
-          <a-input v-model="form.title" placeholder="收藏夹标题"></a-input>
-        </a-form-item>
-        <a-form-item label="收藏夹简介">
-          <a-textarea v-model="form.abstract" :auto-size="{minRows:2,maxRows:3}" placeholder="收藏夹标题"></a-textarea>
-        </a-form-item>
-      </a-form>
-    </a-modal>
+    <q_collect_form_modal v-if="props.isMe" :id="form.id" v-model:abstract="form.abstract"
+                          v-model:title="form.title" v-model:visible="visible"
+                          @ok="getCollectData"></q_collect_form_modal>
     <div class="list">
       <div v-for="item in collectData.list" :class="{active:item.id===Number(route.query.collectID)}" class="item">
         <a-trigger v-if="props.isMe" align-point class="category_trigger" trigger="contextMenu">

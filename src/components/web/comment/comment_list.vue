@@ -39,7 +39,6 @@ async function getData() {
 getData()
 
 async function removeComment() {
-  console.log(checkIDList)
   const resList = await Promise.all(checkIDList.value.map((item) => commentRemoveApi(item)))
   resList.forEach((res) => {
     if (res.code) {

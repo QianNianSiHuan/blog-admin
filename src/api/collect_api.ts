@@ -10,11 +10,13 @@ export interface collectListType {
     "userID": number,
     "isDefault": boolean,
     "articleCount": number
+    "articleUse": boolean
 }
 
 export interface collectListRequest {
     type: 1 | 2 | 3
-    userID: number,
+    userID?: number,
+    ArticleID?: number,
 }
 
 
@@ -35,4 +37,8 @@ export function collectCreatApi(data: collectCreatRequest): Promise<baseResponse
 
 export function collectRemoveApi(idList: number[]): Promise<baseResponse<string>> {
     return useAxios.delete("/api/collect", {data: {idList}})
+}
+
+export function collectArticleRemoveApi(idList: number[]): Promise<baseResponse<string>> {
+    return useAxios.delete("/api/article/collect", {data: {idList}})
 }

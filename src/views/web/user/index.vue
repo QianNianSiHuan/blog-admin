@@ -4,13 +4,13 @@ import Q_nav from "@/components/web/q_nav.vue";
 import {userBaseStores} from "@/stores/user_base_store.ts";
 import {userStores} from "@/stores/user_store.ts";
 import Q_a from "@/components/common/q_a.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import router from "@/router";
 import {useRoute} from "vue-router";
 
 const route = useRoute()
 const userBaseInfo = userBaseStores()
-userBaseInfo.getUserBaseInfo(1)
+userBaseInfo.getUserBaseInfo(Number(route.params.id))
 const userStore = userStores()
 const text = ref<string>("")
 
@@ -23,6 +23,17 @@ async function search() {
     },
     params: route.params
   })
+}
+
+watch(() => route.params.id, () => {
+  const id = Number(route.params.id)
+  if (!isNaN(id)) {
+    userBaseInfo.getUserBaseInfo(Number(id))
+  }
+}, {immediate: true});
+
+
+async function focus() {
 }
 </script>
 

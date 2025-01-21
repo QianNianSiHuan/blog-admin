@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import type {listResponse} from "@/api";
 import {
   categoryCreateApi,
   type categoryCreateRequest,
   categoryListApi,
+  type categoryListRequest,
   type categoryListType,
   categoryRemoveApi
 } from "@/api/category_api.ts";
@@ -22,6 +23,10 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const params = reactive<categoryListRequest>({
+  type: 2,
+  userID: props.userID,
+})
 
 const categoryData = reactive<listResponse<categoryListType>>({
   list: [],
@@ -29,10 +34,7 @@ const categoryData = reactive<listResponse<categoryListType>>({
 })
 
 async function getCategoryData() {
-  const res = await categoryListApi({
-    type: 2,
-    userID: props.userID,
-  })
+  const res = await categoryListApi(params)
   if (res.code) {
     Message.error(res.msg)
     return
@@ -101,6 +103,15 @@ function go(item: categoryListType) {
     params: route.params
   })
 }
+
+watch(() => props.userID, () => {
+  const userId = Number(props.userID)
+  if (!isNaN(userId)) {
+    params.userID = userId
+    getCategoryData()
+  }
+})
+
 
 getCategoryData()
 </script>
