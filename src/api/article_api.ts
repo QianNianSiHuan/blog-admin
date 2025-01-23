@@ -155,3 +155,25 @@ export function articleCollectApi(data: articleCollectRequest): Promise<baseResp
 export function articleLookApi(articleID: number): Promise<baseResponse<string>> {
     return useAxios.post("/api/article/history", {articleID: articleID})
 }
+
+export interface authRecommendListType {
+    userID: number
+    userNickname: string
+    userAvatar: string
+    userAbstract: string
+}
+
+
+export function authRecommendListApi(params: paramsType): Promise<baseResponse<listResponse<authRecommendListType>>> {
+    return useAxios.get("/api/article/auth_recommend", {params})
+}
+
+export interface articleRecommendListType {
+    "id": number,
+    "title": string,
+    "lookCount": number
+}
+
+export function articleRecommendListApi(params: paramsType): Promise<baseResponse<listResponse<articleRecommendListType>>> {
+    return useAxios.get("/api/article/article_recommend", {params})
+}

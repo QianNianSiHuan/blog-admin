@@ -2,7 +2,6 @@
 import {bannerListApi, type bannerListType} from "@/api/banner_api";
 import {reactive, ref} from "vue";
 import type {listResponse} from "@/api";
-import {IconClose} from "@arco-design/web-vue/es/icon";
 
 const data = reactive<listResponse<bannerListType>>({
   list: [],
@@ -38,7 +37,7 @@ function close() {
 
 <template>
   <div v-if="!isClose" class="q_banner_list_com">
-    <IconClose class="close" title="删除" @click="close"></IconClose>
+    <!--    <IconClose class="close" title="删除" @click="close"></IconClose>-->
     <a-carousel v-if="data.list.length" auto-play class="q_banner_com" show-arrow="hover">
       <a-carousel-item v-for="item in data.list">
         <img

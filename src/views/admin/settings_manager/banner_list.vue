@@ -21,7 +21,8 @@ const fListRef = ref()
 const data = reactive<bannerType>({
   show: true,
   cover: "",
-  href: ""
+  href: "",
+  type: 1,
 })
 
 const visible = ref(false)
@@ -31,6 +32,7 @@ function create() {
   data.href = ""
   data.cover = ""
   data.show = true
+  data.type = 1
   visible.value = true
 }
 
@@ -39,7 +41,8 @@ function edit(record: bannerListType) {
   data.show = record.show
   data.href = record.href
   data.cover = record.cover
-  visible.value = true
+  data.type = record.type
+  record.visible.value = true
 }
 
 async function handler() {
@@ -75,13 +78,13 @@ async function handler() {
             @add="create"
             @edit="edit"
     >
-      <template #cover="{record}:{record:bannerLIstType}">
+      <template #cover="{record}:{record:bannerListType}">
         <a-image :src="record.cover" height="50px"></a-image>
       </template>
-      <template #show="{record}:{record:bannerLIstType}">
+      <template #show="{record}:{record:bannerListType}">
         <a-switch :model-value="record.show"></a-switch>
       </template>
-      <template #href="{record}:{record:bannerLIstType}">
+      <template #href="{record}:{record:bannerListType}">
         <a v-if="record.href" :href="record.href" target="_blank">{{ record.href }}</a>
         <span v-else>-</span>
       </template>

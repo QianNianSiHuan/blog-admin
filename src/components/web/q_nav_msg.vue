@@ -1,9 +1,10 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import Q_point from "@/components/common/q_point.vue";
 import router from "@/router";
-function select(val:string){
+
+function select(val: string) {
   router.push({
-    name:val
+    name: val
   })
 }
 </script>
@@ -13,7 +14,7 @@ function select(val:string){
     <a-dropdown class="q_nav_msg_dropdown" @select="select">
       <a href="javascript:void 0">消息</a>
       <template #content>
-        <a-doption  value="msgComment">
+        <a-doption value="msgComment">
           <q_point :count="0">评论和@</q_point>
         </a-doption>
         <a-doption value="msgDigg">
@@ -28,8 +29,8 @@ function select(val:string){
 </template>
 
 <style lang="less">
-.q_nav_msg_dropdown{
-  .arco-dropdown-option-content{
+.q_nav_msg_dropdown {
+  .arco-dropdown-option-content {
     padding: 0 6px;
   }
 }

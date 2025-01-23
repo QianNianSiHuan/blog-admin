@@ -54,7 +54,8 @@ export const userStores = defineStore('userStore', {
                 siteInfo: {
                     title: "",
                     logo: "",
-                    beian: "",
+                    icpBeian: "",
+                    policeBeian: "",
                     mode: 1
                 },
                 project: {

@@ -11,7 +11,8 @@ export interface siteResponse {
     "siteInfo": {
         "title": string,
         "logo": string,
-        "beian": string,
+        "icpBeian": string,
+        "policeBeian": string,
         "mode": number
     },
     "project": {
@@ -39,12 +40,17 @@ export interface siteResponse {
         "captcha": boolean
     },
     "indexRight": {
-        "List": []
+        "List": indexRightType[]
     },
     "article": {
         "noExamine": boolean,
         "commentLine": number
     }
+}
+
+export interface indexRightType {
+    title: string,
+    enable: boolean,
 }
 
 export interface emailResponse {

@@ -8,9 +8,14 @@ export interface bannerListType {
     "show": boolean
     "cover": string
     "href": string
+    type: 1 | 2
 }
 
-export function bannerListApi(params?: paramsType): Promise<baseResponse<listResponse<bannerListType>>> {
+export interface bannerListParams extends paramsType {
+    type?: 1 | 2
+}
+
+export function bannerListApi(params?: bannerListParams): Promise<baseResponse<listResponse<bannerListType>>> {
     return useAxios.get("/api/banner", {params})
 }
 
@@ -19,6 +24,7 @@ export interface bannerType {
     "show": boolean
     "cover": string
     "href": string
+    type?: 1 | 2
 }
 
 export function bannerUpdateApi(data: bannerType): Promise<baseResponse<string>> {

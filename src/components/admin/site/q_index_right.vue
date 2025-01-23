@@ -1,6 +1,7 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {ref} from "vue";
 import type {TreeNodeData} from "@arco-design/web-vue";
+
 interface Props {
   modelValue: any[]
 }
@@ -8,13 +9,14 @@ interface Props {
 const props = defineProps<Props>()
 const emits = defineEmits(["update:modelValue"])
 
-const treeData = ref<TreeNodeData[]>([])
+const treeData = ref<TreeNodeData[]>([{}])
 
 const selectKeys = ref<string[]>([])
 
 function init() {
+  console.log(props.modelValue)
   for (const item of props.modelValue) {
-    if (item.enable){
+    if (item.enable) {
       selectKeys.value.push(item.title)
     }
     treeData.value.push({
@@ -65,9 +67,10 @@ function allowDropHandler(options: { dropNode: TreeNodeData; dropPosition: -1 | 
   return options.dropPosition !== 0
 }
 
-function dropEnd(){
+function dropEnd() {
 
 }
+
 function dragEnd(ev: DragEvent, node: TreeNodeData) {
   update()
 }
@@ -100,28 +103,28 @@ function update() {
 
 <template>
   <div class="q_index_right">
-      <a-tree
-          class="index_right_tree"
-          draggable
-          blockNode
-          checkable
-          :allow-drop="allowDropHandler"
-          :data="treeData"
-          @drop="onDrop"
-          @drag-end="dropEnd"
-          v-model:checked-keys="selectKeys"
-      ></a-tree>
+    <a-tree
+        v-model:checked-keys="selectKeys"
+        :allow-drop="allowDropHandler"
+        :data="treeData"
+        blockNode
+        checkable
+        class="index_right_tree"
+        draggable
+        @drop="onDrop"
+        @drag-end="dropEnd"
+    ></a-tree>
   </div>
 </template>
 
 <style lang="less">
-.q_index_right{
+.q_index_right {
   width: 430px;
   padding: 10px;
   border-radius: 5px;
   border: @q_border;
 
-  .arco-tree-node{
+  .arco-tree-node {
     background: var(--color-fill-1);
     border-radius: 5px;
     margin-bottom: 3px;

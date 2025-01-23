@@ -13,7 +13,7 @@ import {
 } from "@/api/article_api.ts";
 import {Message} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
-import {onUnmounted, reactive, ref, watch} from "vue";
+import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {dataTemFormat} from "@/utils/data.ts";
 import {theme} from "@/components/common/q_theme.ts";
 import Q_article_collect_modal from "@/components/web/article/q_article_collect_modal.vue";
@@ -69,6 +69,18 @@ const userStore = userStores()
 watch(() => route.params.id, () => {
   getData()
 }, {immediate: true})
+
+onMounted(() => {
+  const id = route.query.id;
+  setTimeout(() => {
+    if (id) {
+      const div = document.getElementById(id) as HTMLDivElement;
+      if (div) {
+        document.documentElement.scrollTo({top: div.offsetTop, behavior: "smooth"});
+      }
+    }
+  }, 500)
+})
 
 const isFixed = ref()
 
