@@ -9,7 +9,7 @@ interface Props {
 const props = defineProps<Props>()
 const emits = defineEmits(["update:modelValue"])
 
-const treeData = ref<TreeNodeData[]>([{}])
+const treeData = ref<TreeNodeData[]>([])
 
 const selectKeys = ref<string[]>([])
 
@@ -67,10 +67,6 @@ function allowDropHandler(options: { dropNode: TreeNodeData; dropPosition: -1 | 
   return options.dropPosition !== 0
 }
 
-function dropEnd() {
-
-}
-
 function dragEnd(ev: DragEvent, node: TreeNodeData) {
   update()
 }
@@ -111,8 +107,9 @@ function update() {
         checkable
         class="index_right_tree"
         draggable
+        @check="check"
         @drop="onDrop"
-        @drag-end="dropEnd"
+        @drag-end="dragEnd"
     ></a-tree>
   </div>
 </template>

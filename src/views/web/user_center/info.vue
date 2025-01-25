@@ -1,54 +1,55 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {userCenterStores} from "@/stores/user_center_store.ts";
 import {registerSourceOptions} from "@/options/options.ts";
 import Q_label from "@/components/admin/q_label.vue";
 import Q_edit_input from "@/components/common/input/q_edit_input.vue";
-import { userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api.ts";
+import {userDetailUpdateApi, type userDetailUpdateRequest} from "@/api/user_api.ts";
 import {Message} from "@arco-design/web-vue";
 import Q_avatar_cutter from "@/components/web/q_avatar_cutter.vue";
 import Q_tags_input from "@/components/common/input/q_tags_input.vue";
 import {ref} from "vue";
+
 const userCenterStore = userCenterStores()
-const tags =ref<string[]>([])
+const tags = ref<string[]>([])
 
 
-async function userUpdateColumn(column:"username"|"nickname"|"avatar"|"abstract"|"likeTags",value:string|string[]){
-  const data:userDetailUpdateRequest = {}
-  if (column==="likeTags"){
+async function userUpdateColumn(column: "username" | "nickname" | "avatar" | "abstract" | "likeTags", value: string | string[]) {
+  const data: userDetailUpdateRequest = {}
+  if (column === "likeTags") {
     value = value as string[]
-    data[column]=value
-  }else{
+    data[column] = value
+  } else {
     value = value as string
-    data[column]=value
+    data[column] = value
   }
-  const res =await userDetailUpdateApi(data)
-  if(res.code){
+  const res = await userDetailUpdateApi(data)
+  if (res.code) {
     Message.error(res.msg)
   }
   Message.success(res.msg)
   userCenterStore.getUserDetail()
 }
 
-function isUpdateUsername(updateTime?:string):boolean {
-  if(!updateTime){
+function isUpdateUsername(updateTime?: string): boolean {
+  if (!updateTime) {
     return true
   }
-  const  t1 =new Date(updateTime)
-  const  t2 =new Date()
-  const subDay =(t2-t1)/1000/60/60/24
+  const t1 = new Date(updateTime)
+  const t2 = new Date()
+  const subDay = (Number(t2) - Number(t1)) / 1000 / 60 / 60 / 24
   return subDay > 30;
 }
 
 
-function editTags(val:string[]) {
-  tags.value=val
+function editTags(val: string[]) {
+  tags.value = val
 }
 
-function updateTags(oldTags?:string[]) {
-  if(JSON.stringify(JSON.stringify(oldTags))===JSON.stringify(tags.value)){
+function updateTags(oldTags?: string[]) {
+  if (JSON.stringify(JSON.stringify(oldTags)) === JSON.stringify(tags.value)) {
     return
   }
-  userUpdateColumn("likeTags",tags.value)
+  userUpdateColumn("likeTags", tags.value)
 }
 
 </script>
@@ -68,27 +69,30 @@ function updateTags(oldTags?:string[]) {
         </div>
       </div>
       <div class="info">
-        <div class="title">{{userCenterStore.userDetail.nickname}}</div>
+        <div class="title">{{ userCenterStore.userDetail.nickname }}</div>
         <div class="code_age">
-          <a-tag>注册{{userCenterStore.userDetail.codeAge}}年</a-tag>
+          <a-tag>注册{{ userCenterStore.userDetail.codeAge }}年</a-tag>
         </div>
       </div>
     </div>
     <div class="base_info">
       <div class="head">基本信息</div>
       <div class="body">
-        <a-form :model="userCenterStore.userDetail" :label-col-props="{span:2}" label-align="left" :wrapper-col-props="{span:22}" >
+        <a-form :label-col-props="{span:2}" :model="userCenterStore.userDetail" :wrapper-col-props="{span:22}"
+                label-align="left">
           <a-form-item label="用户昵称">
-            <q_edit_input placeholder="用户昵称" @ok="userUpdateColumn('nickname',$event)" :value="userCenterStore.userDetail.nickname"></q_edit_input>
+            <q_edit_input :value="userCenterStore.userDetail.nickname" placeholder="用户昵称"
+                          @ok="userUpdateColumn('nickname',$event)"></q_edit_input>
           </a-form-item>
           <a-form-item label="用户名">
-            {{userCenterStore.userDetail.username}}
+            {{ userCenterStore.userDetail.username }}
             <template #help>登录唯一标识,30天可修改</template>
           </a-form-item>
           <a-form-item label="用户简介">
-            <q_edit_input placeholder="用户简介" @ok="userUpdateColumn('abstract',$event)" type="textarea" :value="userCenterStore.userDetail.abstract"></q_edit_input>
+            <q_edit_input :value="userCenterStore.userDetail.abstract" placeholder="用户简介" type="textarea"
+                          @ok="userUpdateColumn('abstract',$event)"></q_edit_input>
           </a-form-item>
-          <a-form-item label="注册时间">{{userCenterStore.userDetail.createdAt}}</a-form-item>
+          <a-form-item label="注册时间">{{ userCenterStore.userDetail.createdAt }}</a-form-item>
           <a-form-item label="注册来源">
             <q_label :options="registerSourceOptions" :value="userCenterStore.userDetail.registerSource"></q_label>
           </a-form-item>
@@ -97,16 +101,16 @@ function updateTags(oldTags?:string[]) {
     </div>
     <div class="tags">
       <div class="head">
-       <div class="title">兴趣标签</div>
+        <div class="title">兴趣标签</div>
         <div class="abs">请选择兴趣标签</div>
       </div>
       <div class="body">
         <div>
           <q_tags_input
-              :value="userCenterStore.userDetail.likeTags" @ok="editTags"></q_tags_input>
+              :value="userCenterStore.userDetail.likeTags as string[]" @ok="editTags"></q_tags_input>
         </div>
         <div>
-          <a-button type="primary" @click="updateTags(userCenterStore.userDetail.likeTags)" size="mini">更新</a-button>
+          <a-button size="mini" type="primary" @click="updateTags(userCenterStore.userDetail.likeTags)">更新</a-button>
         </div>
       </div>
     </div>
@@ -116,54 +120,56 @@ function updateTags(oldTags?:string[]) {
 </template>
 
 <style lang="less">
-.user_center_info_view{
-  >div{
+.user_center_info_view {
+  > div {
     background: var(--color-bg-1);
     border-radius: 5px;
   }
 
-  .top{
+  .top {
     margin-bottom: 20px;
     display: flex;
     padding: 20px;
     align-items: center;
 
-    .avatar{
+    .avatar {
       width: 80px;
 
-      .avatar_inner{
+      .avatar_inner {
         position: relative;
         width: 60px;
 
-        .camera_bg{
+        .camera_bg {
           position: absolute;
           left: 50%;
           top: 50%;
-          transform: translate(-50%,-50%);
+          transform: translate(-50%, -50%);
           z-index: 2;
-          background: rgba(0,0,0,0.4);
+          background: rgba(0, 0, 0, 0.4);
           opacity: 0;
           transition: all .3s;
           cursor: pointer;
 
-          svg{
+          svg {
             color: white;
             font-size: 20px;
           }
         }
 
-        &:hover{
-          .camera_bg{
+        &:hover {
+          .camera_bg {
             opacity: 1;
           }
         }
       }
     }
-    .info{
+
+    .info {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      .title{
+
+      .title {
         font-size: 18px;
         color: var(--color-text-1);
         margin-bottom: 10px;
@@ -171,40 +177,47 @@ function updateTags(oldTags?:string[]) {
     }
   }
 
-  .base_info{
+  .base_info {
     margin-top: 20px;
-    .head{
+
+    .head {
       font-size: 16px;
       padding: 20px 20px 10px 20px;
       border-bottom: @q_border;
       font-weight: 600;
       color: var(--color-text-1);
     }
-    .body{
-      padding: 10px 20px 20px  20px;
-      color:var(--color-text-2);
+
+    .body {
+      padding: 10px 20px 20px 20px;
+      color: var(--color-text-2);
 
     }
   }
-  .tags{
-    .head{
+
+  .tags {
+    .head {
       padding: 20px 20px 10px 20px;
       border-bottom: @q_border;
       display: flex;
       align-items: center;
-      .title{
+
+      .title {
         font-weight: 600;
         color: var(--color-text-1);
         font-size: 16px;
       }
-      .abs{
+
+      .abs {
         margin-left: 10px;
         color: var(--color-text-2);
       }
     }
-    .body{
-      padding: 10px 20px 20px  20px;
-      span{
+
+    .body {
+      padding: 10px 20px 20px 20px;
+
+      span {
         margin-right: 10px;
         margin-bottom: 10px;
         cursor: pointer;

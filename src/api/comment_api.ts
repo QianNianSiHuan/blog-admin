@@ -13,12 +13,14 @@ export interface commentListType {
     "articleCover": string
     "diggCount": number
     "relation"?: 1 | 2 | 3 | 4
-    "isMe": boolean
+    "isMe"?: boolean
     visible?: boolean
+    status: 0 | 1 | 2 | 3
 }
 
 export interface commentListRequest extends paramsType {
     type: 1 | 2 | 3
+    status?: 0 | 1 | 2 | 3
 }
 
 
@@ -70,3 +72,12 @@ export function commentDiggApi(id: number): Promise<baseResponse<string>> {
     return useAxios.get("/api/comment/digg/" + id.toString())
 }
 
+export interface commentExamineType {
+    commentID: number
+    status: 2 | 3
+}
+
+export function commentExamineApi(data: commentExamineType): Promise<baseResponse<string>> {
+    return useAxios.post("/api/comment/examine", data)
+
+}

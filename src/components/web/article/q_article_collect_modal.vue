@@ -20,7 +20,7 @@ const data = reactive<listResponse<collectListType>>({
 async function beforeOpen() {
   data.list = []
   data.count = 0
-  const res = await collectListApi({type: 1, articleID: props.articleID as number})
+  const res = await collectListApi({type: 1, articleID: props.articleID})
   if (res.code) {
     Message.error(res.msg)
     return

@@ -1,4 +1,4 @@
-import {type baseResponse, type listResponse, useAxios} from "@/api/index.ts";
+import {type baseResponse, type listResponse, type paramsType, useAxios} from "@/api/index.ts";
 
 export interface collectListType {
     "id": number,
@@ -13,7 +13,7 @@ export interface collectListType {
     "articleUse": boolean
 }
 
-export interface collectListRequest {
+export interface collectListRequest extends paramsType {
     type: 1 | 2 | 3
     userID?: number,
     ArticleID?: number,

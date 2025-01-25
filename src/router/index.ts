@@ -149,6 +149,14 @@ const router = createRouter({
                             },
                             component: () => import("@/views/admin/article_manage/article_list.vue")
                         },
+                        {
+                            name: "commentList",
+                            path: "comment_list",
+                            meta: {
+                                title: "评论列表",
+                            },
+                            component: () => import("@/views/admin/article_manage/comment_list.vue")
+                        },
                     ]
                 },
                 {

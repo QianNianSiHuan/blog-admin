@@ -13,6 +13,9 @@ import {articleStatusOptions} from "@/options/options.ts";
 import {Message} from "@arco-design/web-vue";
 import Q_user from "@/components/common/q_user.vue";
 import {userArticleTopApi} from "@/api/user_api.ts";
+import {theme} from "@/components/common/q_theme.ts";
+import {MdPreview} from "md-editor-v3";
+import "md-editor-v3/lib/preview.css"
 
 const columns: columnType[] = [
   {title: "ID", dataIndex: 'id'},
@@ -110,7 +113,7 @@ async function adminArticleTop(record: articleListType) {
 <template>
   <div>
     <a-modal v-model:visible="visible" :on-before-ok="handler" modal-class="article_examine_modal" title="文章审核">
-      <a-form :model="data">
+      <a-form :model="data" class="article_examine_form">
         <a-form-item label="文章标题">{{ data.title }}</a-form-item>
         <a-form-item label="文章简介">{{ data.abstract }}</a-form-item>
         <a-form-item label="文章用户">
@@ -120,9 +123,7 @@ async function adminArticleTop(record: articleListType) {
         <a-form-item label="文章标签">
           <a-tag v-for="tag in data.tagList" color="blue" style="margin-right: 10px">{{ tag }}</a-tag>
         </a-form-item>
-        <a-form-item label="文章正文">
-          {{ data.content }}
-        </a-form-item>
+        <MdPreview :id="`md_${data.id}`" :model-value="data.content" :theme="theme as 'light'|'dark'"></MdPreview>
         <a-form-item v-if="data.status===2" label="审核">
           <a-radio-group v-model="form.status">
             <a-radio :value="3">审核通过</a-radio>
@@ -159,5 +160,14 @@ async function adminArticleTop(record: articleListType) {
 </template>
 
 <style lang="less">
+.article_examine_modal {
+  width: 30%;
+
+  .arco-modal-body {
+    .arco-form-item-label-col {
+      justify-content: center;
+    }
+  }
+}
 
 </style>

@@ -1,15 +1,15 @@
-import {type baseResponse, type paramsType, useAxios} from "@/api/index.ts";
+import {type baseResponse, type listResponse, type paramsType, useAxios} from "@/api/index.ts";
 
-export interface logListType{
+export interface logListType {
     "id": number
     "CreatedAt": string
     "UpdatedAt": string
     "logType": number
     "title": string
     "content": string
-    "level":number
+    "level": number
     "userID": number
-    "method":string
+    "method": string
     "ip": string
     "addr": string
     "isRead": boolean,
@@ -22,13 +22,16 @@ export interface logListType{
     "userAvatar": string
 }
 
-export interface logListParams extends paramsType{
-    logType:1|2|3
+
+export interface logListParamsType extends paramsType {
+    logType: 1 | 2 | 3
 }
 
-export function logListApi(params:logListParams){
-return useAxios.get("/api/logs",{params})
+
+export function logListApi(params: logListParamsType): Promise<baseResponse<listResponse<logListType>>> {
+    return useAxios.get("/api/logs", {params})
 }
-export function logReadApi(id:number):Promise<baseResponse<string>>{
-    return useAxios.get("/api/logs/"+id.toString())
+
+export function logReadApi(id: number): Promise<baseResponse<string>> {
+    return useAxios.get("/api/logs/" + id.toString())
 }

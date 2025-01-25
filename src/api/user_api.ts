@@ -145,15 +145,15 @@ export function userDetailApi(): Promise<baseResponse<userDetailType>> {
 }
 
 export interface userDetailUpdateRequest {
-    "username": string,
-    "nickname": string,
-    "avatar": string,
-    "abstract": string,
+    "username"?: string,
+    "nickname"?: string,
+    "avatar"?: string,
+    "abstract"?: string,
     "likeTags"?: string[],
-    "openCollect": boolean,
-    "openFollow": boolean,
-    "openFans": boolean,
-    "homeStyleID": number
+    "openCollect"?: boolean,
+    "openFollow"?: boolean,
+    "openFans"?: boolean,
+    "homeStyleID"?: number
 }
 
 export function userDetailUpdateApi(data: userDetailUpdateRequest): Promise<baseResponse<string>> {

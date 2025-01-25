@@ -43,6 +43,7 @@ export interface siteResponse {
         "List": indexRightType[]
     },
     "article": {
+        "commentNoExamine": boolean,
         "noExamine": boolean,
         "commentLine": number
     }

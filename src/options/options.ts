@@ -11,6 +11,13 @@ export const articleStatusOptions: optionsColorType[] = [
     {label: "已拒绝", value: 4, color: "red"},
 ]
 
+export const commentStatusOptions: optionsColorType[] = [
+    {label: "待审核", value: 1, color: "green"},
+    {label: "已发布", value: 2, color: "blue"},
+    {label: "未通过", value: 3, color: "red"},
+]
+
+
 export const roleOptions: optionsColorType[] = [
     {label: "管理员", value: 1, color: "blue"},
     {label: "用户", value: 2, color: "green"},

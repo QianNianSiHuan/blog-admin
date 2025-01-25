@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import Q_list from "@/components/admin/q_list.vue";
 import {createApp, h, nextTick, reactive, ref} from "vue";
-import {logListApi, type logListParams, type logListType, logReadApi} from "@/api/log_api.ts";
+import {logListApi, type logListParamsType, type logListType, logReadApi} from "@/api/log_api.ts";
 import Q_user from "@/components/common/q_user.vue";
 import {logLevelOptions} from "@/options/options.ts";
 import {Message} from "@arco-design/web-vue";
@@ -9,8 +9,8 @@ import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
 import {theme} from "@/components/common/q_theme.ts";
 
-const params =reactive<logListParams>({
-  logType:2,
+const params = reactive<logListParamsType>({
+  logType: 2,
 })
 
 
@@ -29,7 +29,7 @@ const columnsDict = reactive({
         {title: "地址", slotName: 'addr'},
         {title: "用户", slotName: 'user'},
         {title: "方法", slotName: 'method'},
-        {title: "等级", dataIndex: 'level', type:"options",options:logLevelOptions},
+        {title: "等级", dataIndex: 'level', type: "options", options: logLevelOptions},
         {title: "标题", slotName: 'title'},
         {title: "时间", dataIndex: 'createdAt', type: "date"},
         {title: "操作", slotName: 'action'},
@@ -38,44 +38,38 @@ const columnsDict = reactive({
         {title: "ID", dataIndex: 'id'},
         {title: "服务", dataIndex: 'serviceName'},
         {title: "标题", slotName: 'title'},
-        {title: "等级", dataIndex: 'level', },
+        {title: "等级", dataIndex: 'level',},
         {title: "时间", dataIndex: 'createdAt', type: "date"},
         {title: "操作", slotName: 'action'},
       ]
-}
+    }
 )
 
 
-
-const fListRef =ref()
+const fListRef = ref()
 
 const visible = ref(false)
 
-
-function edit(record:logListType) {
-  visible.value=true
-}
-
-function logTypeChange(){
+function logTypeChange() {
   fListRef.value.getList(params)
 }
 
-const content =ref("")
+const content = ref("")
 
-async function logRead(record:logListType){
-if(!record.isRead){
-  const res =await logReadApi(record.id)
-  if (res.code){
-    Message.error(res.msg)
-    return
+async function logRead(record: logListType) {
+  if (!record.isRead) {
+    const res = await logReadApi(record.id)
+    if (res.code) {
+      Message.error(res.msg)
+      return
+    }
+    record.isRead = true
   }
-  record.isRead = true
-}
-  content.value =record.content
-  visible.value=true
-  await nextTick(()=>{
-    const dom =document.querySelector(".log_modal_body")
-    if(dom){
+  content.value = record.content
+  visible.value = true
+  await nextTick(() => {
+    const dom = document.querySelector(".log_modal_body")
+    if (dom) {
       dom.classList.add("scrollbar")
     }
     jsonParse()
@@ -88,10 +82,10 @@ function jsonParse() {
     const jsonData = (value as HTMLPreElement).innerText
     const data = JSON.parse(jsonData)
     // 生成虚拟dom
-    const vNode = h(VueJsonPretty, {data: data, deep:1 ,theme:theme.value})
+    const vNode = h(VueJsonPretty, {data: data, deep: 1, theme: theme.value as 'light' | 'dark'})
     // 创建app
     const app = createApp({
-      render: ()=>vNode
+      render: () => vNode
     })
     // 挂载app
     app.mount(value)
@@ -101,17 +95,16 @@ function jsonParse() {
 
 <template>
   <div class="log_list_view">
-    <a-modal v-model:visible="visible" width="35%" title="日志详情" body-class="log_modal_body" :footer="false">
-      <div class="log_body" :class="`log_type_${params.logType}`" v-html="content"></div>
+    <a-modal v-model:visible="visible" :footer="false" body-class="log_modal_body" title="日志详情" width="35%">
+      <div :class="`log_type_${params.logType}`" class="log_body" v-html="content"></div>
     </a-modal>
 
     <q_list ref="fListRef"
+            :columns="columnsDict[params.logType]"
+            :default-params="params"
             :url="logListApi"
             no-add
             no-edit
-            :default-params="params"
-            :columns="columnsDict[params.logType]"
-            @edit="edit"
     >
       <template #search_other>
         <a-radio-group v-model="params.logType" @change="logTypeChange">
@@ -121,7 +114,7 @@ function jsonParse() {
         </a-radio-group>
       </template>
       <template #addr="{record}:{record:logListType}">
-        {{record.ip}}({{record.addr}})
+        {{ record.ip }}({{ record.addr }})
       </template>
       <template #user="{record}:{record:logListType}">
         <q_user v-if="record.userID" :avatar="record.userAvatar" :nickname="record.userNickName"></q_user>
@@ -132,7 +125,7 @@ function jsonParse() {
         <a-tag v-else color="red">登录失败</a-tag>
       </template>
       <template #title="{record}:{record:logListType}">
-        <a href="javascript:void 0" @click="logRead(record)" :class="{is_read:record.isRead}">{{record.title}}</a>
+        <a :class="{is_read:record.isRead}" href="javascript:void 0" @click="logRead(record)">{{ record.title }}</a>
       </template>
       <template #method="{record}:{record:logListType}">
         <a-tag v-if="record.method === 'GET'" color="#00CDCD">{{ record.method }}</a-tag>
@@ -151,16 +144,16 @@ function jsonParse() {
   }
 }
 
-.text_color(@text,@color:rgb(var(--arcoblue-6))){
-&::after {
-  content: @text;
-  display: block;
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  color: @color;
-  font-size: 12px;
-}
+.text_color(@text,@color:rgb(var(--arcoblue-6))) {
+  &::after {
+    content: @text;
+    display: block;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    color: @color;
+    font-size: 12px;
+  }
 }
 
 .log_modal_body {
@@ -186,20 +179,24 @@ function jsonParse() {
       }
     }
 
-    .log_request_header{
+    .log_request_header {
       .text_color("请求头")
     }
-    .log_request{
+
+    .log_request {
       .text_color("请求")
     }
-    .log_response{
+
+    .log_response {
       .text_color("响应")
     }
-    .log_response_header{
+
+    .log_response_header {
       .text_color("响应头")
     }
 
   }
+
   .log_type_2 {
     > div {
       padding: 20px;

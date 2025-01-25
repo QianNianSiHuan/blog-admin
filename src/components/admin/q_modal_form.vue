@@ -1,36 +1,18 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import {type FieldRule, Message} from "@arco-design/web-vue";
+import {Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
-import type {optionsFunc, optionsType} from "@/api";
-import {unrefElement} from "@arco-design/web-vue/es/watermark/hooks/use-mutation-observer";
+import type {emitFnType, formListType} from "@/components/admin/q_modal_form.ts";
 
-export interface formListType{
-  label:string
-  field:string
-  type?:"input"|"textarea"|"select"|"switch"|"radio"|"password"
-  validateTrigger?: "focus" | "input" | "change" | "blur" | ("focus" | "input" | "change" | "blur")[];
-  rules?:FieldRule<any>|FieldRule<any>[]
-  source?: optionsType[] | optionsFunc
-  options?: optionsType[]
-  autoSize?: boolean | {
-    minRows?: number | undefined;
-    maxRows?: number | undefined;
-  }
-  multiple?:boolean
-  editDisable?:boolean//选项框是否编辑不可见
+
+interface Props {
+  visible: boolean
+  formList: formListType[]
+  addLabel: string //添加时显示的名字
+  editLabel: string//添加时显示的名字
 }
 
-export type emitFnType =(val:boolean)=>void
-
-interface Props{
-  visible:boolean
-  formList:formListType[]
-  addLabel:string //添加时显示的名字
-  editLabel:string//添加时显示的名字
-}
-
-const props =defineProps<Props>()
+const props = defineProps<Props>()
 
 
 const formList = ref<formListType[]>([])
@@ -38,15 +20,15 @@ const formList = ref<formListType[]>([])
 
 async function initForm() {
   formList.value = []
-  for(const val of props.formList){
-    if (typeof val.source ==="function"){
-      const res =await val.source()
-      if (res.code){
+  for (const val of props.formList) {
+    if (typeof val.source === "function") {
+      const res = await val.source()
+      if (res.code) {
         Message.error(res.msg)
         continue
       }
-      val.options =res.data
-    }else {
+      val.options = res.data
+    } else {
       val.options = val.source
     }
 
@@ -57,37 +39,36 @@ async function initForm() {
 initForm()
 
 const emit = defineEmits<{
-  "update:visible":[visible:boolean]
-  create:[form:object,fn?:emitFnType]
-  update:[form:object,fn?:emitFnType]
+  "update:visible": [visible: boolean]
+  create: [form: object, fn?: emitFnType]
+  update: [form: object, fn?: emitFnType]
 }>()
 
-function cancel(){
+function cancel() {
   formRef.value.clearValidate()
   formRef.value.resetFields()
-  isEdit.value =false
-  emit("update:visible",false)
+  isEdit.value = false
+  emit("update:visible", false)
 }
 
-const form =reactive<object>({
+const form = reactive<object>({})
 
-})
+const formRef = ref()
 
-const formRef=ref()
-async function onBeforeOk(){
-  const val =await  formRef.value.validate()
+async function onBeforeOk() {
+  const val = await formRef.value.validate()
   console.log("onBeforeOk")
-  if(val)return false
-  const emitFn =(val:boolean)=>{
-    if(val){
+  if (val) return false
+  const emitFn = (val: boolean) => {
+    if (val) {
       cancel()
       return
     }
   }
-  if (!isEdit.value){
-    emit("create",form,emitFn)
-  }else {
-    emit("update",form,emitFn)
+  if (!isEdit.value) {
+    emit("create", form, emitFn)
+  } else {
+    emit("update", form, emitFn)
   }
 
 
@@ -95,9 +76,9 @@ async function onBeforeOk(){
 
 const isEdit = ref(false)
 
-function setForm(formObj:any){
+function setForm(formObj: any) {
   isEdit.value = true
-  Object.assign(form,formObj)
+  Object.assign(form, formObj)
 }
 
 defineExpose({
@@ -108,38 +89,42 @@ defineExpose({
 </script>
 
 <template>
-<a-modal :title="isEdit? editLabel?editLabel :addLabel: addLabel" :visible="props.visible" @cancel="cancel" :on-before-ok="onBeforeOk">
+  <a-modal :on-before-ok="onBeforeOk" :title="isEdit? editLabel?editLabel :addLabel: addLabel" :visible="props.visible"
+           @cancel="cancel">
     <a-form ref="formRef" :model="form">
-      <template v-for="item in formList" >
-        <a-form-item v-if="!isEdit||(isEdit&&!item.editDisable)" :field="item.field" :label="item.label" :rules="item.rules" :validate-trigger="item.validateTrigger" >
+      <template v-for="item in formList">
+        <a-form-item v-if="!isEdit||(isEdit&&!item.editDisable)" :field="item.field" :label="item.label"
+                     :rules="item.rules" :validate-trigger="item.validateTrigger">
           <template v-if="item.type === 'input' || item.type==='password'">
-            <a-input v-model="form[item.field]" :type="item.type==='password'?'password':'text'" :placeholder="item.label"></a-input>
+            <a-input v-model="item.field" :placeholder="item.label"
+                     :type="item.type==='password'?'password':'text'"></a-input>
           </template>
           <template v-else-if="item.type==='select'">
-            <a-select :multiple="item.multiple" :placeholder="item.label" v-model="form[item.field]" :options="item.options" allow-clear></a-select>
+            <a-select v-model="item.field" :multiple="item.multiple" :options="item.options"
+                      :placeholder="item.label" allow-clear></a-select>
           </template>
           <template v-else-if="item.type==='switch'">
-            <a-switch  v-model="form[item.field]" ></a-switch>
+            <a-switch v-model="item.field"></a-switch>
           </template>
           <template v-else-if="item.type==='radio'">
-            <a-radio-group  v-model="form[item.field]" :options="item.options"></a-radio-group>
+            <a-radio-group v-model="item.field" :options="item.options"></a-radio-group>
           </template>
           <template v-if="item.type === 'textarea'">
-            <a-textarea v-model="form[item.field]" :placeholder="item.label" allow-clear :auto-size="item.autoSize"></a-textarea>
+            <a-textarea v-model="item.field" :auto-size="item.autoSize" :placeholder="item.label"
+                        allow-clear></a-textarea>
           </template>
           <template v-else>
-            <slot :name="item.field" :form="form"></slot>
+            <slot :form="form" :name="item.field"></slot>
           </template>
           <template #help>
-            <slot :name="`${item.field}_help`" :value="form[item.field]"></slot>
+            <slot :name="`${item.field}_help`" :value="item.field"></slot>
           </template>
-
         </a-form-item>
       </template>
     </a-form>
-  <template #footer>
-    <slot name="footer" :form="form"></slot>
-  </template>
+    <template #footer>
+      <slot :form="form" name="footer"></slot>
+    </template>
   </a-modal>
 </template>
 

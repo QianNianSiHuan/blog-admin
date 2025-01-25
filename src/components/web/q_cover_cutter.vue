@@ -36,20 +36,20 @@ async function cutDown(e: any) {
 
   function upload(file: File, conf: qiniuUploadConfigType) {
     const observer = {
-      next(res) {
-        // ...
-        //console.log("next:", res)
+      next(res: string) {
+        //...
+        console.log("next:", res)
       },
-      error(err) {
+      error(err: string) {
         // ...
         //console.log("error:", err)
         Message.error(err)
       },
-      complete(res) {
-        // ...
-        //console.log("complete:", res)
-        emits("ok", conf.url)
-      }
+      // complete(res) {
+      // ...
+      //console.log("complete:", res)
+      //emits("ok", conf.url)
+      // }
     }
     const config = {
       useCdnDomain: true,

@@ -58,8 +58,8 @@ export interface articleDetailType {
     "username": string
     "nickname": string
     "userAvatar": string
-    "isDigg": boolean
-    "isCollect": boolean
+    "isDigg"?: boolean
+    "isCollect"?: boolean
 }
 
 export function articleDetailApi(id: number): Promise<baseResponse<articleDetailType>> {

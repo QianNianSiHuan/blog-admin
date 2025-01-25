@@ -12,7 +12,17 @@ import Feedback from "@/components/web/index/feedback.vue";
 import {userStores} from "@/stores/user_store.ts";
 
 const userStore = userStores()
-const map = {
+
+interface ComponentMap {
+  "标签云": typeof Tag_list;
+  "作者推荐": typeof Auth_recommend;
+  "文章推荐": typeof Article_recommend;
+  "关于我们": typeof About;
+  "独家推广": typeof Extension;
+  "用户反馈": typeof Feedback;
+}
+
+const map: ComponentMap = {
   "标签云": Tag_list,
   "作者推荐": Auth_recommend,
   "文章推荐": Article_recommend,
@@ -20,6 +30,7 @@ const map = {
   "独家推广": Extension,
   "用户反馈": Feedback,
 }
+
 </script>
 
 <template>
@@ -36,7 +47,7 @@ const map = {
       </div>
       <div class="right">
         <template v-for="item in userStore.siteInfo.indexRight.List">
-          <component :is="map[item.title]" v-if="item.enable"></component>
+          <component :is="map[item.title as keyof ComponentMap]" v-if="item.enable"></component>
         </template>
       </div>
     </q_main>

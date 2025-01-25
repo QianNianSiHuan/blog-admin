@@ -42,7 +42,7 @@ function edit(record: bannerListType) {
   data.href = record.href
   data.cover = record.cover
   data.type = record.type
-  record.visible.value = true
+  visible.value = true
 }
 
 async function handler() {

@@ -74,7 +74,7 @@ onMounted(() => {
   const id = route.query.id;
   setTimeout(() => {
     if (id) {
-      const div = document.getElementById(id) as HTMLDivElement;
+      const div = document.getElementById(id as string) as HTMLDivElement;
       if (div) {
         document.documentElement.scrollTo({top: div.offsetTop, behavior: "smooth"});
       }
@@ -183,7 +183,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div class="body">
-            <MdPreview :id="`md_${data.id}`" :model-value="data.content" :theme="theme"></MdPreview>
+            <MdPreview :id="`md_${data.id}`" :model-value="data.content" :theme="theme as 'light'|'dark'"></MdPreview>
           </div>
         </div>
         <article_comment v-if="data.openComment" ref="articleCommentRef"
@@ -221,7 +221,7 @@ onUnmounted(() => {
             <div class="body scrollbar">
               <MdCatalog :editorId="`md_${data.id}`" :offsetTop="61" :scrollElement="scrollElement"
                          :scrollElementOffsetTop="60"
-                         :theme="theme"></MdCatalog>
+                         :theme="theme as 'light'|'dark'"></MdCatalog>
             </div>
           </div>
           <div class="article_action">

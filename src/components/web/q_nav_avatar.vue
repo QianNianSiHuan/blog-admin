@@ -9,7 +9,6 @@ const userStore = userStores()
 function goRouter(name: string) {
   if (name === "exit") {
     userStore.userLogout()
-
     return
   }
   router.push({
@@ -20,7 +19,10 @@ function goRouter(name: string) {
 </script>
 
 <template>
-  <a-avatar v-if="!userStore.isLogin" :size="30" class="avatar_1" @click="showLogin">登录</a-avatar>
+  <a-avatar v-if="!userStore.isLogin" :size="30" class="avatar_1" @click="()=>{
+    showLogin
+  }">登录
+  </a-avatar>
   <a-trigger v-else :unmount-on-close="false" animation-name="fade" class="q_nav_avatar_trigger" trigger="hover">
     <a-avatar :image-url="userStore.userInfo.avatar" :size="30" class="avatar_1"
               @click="goUser(userStore.userInfo.userID)">{{ userStore.userInfo.nickName[0] }}

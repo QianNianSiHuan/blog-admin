@@ -87,6 +87,7 @@ export const userStores = defineStore('userStore', {
                 },
                 article: {
                     noExamine: false,
+                    commentNoExamine: false,
                     commentLine: 3
                 }
             }

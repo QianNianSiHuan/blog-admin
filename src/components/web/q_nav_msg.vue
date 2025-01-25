@@ -2,9 +2,9 @@
 import Q_point from "@/components/common/q_point.vue";
 import router from "@/router";
 
-function select(val: string) {
+function select(val: string | number | Record<string, any> | undefined, ev: Event) {
   router.push({
-    name: val
+    name: val as string,
   })
 }
 </script>

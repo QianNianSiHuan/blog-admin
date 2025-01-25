@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {reactive, ref} from "vue";
 import {emailLoginApi, type emailLoginRequest} from "@/api/user_api.ts";
 import {Message} from "@arco-design/web-vue";
@@ -6,36 +6,36 @@ import {userStores} from "@/stores/user_store.ts";
 import router from "@/router";
 import {useRoute} from "vue-router";
 
-  const  form = reactive<emailLoginRequest>({
-        val:"",
-        password:"",
-    captchaCode:"",
-    captchaID:"",
-      })
-const route =useRoute()
-const formRef =ref()
-const userStore =userStores()
-async function emailLogin(){
+const form = reactive<emailLoginRequest>({
+  val: "",
+  password: "",
+  captchaCode: "",
+  captchaID: "",
+})
+const route = useRoute()
+const formRef = ref()
+const userStore = userStores()
+
+async function emailLogin() {
   const val = await formRef.value.validate()
-  if(val)return
+  if (val) return
   const res = await emailLoginApi(form)
-  if (res.code){
+  if (res.code) {
     Message.error(res.msg)
     return
   }
-
   Message.success("登陆成功")
   //1.解析token获取信息 2.掉用户信息接口
   userStore.saveUserInfo(res.data)
   const redirect = route.query.redirect
-  if(redirect){
+  if (redirect) {
     router.push(redirect as string)
     return
   }
-  router.push({name:"web"})
+  router.push({name: "web"})
 }
 
-const keyDown = (e:any) => {
+const keyDown = (e: any) => {
   if (e.keyCode == 13 || e.keyCode == 100) {
     emailLogin()
   }
@@ -47,26 +47,30 @@ const keyDown = (e:any) => {
 <template>
   <div class="login_view">
     <div class="login_mask">
-      <a-form ref="formRef" :model="form" :label-col-props="{span:0}" :wrapper-col-props="{span:24}">
+      <a-form ref="formRef" :label-col-props="{span:0}" :model="form" :wrapper-col-props="{span:24}">
         <div class="title">用户登录</div>
-        <a-form-item label="用户名" field="val"
-                     :rules="[{required:true,message:'请输入用户名'},{minLength:5,maxLength:16,message:'用户名长度为5-16个字符'}]">
-          <a-input placeholder="请输入用户名" v-model = form.val >
+        <a-form-item
+            :rules="[{required:true,message:'请输入用户名'},{minLength:5,maxLength:16,message:'用户名长度为5-16个字符'}]"
+            field="val"
+            label="用户名">
+          <a-input v-model=form.val placeholder="请输入用户名">
             <template #prefix>
               <icon-user/>
             </template>
           </a-input>
         </a-form-item>
-        <a-form-item label="密码" field="password"
-                     :rules="[{required:true,message:'请输入密码'},{minLength:5,maxLength:16,message:'密码长度为5-16个字符'}]">
-          <a-input placeholder="请输入密码" type="password" v-model="form.password">
+        <a-form-item
+            :rules="[{required:true,message:'请输入密码'},{minLength:5,maxLength:16,message:'密码长度为5-16个字符'}]"
+            field="password"
+            label="密码">
+          <a-input v-model="form.password" placeholder="请输入密码" type="password">
             <template #prefix>
-            <icon-lock/>
+              <icon-lock/>
             </template>
           </a-input>
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" @click="emailLogin" @keyup.enter="keyDown" long>登录</a-button>
+          <a-button long type="primary" @click="emailLogin" @keyup.enter="keyDown">登录</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -74,11 +78,12 @@ const keyDown = (e:any) => {
 </template>
 
 <style lang="less">
-.login_view{
+.login_view {
   background: url(http://qiniuyun.starletter.cn/picture/20241226144246567.png) 50% / cover no-repeat;
   position: relative;
   height: 100vh;
-  .login_mask{
+
+  .login_mask {
     width: 400px;
     height: 100vh;
     background-color: var(--login-bg);
@@ -88,10 +93,12 @@ const keyDown = (e:any) => {
     display: flex;
     justify-content: center;
     align-items: center;
-    .arco-form{
+
+    .arco-form {
       padding: 40px;
     }
-    .title{
+
+    .title {
       font-size: 26px;
       font-weight: 600;
       text-align: center;
@@ -100,10 +107,12 @@ const keyDown = (e:any) => {
     }
   }
 }
+
 :root {
-  --login-bg: rgba(255, 255, 255,0.6);
+  --login-bg: rgba(255, 255, 255, 0.6);
 }
+
 [arco-theme ='dark'] {
-  --login-bg: rgba(0, 0, 0,0.6);
+  --login-bg: rgba(0, 0, 0, 0.6);
 }
 </style>

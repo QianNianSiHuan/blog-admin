@@ -52,10 +52,10 @@ import Q_site from "@/components/admin/site/q_site.vue";
               <q_title>seo设置</q_title>
               <div class="body">
                 <a-form-item :label-col-props="{span:4}" :wrapper-col-props="{span:18}" label="keywords">
-                  <a-input v-model="form.project.title" placeholder="keywords"></a-input>
+                  <a-input v-model="form.seo.keywords" placeholder="keywords"></a-input>
                 </a-form-item>
                 <a-form-item :label-col-props="{span:4}" :wrapper-col-props="{span:18}" label="description">
-                  <a-textarea v-model="form.project.seo" :auto-size="{minRows:2,maxRows:3}"
+                  <a-textarea v-model="form.seo.description" :auto-size="{minRows:2,maxRows:3}"
                               placeholder="description"></a-textarea>
                 </a-form-item>
               </div>
@@ -112,13 +112,16 @@ import Q_site from "@/components/admin/site/q_site.vue";
           <a-col :span="8">
             <div class="form index_right_form">
               <q_title>首页右侧组件展示</q_title>
-              <q_index_right v-model="form.indexRight.List"></q_index_right>
+              <q_index_right v-model="form.indexRight.List" class="body"></q_index_right>
             </div>
             <div class="form article_form">
               <q_title>文章设置</q_title>
               <div class="body">
                 <a-form-item :label-col-props="{span:5}" :wrapper-col-props="{span:13}" label="文章免审核">
                   <a-switch v-model="form.article.noExamine"></a-switch>
+                </a-form-item>
+                <a-form-item :label-col-props="{span:5}" :wrapper-col-props="{span:13}" label="评论免审核">
+                  <a-switch v-model="form.article.commentNoExamine"></a-switch>
                 </a-form-item>
                 <a-form-item :label-col-props="{span:5}" :wrapper-col-props="{span:13}" label="评论层数">
                   <a-input-number v-model="form.article.commentLine" placeholder="评论层数"></a-input-number>

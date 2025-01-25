@@ -1,22 +1,22 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {nextTick, ref, watch} from "vue";
 
 interface Props {
-  value:string[]
+  value: string[]
 }
-const props= defineProps<Props>()
-const emits =defineEmits(["ok"])
+
+const props = defineProps<Props>()
+const emits = defineEmits(["ok"])
 const tags = ref<string[]>([])
-const inputRef = ref(null)
+const inputRef = ref()
 const showInput = ref(false)
 const inputVal = ref('')
 
-watch(()=>props.value,()=>{
-  if(props.value){
-    tags.value =JSON.parse(JSON.stringify(props.value))
+watch(() => props.value, () => {
+  if (props.value) {
+    tags.value = JSON.parse(JSON.stringify(props.value))
   }
-},{immediate:true})
-
+}, {immediate: true})
 
 
 const handleEdit = () => {
@@ -33,14 +33,14 @@ const handleAdd = () => {
   if (inputVal.value) {
     tags.value.push(inputVal.value)
     inputVal.value = ''
-    emits("ok",tags.value)
+    emits("ok", tags.value)
   }
   showInput.value = false
 };
 
-const handleRemove = (key:string) => {
+const handleRemove = (key: string) => {
   tags.value = tags.value.filter((tag) => tag !== key)
-  emits("ok",tags.value)
+  emits("ok", tags.value)
 };
 
 </script>
@@ -59,11 +59,11 @@ const handleRemove = (key:string) => {
     <a-input
         v-if="showInput"
         ref="inputRef"
+        v-model.trim="inputVal"
         :style="{ width: '90px'}"
         size="mini"
-        v-model.trim="inputVal"
-        @keyup.enter="handleAdd"
         @blur="handleAdd"
+        @keyup.enter="handleAdd"
     />
     <a-tag
         v-else

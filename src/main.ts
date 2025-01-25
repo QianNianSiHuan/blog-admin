@@ -19,3 +19,20 @@ app.use(router)
 app.use(ArcoVue)
 app.use(ArcoVueIcon)
 app.mount('#app')
+
+function initVersion() {
+    const gitInfo = import.meta.env.VITE_GIT_INFO;
+    const gitInfoObj = gitInfo && JSON.parse(gitInfo);
+
+    if (document.visibilityState === 'hidden') return;
+
+    fetch(`/versionInfo.json?v=${Date.now()}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.version !== gitInfoObj.version) {
+                location.reload();
+            }
+        });
+}
+
+initVersion()
