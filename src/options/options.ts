@@ -43,3 +43,8 @@ export const relationOptions: optionsColorType[] = [
     {label: "粉丝", value: 3, color: "#87CEEB"},
     {label: "好友", value: 3, color: "#BEBEBE"},
 ]
+
+export const bannerOptions: optionsColorType[] = [
+    {label: "封面", value: 1, color: "#7FFFD4"},
+    {label: "推广", value: 2, color: "#FFFAFA"},
+]

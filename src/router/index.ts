@@ -10,6 +10,7 @@ const router = createRouter({
             name: "web",
             path: "/",
             component: () => import("@/views/web/index.vue"),
+            redirect: {name: "web_home"},
             children: [
                 {
                     name: "web_home",
@@ -269,7 +270,6 @@ router.beforeEach((to, from, next) => {
         if (!store.isLogin) {
             // 没有登陆
             Message.warning("需要登陆")
-            console.log(to.path)
             showLogin({to: to.path, reload: true})
             return
         }

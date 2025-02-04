@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import {ref} from "vue";
-import Q_nav_msg from "@/components/web/q_nav_msg.vue";
 import Q_nav_avatar from "@/components/web/q_nav_avatar.vue";
 import Q_text_search_modal from "@/components/web/q_text_search_modal.vue";
+import {userStores} from "@/stores/user_store.ts";
 
+const userStore = userStores()
 
 interface Props {
   noScroll?: boolean
@@ -52,10 +53,14 @@ function search() {
       </div>
       <div class="right">
         <q_nav_avatar></q_nav_avatar>
-        <q_nav_msg></q_nav_msg>
-        <a href="javascript:void 0">历史</a>
-        <router-link :to="{name: 'platformArticleAdd'}">
-          <a-button type="primary"><i class="iconfont icon-jia"></i> <span>发布</span></a-button>
+        <!--        <q_nav_msg></q_nav_msg>-->
+        <template v-if="userStore.isLogin">
+          <router-link :to="{ name:'userCenterHistory'}">
+            <a href="javascript:void 0">历史</a>
+          </router-link>
+        </template>
+        <router-link v-if="userStore.isLogin&&userStore.isAdmin" :to="{name: 'platformArticleAdd'}">
+          <a-button type="primary"><i class="iconfont icon-jiahao"></i> <span>发布</span></a-button>
         </router-link>
       </div>
     </div>

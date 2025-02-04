@@ -6,14 +6,16 @@ import {reactive, ref} from "vue";
 import {bannerListApi, type bannerListType, type bannerType, bannerUpdateApi} from "@/api/banner_api.ts";
 import Q_image_upload from "@/components/common/q_image_upload.vue";
 import {Message} from "@arco-design/web-vue";
+import {bannerOptions} from "@/options/options.ts";
 
 const columns: columnType[] = [
   {title: "ID", dataIndex: "id"},
   {title: "图片", slotName: "cover"},
   {title: "跳转地址", slotName: "href"},
   {title: "是否显示", slotName: "show"},
+  {title: "类型", dataIndex: 'type', type: "options", options: bannerOptions},
   {title: "日期", slotName: "CreatedAt"},
-  {title: "操作", slotName: "action",},
+  {title: "操作", slotName: "action"},
 ]
 
 const fListRef = ref()
@@ -66,6 +68,12 @@ async function handler() {
         </a-form-item>
         <a-form-item label="跳转地址">
           <a-input v-model="data.href" placeholder="跳转地址"></a-input>
+        </a-form-item>
+        <a-form-item>
+          <a-radio-group v-model="data.type">
+            <a-radio :value="1">封面</a-radio>
+            <a-radio :value="2">推广</a-radio>
+          </a-radio-group>
         </a-form-item>
         <a-form-item label="是否显示">
           <a-switch v-model="data.show"></a-switch>

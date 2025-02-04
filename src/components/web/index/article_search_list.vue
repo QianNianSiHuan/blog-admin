@@ -12,7 +12,7 @@ const data = reactive<listResponse<articleSearchType>>({
 })
 
 const params = reactive<articleSearchRequest>({
-  limit: 3,
+  limit: 5,
   page: 1,
   type: 0,
 })
@@ -25,7 +25,7 @@ async function getData() {
   }
   data.count = res.data.count
   data.list = res.data.list
-  Message.success(res.msg)
+  //Message.success(res.msg)
 }
 
 async function setType(t: number) {
@@ -57,7 +57,8 @@ getData()
           管理员置顶
         </div>
         <div class="top_info">
-          <a-avatar :image-url="item.userAvatar" :size="30" @click="goUser(item.userID)"></a-avatar>
+          <a-avatar :image-url="item.userAvatar" :size="30" style="cursor: pointer"
+                    @click="goUser(item.userID)"></a-avatar>
           <span class="nick" @click="goUser(item.userID)">{{ item.userNickname }}</span>
           <span class="date">最后更新于{{ dateCurrentFormat(item.UpdatedAt) }}</span>
         </div>
@@ -210,10 +211,12 @@ getData()
             font-size: 17px;
             font-weight: 600;
             color: var(--color-text-1);
+            cursor: pointer;
           }
 
           .abs {
             margin: 5px 0;
+            cursor: pointer;
           }
 
           .data {
