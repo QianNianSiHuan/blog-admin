@@ -26,7 +26,7 @@ async function dispatchDelete(idList: number[]) {
 </script>
 
 <template>
-  <div class="user_article_list_view">
+  <div class="user_article_list_view scrollbar">
     <q_collect_list :is-me="userBaseStore.isMe" :user-i-d="Number(route.params.id)"></q_collect_list>
     <q_article_list ref="articleListRef" :is-check="userBaseStore.isMe"
                     @dispatch-delete="dispatchDelete"></q_article_list>
@@ -35,8 +35,9 @@ async function dispatchDelete(idList: number[]) {
 
 <style lang="less">
 .user_article_list_view {
-  display: flex;
   height: 100%;
+  display: flex;
+
 
   .q_category_list_com {
     width: 150px;

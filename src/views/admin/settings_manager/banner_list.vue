@@ -57,6 +57,16 @@ async function handler() {
   fListRef.value.getList()
   return true
 }
+
+async function bannerIsShow(record: bannerListType) {
+  data.id = record.id
+  data.show = record.show
+  data.href = record.href
+  data.cover = record.cover
+  data.type = record.type
+  await handler()
+}
+
 </script>
 
 <template>
@@ -90,7 +100,7 @@ async function handler() {
         <a-image :src="record.cover" height="50px"></a-image>
       </template>
       <template #show="{record}:{record:bannerListType}">
-        <a-switch :model-value="record.show"></a-switch>
+        <a-switch v-model="record.show" @change="bannerIsShow(record)"></a-switch>
       </template>
       <template #href="{record}:{record:bannerListType}">
         <a v-if="record.href" :href="record.href" target="_blank">{{ record.href }}</a>

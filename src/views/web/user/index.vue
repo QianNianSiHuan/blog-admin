@@ -101,18 +101,18 @@ async function focus() {
         <div class="head">
           <div class="left">
             <router-link :to="{name:'userArticle'}">
-              {{ userBaseInfo.isMe ? '他的文章' : '我的文章' }}
+              {{ userBaseInfo.isMe ? '我的文章' : '他的文章' }}
             </router-link>
             <router-link v-if="!userBaseInfo.userBase.openCollect||!userBaseInfo.isMe"
                          :to="{name:'userArticleCollect'}">
-              {{ userBaseInfo.isMe ? '他的收藏' : '我的收藏' }}
+              {{ userBaseInfo.isMe ? '我的收藏' : '他的收藏' }}
             </router-link>
-            <router-link v-if="!userBaseInfo.userBase.openFollow||!userBaseInfo.isMe" to="">
-              {{ userBaseInfo.isMe ? '他的关注' : '他的关注' }}
-            </router-link>
-            <router-link v-if="!userBaseInfo.userBase.openFans||!userBaseInfo.isMe" to="">
-              {{ userBaseInfo.isMe ? '他的粉丝' : '他的粉丝' }}
-            </router-link>
+            <!--            <router-link v-if="!userBaseInfo.userBase.openFollow||!userBaseInfo.isMe" to="">-->
+            <!--              {{ userBaseInfo.isMe ? '我的关注' : '他的关注' }}-->
+            <!--            </router-link>-->
+            <!--            <router-link v-if="!userBaseInfo.userBase.openFans||!userBaseInfo.isMe" to="">-->
+            <!--              {{ userBaseInfo.isMe ? '我的粉丝' : '他的粉丝' }}-->
+            <!--            </router-link>-->
           </div>
           <a-input-search v-model="text" :on-search="search" placeholder="搜索内容"
                           @keydown.enter="search"></a-input-search>
@@ -223,10 +223,11 @@ async function focus() {
           color: rgb(var(--arcoblue-6));
         }
       }
+
     }
 
     .body {
-      height: calc(100% - 270px);
+      height: calc(100vh - 250px);
     }
   }
 }

@@ -31,25 +31,29 @@ async function cutDown(e: any) {
     return
   }
   loadScript("/public/js/qiniu.min.js", () => {
+    console.log(1)
     upload(e.file, res.data)
   })
 
   function upload(file: File, conf: qiniuUploadConfigType) {
     const observer = {
-      next(res: string) {
+      //@ts-ignore
+      next(res) {
         //...
-        console.log("next:", res)
+        // console.log("next:", res)
       },
-      error(err: string) {
+      //@ts-ignore
+      error(err) {
         // ...
         //console.log("error:", err)
         Message.error(err)
       },
-      // complete(res) {
-      // ...
-      //console.log("complete:", res)
-      //emits("ok", conf.url)
-      // }
+      //@ts-ignore
+      complete(res) {
+        //...
+        //console.log("complete:", res)
+        emits("ok", conf.url)
+      }
     }
     const config = {
       useCdnDomain: true,
@@ -65,7 +69,7 @@ async function cutDown(e: any) {
 </script>
 
 <template>
-  <ImgCutter rate="1920:1080" @cutDown="cutDown">
+  <ImgCutter :quality="0" :toolBoxOverflow="false" originalGraph rate="192:108" @cutDown="cutDown">
     <template #open>
       <slot></slot>
     </template>

@@ -88,6 +88,14 @@ async function paste(e: ClipboardEvent) {
     //粘贴的是图片
     return
   }
+  await aiAnalysis()
+}
+
+async function aiAnalysis() {
+  if (!form.content.trim()) {
+    Message.warning("请输入正文")
+    return
+  }
   const res = await aiAnalysisApi(form.content)
   if (res.code) {
     Message.error(res.msg)
@@ -110,6 +118,10 @@ function removeCover() {
   form.cover = ""
 }
 
+defineExpose({
+      aiAnalysis
+    }
+)
 </script>
 
 <template>
@@ -123,7 +135,7 @@ function removeCover() {
     </a-form-item>
     <a-form-item :rules="[{required:true,message:'请输入文章内容'}]" field="content" validate-trigger="blur">
       <MdEditor v-model="form.content" placeholder="请输入文章内容" @onUploadImg="onUploadImg"
-                @paste="paste"></MdEditor>
+      ></MdEditor>
     </a-form-item>
     <a-collapse :bordered="false" :default-active-key="[1]">
       <a-collapse-item :key="1" header="更多设置">

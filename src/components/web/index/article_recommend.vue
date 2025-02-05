@@ -34,7 +34,11 @@ getData()
     justify-content: space-between;
     padding: 5px 0;
     align-items: center;
+
+    a {
+      width: 100%;
+    }
   }
-  
+
 }
 </style>
