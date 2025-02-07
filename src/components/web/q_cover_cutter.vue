@@ -31,7 +31,6 @@ async function cutDown(e: any) {
     return
   }
   loadScript("/public/js/qiniu.min.js", () => {
-    console.log(1)
     upload(e.file, res.data)
   })
 

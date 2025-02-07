@@ -17,6 +17,10 @@ store.loadUserInfo()
 function goHome() {
   router.push({name: "web"})
 }
+
+function goAdminHome() {
+  router.push({name: "home"})
+}
 </script>
 
 

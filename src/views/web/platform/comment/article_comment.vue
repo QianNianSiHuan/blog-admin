@@ -47,7 +47,7 @@ function hide() {
 
 <template>
   <div class="article_comment_view">
-    <comment_list ref="commentRef" v-slot="{item}:{item:commentListType}" :type="1">
+    <comment_list ref="commentRef" v-slot="{item}:{item:commentListType}" :status="2" :type="1">
       <div class="user">
         <a-avatar :image-url="item.userAvatar"></a-avatar>
       </div>

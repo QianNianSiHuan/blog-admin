@@ -7,6 +7,7 @@ import {useRoute} from "vue-router";
 
 interface Props {
   type: 1 | 2
+  status: 0 | 2
 }
 
 const loading = ref<boolean>(false);
@@ -18,6 +19,7 @@ const data = reactive<listResponse<commentListType>>({
 const params = reactive<commentListRequest>({
   type: props.type,
   limit: 10,
+  status: props.status
 })
 
 const checkIDList = ref<number[]>([])

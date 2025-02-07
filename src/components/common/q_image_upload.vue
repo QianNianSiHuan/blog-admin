@@ -42,7 +42,7 @@ function callback(data: string) {
 </script>
 
 <template>
-  <div class="f_image_upload">
+  <div class="q_image_upload">
     <a-input :model-value="props.modelValue" :placeholder="props.placeholder" @input="inputHandler"></a-input>
     <!--    <a-upload :headers="{token:userStore.userInfo.token}" :show-file-list="false" action="/api/images" name="fileTool"-->
     <!--              @success="fileUploadCallBack">-->
@@ -57,7 +57,7 @@ function callback(data: string) {
 </template>
 
 <style lang="less">
-.f_image_upload {
+.q_image_upload {
   width: 100%;
 
   .arco-input-wrapper {

@@ -120,6 +120,7 @@ const router = createRouter({
         {
             name: "admin",
             path: "/admin",
+            redirect: "/admin/home",
             meta: {
                 title: "首页",
                 role: [1, 3]

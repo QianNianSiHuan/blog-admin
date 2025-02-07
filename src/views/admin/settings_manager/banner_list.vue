@@ -4,9 +4,9 @@ import type {columnType} from "@/components/admin/q_list.vue";
 import Q_list from "@/components/admin/q_list.vue";
 import {reactive, ref} from "vue";
 import {bannerListApi, type bannerListType, type bannerType, bannerUpdateApi} from "@/api/banner_api.ts";
-import Q_image_upload from "@/components/common/q_image_upload.vue";
 import {Message} from "@arco-design/web-vue";
 import {bannerOptions} from "@/options/options.ts";
+import Q_cover_upload from "@/components/common/q_cover_upload.vue";
 
 const columns: columnType[] = [
   {title: "ID", dataIndex: "id"},
@@ -67,6 +67,14 @@ async function bannerIsShow(record: bannerListType) {
   await handler()
 }
 
+function removeCover() {
+  data.cover = ""
+}
+
+function coverBack(url: string) {
+  data.cover = url
+}
+
 </script>
 
 <template>
@@ -74,12 +82,24 @@ async function bannerIsShow(record: bannerListType) {
     <a-modal v-model:visible="visible" :on-before-ok="handler" :title="data.id ? '更新banner':'创建banner'">
       <a-form :model="data">
         <a-form-item label="封面">
-          <q_image_upload v-model="data.cover" :height="60" placeholder="banner封面" shape=""></q_image_upload>
+          <div class="banner_list_upload">
+            <a-input v-model="data.cover" placeholder="图片地址"></a-input>
+            <div v-if="!data.cover">
+              <q_cover_upload placeholder="点击上传封面" @ok="coverBack"></q_cover_upload>
+            </div>
+            <div v-else class="banner_list_show">
+              <a-image :height="108" :src="data.cover">
+                <template #extra>
+                  <IconDelete @click="removeCover"></IconDelete>
+                </template>
+              </a-image>
+            </div>
+          </div>
         </a-form-item>
         <a-form-item label="跳转地址">
           <a-input v-model="data.href" placeholder="跳转地址"></a-input>
         </a-form-item>
-        <a-form-item>
+        <a-form-item label="类型">
           <a-radio-group v-model="data.type">
             <a-radio :value="1">封面</a-radio>
             <a-radio :value="2">推广</a-radio>
@@ -111,5 +131,27 @@ async function bannerIsShow(record: bannerListType) {
 </template>
 
 <style lang="less">
+.banner_list_upload {
+  width: 100%;
 
+  .arco-input-wrapper {
+    margin-bottom: 10px;
+  }
+
+  .banner_list_show {
+    .arco-image-footer {
+      display: flex;
+      justify-content: center;
+
+      .arco-image-footer-extra {
+        padding-left: 0;
+
+        svg {
+          cursor: pointer;
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
 </style>

@@ -6,7 +6,7 @@ import Comment_list from "@/components/web/comment/comment_list.vue";
 
 <template>
   <div class="my_comment_view">
-    <comment_list v-slot="{item}:{item:commentListType}" :type="2">
+    <comment_list v-slot="{item}:{item:commentListType}" :status="0" :type="2">
       <div class="info">
         <div class="article">
           评论了文章:

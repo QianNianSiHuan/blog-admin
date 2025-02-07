@@ -4,12 +4,12 @@ import {Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
 import {MdEditor} from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
-import Q_cover_cutter from "@/components/web/q_cover_cutter.vue";
 import {getOptions, type optionsType} from "@/api";
 import {articleCategoryOptionsApi} from "@/api/article_api.ts";
 import {userStores} from "@/stores/user_store.ts";
 import {aiAnalysisApi, type aiType} from "@/api/ai_api.ts";
 import {onUploadImg} from "@/api/image_api.ts";
+import Q_cover_upload from "@/components/common/q_cover_upload.vue";
 
 const form = reactive<articleAddType>({
   title: "",
@@ -143,18 +143,13 @@ defineExpose({
                 label-align="left">
           <a-form-item label="请选择文章分类">
             <a-select v-model="form.categoryID" :options="categoryOptions" placeholder="文章分类"></a-select>
-            <template #help>
-              <span v-if="aiData.category">基于ai推荐分类:{{ aiData.category }}</span>
+            <template v-if="aiData.category" #help>
+              <span>基于ai推荐分类:{{ aiData.category }}</span>
             </template>
           </a-form-item>
           <a-form-item content-class="article_cover_col" label="文章封面">
             <div v-if="!form.cover" class="up">
-              <q_cover_cutter style="width: 100%" @ok="coverBack">
-                <div class="cover_mask">
-                  <IconCamera></IconCamera>
-                  <span>点击上传封面</span>
-                </div>
-              </q_cover_cutter>
+              <q_cover_upload placeholder="上传文章封面" @ok="coverBack"></q_cover_upload>
             </div>
             <div v-if="form.cover" class="show">
               <a-image :height="108" :src="form.cover">
@@ -223,26 +218,6 @@ defineExpose({
       margin-bottom: 0;
     }
 
-    .cover_mask {
-      width: 192px;
-      height: 108px;
-      cursor: pointer;
-      border: @q_border;
-      border-radius: 5px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-2);
-
-      span {
-        font-size: 12px;
-      }
-
-      svg {
-        font-size: 30px;
-      }
-    }
 
     .article_cover_col {
       flex-direction: column;
