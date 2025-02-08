@@ -2,7 +2,7 @@
 import {userStores} from "@/stores/user_store.ts";
 import router from "@/router";
 import {showLogin} from "@/components/web/q_login.ts";
-import {goUser} from "@/utils/go_router.ts";
+import {goUser, goUserCollect} from "@/utils/go_router.ts";
 
 const userStore = userStores()
 
@@ -41,9 +41,16 @@ function goRouter(name: string) {
         <div class="menu">
           <div class="item" @click="goRouter('userCenterInfo')"><i class="iconfont icon-list"></i><span>个人中心</span>
           </div>
-          <div class="item" @click="goRouter('platformArticle')"><i class="iconfont icon-list"></i><span>文章管理</span>
+          <div v-if="userStore.siteInfo.siteInfo.mode===1 || userStore.isAdmin" class="item"
+               @click="goRouter('platformArticle')"><i class="iconfont icon-list"></i><span>文章管理</span>
           </div>
-          <div class="item" @click="goRouter('msgChat')"><i class="iconfont icon-list"></i><span>我的消息</span></div>
+          <div class="item"
+               @click="goUserCollect(userStore.userInfo.userID)"><i class="iconfont icon-list"></i><span>我的收藏</span>
+          </div>
+          <div v-if="userStore.siteInfo.siteInfo.mode===1 || userStore.isAdmin" class="item"
+               @click="goRouter('msgChat')"><i class="iconfont icon-list"></i><span>我的消息</span>
+          </div>
+          <div class="item" @click=""><i class="iconfont icon-list"></i><span>黑夜模式</span></div>
           <div v-if="userStore.isAdmin" class="item" @click="goRouter('admin')"><i class="iconfont icon-list"></i><span>后台管理</span>
           </div>
           <div class="exit" @click="goRouter('exit')">

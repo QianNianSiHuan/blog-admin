@@ -100,7 +100,7 @@ async function focus() {
       <div class="user_sub_view">
         <div class="head">
           <div class="left">
-            <router-link :to="{name:'userArticle'}">
+            <router-link v-if="userStore.siteInfo.siteInfo.mode == 1" :to="{name:'userArticle'}">
               {{ userBaseInfo.isMe ? '我的文章' : '他的文章' }}
             </router-link>
             <router-link v-if="!userBaseInfo.userBase.openCollect||!userBaseInfo.isMe"

@@ -8,7 +8,7 @@ export interface emailLoginRequest {
 }
 
 export function emailLoginApi(data: emailLoginRequest): Promise<baseResponse<string>> {
-    return useAxios.post("api/user/login", data)
+    return useAxios.post("/api/user/login", data)
 }
 
 export interface userInfoType {

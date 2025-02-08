@@ -20,3 +20,10 @@ export function goUser(id: number) {
         params: {id: id}
     })
 }
+
+export function goUserCollect(id: number) {
+    router.push({
+        name: "userArticleCollect",
+        params: {id: id}
+    })
+}

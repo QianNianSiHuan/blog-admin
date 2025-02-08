@@ -85,7 +85,7 @@ getData()
 <template>
   <div class="q_article_list_parent_com scrollbar">
     <div v-if="props.isCheck" class="actions">
-      <span class="dispatch_span" @click="isCheckHandler">批量操作</span>
+      <span v-if="data.list.length" class="dispatch_span" @click="isCheckHandler">批量操作</span>
       <a-button v-if="checkIDList.length && isCheckShow" size="mini" status="danger" @click="dispatchDelete">批量移除
       </a-button>
     </div>

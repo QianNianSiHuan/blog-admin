@@ -2,7 +2,9 @@
 import Q_main from "@/components/web/q_main.vue";
 import Q_nav from "@/components/web/q_nav.vue";
 import {userCenterStores} from "@/stores/user_center_store.ts";
+import {userStores} from "@/stores/user_store.ts";
 
+const userStore = userStores()
 const userCenterStore = userCenterStores()
 userCenterStore.getUserDetail()
 </script>
@@ -15,7 +17,7 @@ userCenterStore.getUserDetail()
         <router-link :to="{name:'userCenterInfo'}">个人资料</router-link>
         <router-link :to="{name:'userCenterAccount'}">账号设置</router-link>
         <router-link :to="{name:'userCenterPrivacy'}">隐私设置</router-link>
-        <router-link :to="{name:'userCenterHome'}">主页设置</router-link>
+        <router-link v-if="userStore.siteInfo.siteInfo.mode===1" :to="{name:'userCenterHome'}">主页设置</router-link>
         <router-link :to="{name:'userCenterHistory'}">历史浏览</router-link>
       </div>
       <div class="view">

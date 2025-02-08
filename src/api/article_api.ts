@@ -96,7 +96,7 @@ export function articleHistoryListApi(params: articleHistoryListRequest): Promis
 }
 
 export function articleHistoryRemoveApi(idList: number[]): Promise<baseResponse<string>> {
-    return useAxios.delete("/api/article/history", {data: idList})
+    return useAxios.delete("/api/article/history", {data: {idList}})
 }
 
 export interface articleAddType {

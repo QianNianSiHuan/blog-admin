@@ -68,7 +68,7 @@ getData()
 
 
 async function removeHistory(item: articleHistoryListType) {
-  const res = await articleHistoryRemoveApi([item.articleID])
+  const res = await articleHistoryRemoveApi([item.id])
   if (res.code) {
     Message.error(res.msg)
     return

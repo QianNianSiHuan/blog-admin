@@ -6,5 +6,5 @@ export interface feedbackCreateType {
 }
 
 export function feedbackCreateApi(data: feedbackCreateType): Promise<baseResponse<string>> {
-    return useAxios.post("/api/feedback/", data)
+    return useAxios.post("/api/feedback", data)
 }

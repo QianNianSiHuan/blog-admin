@@ -58,7 +58,7 @@ async function getData() {
   }
   Object.assign(data, res.data)
 
-  setTimeout(look, 2000)
+  //setTimeout(look, 2000)
 }
 
 async function look() {

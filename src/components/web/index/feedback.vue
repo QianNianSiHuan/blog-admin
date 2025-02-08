@@ -1,21 +1,28 @@
 <script lang="ts" setup>
-
 import Q_card from "@/components/web/q_card.vue";
 import {reactive} from "vue";
 import {feedbackCreateApi, type feedbackCreateType} from "@/api/feedback.ts";
 import {Message} from "@arco-design/web-vue";
+import {userStores} from "@/stores/user_store.ts";
+import {showLogin} from "@/components/web/q_login.ts";
 
+const userStore = userStores()
 const form = reactive<feedbackCreateType>({
   email: "",
   content: "",
 })
 
 async function add() {
+  if (!userStore.isLogin) {
+    showLogin()
+    return
+  }
   const res = await feedbackCreateApi(form)
   if (res.code) {
     Message.error(res.msg)
     return
   }
+  Message.success(res.msg)
 }
 </script>
 
