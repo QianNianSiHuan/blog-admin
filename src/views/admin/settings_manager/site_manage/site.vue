@@ -1,13 +1,14 @@
 <script lang="ts" setup>
+import type {siteResponse} from "@/api/site_api.ts";
+import Q_site from "@/components/admin/site/q_site.vue";
 import Q_title from "@/components/admin/q_title.vue";
 import Q_image_upload from "@/components/common/q_image_upload.vue";
 import Q_index_right from "@/components/admin/site/q_index_right.vue";
-import Q_site from "@/components/admin/site/q_site.vue";
 </script>
 
 <template>
   <div class="site_view">
-    <q_site v-slot="{form}" name="site">
+    <q_site v-slot="{form}:{form:siteResponse}" name="site">
       <a-form :model="form">
         <a-row>
           <a-col :span="8">
@@ -120,10 +121,10 @@ import Q_site from "@/components/admin/site/q_site.vue";
                 <a-form-item :label-col-props="{span:5}" :wrapper-col-props="{span:13}" label="文章免审核">
                   <a-switch v-model="form.article.noExamine"></a-switch>
                 </a-form-item>
-                <a-form-item :label-col-props="{span:5}" :wrapper-col-props="{span:13}" label="评论免审核">
+                <a-form-item :label-col-props="{span:5}" :wrapper-col-props="{span:14}" label="评论免审核">
                   <a-switch v-model="form.article.commentNoExamine"></a-switch>
                 </a-form-item>
-                <a-form-item :label-col-props="{span:5}" :wrapper-col-props="{span:13}" label="评论层数">
+                <a-form-item :label-col-props="{span:5}" :wrapper-col-props="{span:14}" label="评论层数">
                   <a-input-number v-model="form.article.commentLine" placeholder="评论层数"></a-input-number>
                 </a-form-item>
               </div>

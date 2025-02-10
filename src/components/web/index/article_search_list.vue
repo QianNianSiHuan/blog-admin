@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {articleSearchApi, type articleSearchRequest, type articleSearchType} from "@/api/search_api.ts";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 import type {listResponse} from "@/api";
 import {Message} from "@arco-design/web-vue";
 import {goArticle, goUser} from "@/utils/go_router.ts";
@@ -10,7 +10,7 @@ const data = reactive<listResponse<articleSearchType>>({
   list: [],
   count: 0
 })
-
+const animation = ref(false)
 const params = reactive<articleSearchRequest>({
   limit: 5,
   page: 1,
@@ -18,7 +18,9 @@ const params = reactive<articleSearchRequest>({
 })
 
 async function getData() {
+  animation.value = true
   const res = await articleSearchApi(params)
+  animation.value = false
   if (res.code) {
     Message.error(res.msg)
     return
@@ -51,7 +53,12 @@ getData()
                       @keydown.enter="getData"></a-input-search>
     </div>
     <div class="list">
-      <div v-for="item in data.list" class="item">
+      <a-skeleton v-if="animation" :animation="animation">
+        <a-space :style="{width:'100%'}" direction="vertical" size="large">
+          <a-skeleton-line :rows="24"/>
+        </a-space>
+      </a-skeleton>
+      <div v-for="item in data.list" v-if="!animation" class="item">
         <div v-if="item.adminTop" class="admin_top">
           <i class="iconfont icon-tubiao02"></i>
           管理员置顶
@@ -148,8 +155,12 @@ getData()
   .list {
     padding: 0 20px 10px 20px;
 
+    .arco-skeleton {
+      padding: 20px 0;
+    }
+
     .item {
-      padding: 10px 0;
+      padding: 20px 0;
       border-bottom: @q_border;
 
       .admin_top {

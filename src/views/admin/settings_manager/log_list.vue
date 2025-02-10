@@ -38,7 +38,7 @@ const columnsDict = reactive({
         {title: "ID", dataIndex: 'id'},
         {title: "服务", dataIndex: 'serviceName'},
         {title: "标题", slotName: 'title'},
-        {title: "等级", dataIndex: 'level',},
+        {title: "等级", dataIndex: 'level', type: "options", options: logLevelOptions},
         {title: "时间", dataIndex: 'createdAt', type: "date"},
         {title: "操作", slotName: 'action'},
       ]

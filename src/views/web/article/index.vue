@@ -4,13 +4,7 @@ import Q_nav from "@/components/web/q_nav.vue";
 import Q_main from "@/components/web/q_main.vue";
 import {MdCatalog, MdPreview} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
-import {
-  articleCollectApi,
-  articleDetailApi,
-  type articleDetailType,
-  articleDiggApi,
-  articleLookApi
-} from "@/api/article_api.ts";
+import {articleCollectApi, articleDetailApi, type articleDetailType, articleDiggApi} from "@/api/article_api.ts";
 import {Message} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
 import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
@@ -23,9 +17,9 @@ import {showLogin} from "@/components/web/q_login.ts";
 import {goArticleEdit} from "@/utils/go_router.ts";
 
 const route = useRoute()
-
+const animation = ref(false)
 const scrollElement = document.documentElement;
-const data = reactive<articleDetailType>({
+let data = reactive<articleDetailType>({
   "id": 0,
   "CreatedAt": "",
   "UpdatedAt": "",
@@ -51,19 +45,20 @@ const data = reactive<articleDetailType>({
 })
 
 async function getData() {
+  animation.value = true;
   const res = await articleDetailApi(Number(route.params.id));
+  animation.value = false;
   if (res.code) {
     Message.error(res.msg)
     return
   }
   Object.assign(data, res.data)
-
   //setTimeout(look, 2000)
 }
 
-async function look() {
-  await articleLookApi(data.id)
-}
+// async function look() {
+//   await articleLookApi(data.id)
+// }
 
 const userStore = userStores()
 watch(() => route.params.id, () => {
@@ -170,7 +165,12 @@ onUnmounted(() => {
                                @select="collectArticle"></q_article_collect_modal>
       <div class="article_container">
         <div class="article_content">
-          <div class="head">
+          <a-skeleton v-if="animation" :animation="animation">
+            <a-space :style="{width:'100%'}" direction="vertical" size="large">
+              <a-skeleton-line :rows="18"/>
+            </a-space>
+          </a-skeleton>
+          <div v-if="!animation" class="head">
             <div class="title">
               <span>{{ data.title }}</span>
               <IconEdit v-if="data.userID===userStore.userInfo.userID" style="margin-left: 10px;cursor: pointer"
@@ -182,7 +182,7 @@ onUnmounted(() => {
               <a-tag v-for="item in data.tagList">{{ item }}</a-tag>
             </div>
           </div>
-          <div class="body">
+          <div v-if="!animation" class="body">
             <MdPreview :id="`md_${data.id}`" :model-value="data.content" :theme="theme as 'light'|'dark'"></MdPreview>
           </div>
         </div>
@@ -249,6 +249,10 @@ onUnmounted(() => {
 
   .article_container {
     width: calc(100% - 280px);
+
+    .article_content {
+      padding: 20px;
+    }
 
     .article_content {
       background: var(--color-bg-1);

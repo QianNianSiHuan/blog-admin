@@ -3,6 +3,7 @@ import {userStores} from "@/stores/user_store.ts";
 import router from "@/router";
 import {showLogin} from "@/components/web/q_login.ts";
 import {goUser, goUserCollect} from "@/utils/go_router.ts";
+import {setTheme, theme} from "@/components/common/q_theme.ts";
 
 const userStore = userStores()
 
@@ -39,22 +40,28 @@ function goRouter(name: string) {
           <a-statistic :value="userStore.userInfo.articleCount" extra="文章"/>
         </div>
         <div class="menu">
-          <div class="item" @click="goRouter('userCenterInfo')"><i class="iconfont icon-list"></i><span>个人中心</span>
+          <div class="item" @click="goRouter('userCenterInfo')"><i class="iconfont icon-geren"></i><span>个人中心</span>
           </div>
           <div v-if="userStore.siteInfo.siteInfo.mode===1 || userStore.isAdmin" class="item"
-               @click="goRouter('platformArticle')"><i class="iconfont icon-list"></i><span>文章管理</span>
+               @click="goRouter('platformArticle')"><i class="iconfont icon-16"></i><span>文章管理</span>
           </div>
           <div class="item"
-               @click="goUserCollect(userStore.userInfo.userID)"><i class="iconfont icon-list"></i><span>我的收藏</span>
+               @click="goUserCollect(userStore.userInfo.userID)"><i
+              class="iconfont icon-shoucang2"></i><span>我的收藏</span>
           </div>
           <div v-if="userStore.siteInfo.siteInfo.mode===1 || userStore.isAdmin" class="item"
-               @click="goRouter('msgChat')"><i class="iconfont icon-list"></i><span>我的消息</span>
+               @click="goRouter('msgChat')"><i class="iconfont icon-xiaoxi"></i><span>我的消息</span>
           </div>
-          <div class="item" @click=""><i class="iconfont icon-list"></i><span>黑夜模式</span></div>
-          <div v-if="userStore.isAdmin" class="item" @click="goRouter('admin')"><i class="iconfont icon-list"></i><span>后台管理</span>
+          <div v-if="theme==='dark'" class="item" @click="setTheme('')"><i
+              class="iconfont icon-heiye2"></i><span>黑夜模式</span>
+          </div>
+          <div v-else class="item" @click="setTheme('dark')"><i
+              class="iconfont icon-baitian-qing"></i><span>白天模式</span></div>
+          <div v-if="userStore.isAdmin" class="item" @click="goRouter('admin')"><i
+              class="iconfont icon-shezhi"></i><span>后台管理</span>
           </div>
           <div class="exit" @click="goRouter('exit')">
-            <div class="item"><i class="iconfont icon-list"></i><span>退出</span></div>
+            <div class="item"><i class="iconfont icon-tuichu"></i><span>退出</span></div>
           </div>
         </div>
       </div>
