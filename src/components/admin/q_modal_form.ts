@@ -1,5 +1,5 @@
 import type {FieldRule} from "@arco-design/web-vue";
-import type {optionsFunc, optionsType} from "@/api";
+import type {optionsFunc, optionsType} from "@/api/index.ts";
 
 export type emitFnType = (val: boolean) => void
 

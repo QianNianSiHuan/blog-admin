@@ -7,7 +7,7 @@ import "md-editor-v3/lib/preview.css"
 import {articleCollectApi, articleDetailApi, type articleDetailType, articleDiggApi} from "@/api/article_api.ts";
 import {Message} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
-import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
+import {onMounted, onUnmounted, reactive, ref} from "vue";
 import {dataTemFormat} from "@/utils/data.ts";
 import {theme} from "@/components/common/q_theme.ts";
 import Q_article_collect_modal from "@/components/web/article/q_article_collect_modal.vue";
@@ -39,7 +39,7 @@ let data = reactive<articleDetailType>({
   "status": 0,
   "username": "",
   "nickname": "",
-  "userAvatar": "",
+  userAvatar: "",
   isDigg: false,
   isCollect: false,
 })
@@ -47,13 +47,15 @@ let data = reactive<articleDetailType>({
 async function getData() {
   animation.value = true;
   const res = await articleDetailApi(Number(route.params.id));
-  animation.value = false;
-  if (res.code) {
-    Message.error(res.msg)
-    return
-  }
-  Object.assign(data, res.data)
-  //setTimeout(look, 2000)
+  setTimeout(() => {
+    animation.value = false;
+    if (res.code) {
+      Message.error(res.msg)
+      return
+    }
+    Object.assign(data, res.data)
+    //setTimeout(look, 2000)
+  }, 800)
 }
 
 // async function look() {
@@ -61,20 +63,21 @@ async function getData() {
 // }
 
 const userStore = userStores()
-watch(() => route.params.id, () => {
-  getData()
-}, {immediate: true})
+
+// watch(() => route.params.id, () => {
+//   getData()
+// }, {immediate: true})
+
 
 onMounted(() => {
+  getData()
   const id = route.query.id;
-  setTimeout(() => {
-    if (id) {
-      const div = document.getElementById(id as string) as HTMLDivElement;
-      if (div) {
-        document.documentElement.scrollTo({top: div.offsetTop, behavior: "smooth"});
-      }
+  if (id) {
+    const div = document.getElementById(id as string) as HTMLDivElement;
+    if (div) {
+      document.documentElement.scrollTo({top: div.offsetTop, behavior: "smooth"});
     }
-  }, 500)
+  }
 })
 
 const isFixed = ref()
@@ -126,11 +129,12 @@ async function collectArticle(id: number) {
     return
   }
   Message.success(res.msg)
-  if (res.msg.indexOf("取消") !== -1) {
-    data.isCollect = true
-    data.collectCount = data.collectCount++
+  data.isCollect = res.data.isCollect
+  console.log(res.data.collect)
+  if (res.data.collect) {
+    data.collectCount++
   } else {
-    data.collectCount = data.collectCount--
+    data.collectCount--
   }
 }
 
@@ -182,7 +186,7 @@ onUnmounted(() => {
               <a-tag v-for="item in data.tagList">{{ item }}</a-tag>
             </div>
           </div>
-          <div v-if="!animation" class="body">
+          <div class="body">
             <MdPreview :id="`md_${data.id}`" :model-value="data.content" :theme="theme as 'light'|'dark'"></MdPreview>
           </div>
         </div>

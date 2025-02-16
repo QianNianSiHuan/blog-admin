@@ -1,21 +1,21 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
 
 <template>
-<div class="f_title">
-  <slot></slot>
-</div>
+  <div class="q_title">
+    <slot></slot>
+  </div>
 </template>
 
 <style lang="less">
-.f_title{
+.q_title {
   display: flex;
   align-items: center;
   font-weight: 600;
   font-size: 16px;
 
-  &::before{
+  &::before {
     width: 4px;
     height: 1.5rem;
     content: "";

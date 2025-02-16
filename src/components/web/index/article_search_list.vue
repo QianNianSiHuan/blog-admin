@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import {articleSearchApi, type articleSearchRequest, type articleSearchType} from "@/api/search_api.ts";
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import type {listResponse} from "@/api";
 import {Message} from "@arco-design/web-vue";
 import {goArticle, goUser} from "@/utils/go_router.ts";
 import {dateCurrentFormat} from "@/utils/data.ts";
+import {useRoute} from "vue-router";
+
+const route = useRoute()
 
 const data = reactive<listResponse<articleSearchType>>({
   list: [],
@@ -15,6 +18,7 @@ const params = reactive<articleSearchRequest>({
   limit: 5,
   page: 1,
   type: 0,
+  tag: "",
 })
 
 async function getData() {
@@ -35,6 +39,18 @@ async function setType(t: number) {
   getData()
 }
 
+watch(() => route.query.tag, () => {
+  const tag = String(route.query.tag)
+  if (tag !== undefined) {
+    params.tag = undefined
+  } else {
+    params.tag = tag
+  }
+  if (route.query.tag !== undefined) {
+    params.tag = route.query.tag as string
+  }
+  getData()
+}, {immediate: true});
 
 getData()
 </script>
@@ -59,15 +75,15 @@ getData()
         </a-space>
       </a-skeleton>
       <div v-for="item in data.list" v-if="!animation" class="item">
-        <div v-if="item.adminTop" class="admin_top">
-          <i class="iconfont icon-tubiao02"></i>
-          管理员置顶
-        </div>
         <div class="top_info">
           <a-avatar :image-url="item.userAvatar" :size="30" style="cursor: pointer"
                     @click="goUser(item.userID)"></a-avatar>
           <span class="nick" @click="goUser(item.userID)">{{ item.userNickname }}</span>
           <span class="date">最后更新于{{ dateCurrentFormat(item.UpdatedAt) }}</span>
+          <div v-if="item.adminTop" class="admin_top">
+            <i class="iconfont icon-tubiao02"></i>
+            管理员置顶
+          </div>
         </div>
         <div class="article_info">
           <div v-if="item.cover" class="cover">
@@ -163,19 +179,6 @@ getData()
       padding: 20px 0;
       border-bottom: @q_border;
 
-      .admin_top {
-        position: absolute;
-        right: 0;
-        top: 10px;
-        color: rgb(var(--arcoblue-6));
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-
-        i {
-          margin-right: 5px;
-        }
-      }
 
       em {
         color: red;
@@ -195,6 +198,20 @@ getData()
           font-size: 12px;
           color: var(--color-text-2);
         }
+
+        .admin_top {
+          right: 0;
+          top: 10px;
+          color: rgb(var(--arcoblue-6));
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+
+          i {
+            margin-right: 5px;
+          }
+        }
+
       }
 
       .article_info {

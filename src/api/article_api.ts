@@ -147,7 +147,12 @@ export interface articleCollectRequest {
     collectID?: number
 }
 
-export function articleCollectApi(data: articleCollectRequest): Promise<baseResponse<string>> {
+export interface articleCollectType {
+    isCollect: boolean
+    collect: boolean
+}
+
+export function articleCollectApi(data: articleCollectRequest): Promise<baseResponse<articleCollectType>> {
     return useAxios.post("/api/article/collect", data)
 }
 

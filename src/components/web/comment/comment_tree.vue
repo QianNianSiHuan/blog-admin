@@ -86,7 +86,7 @@ async function remove(item: commentTreeType) {
       <span key="heart" :class="{active:item.isDigg}" class="action" @click="digg(item)">
         <i class="iconfont icon-dianzan_kuai"></i>点赞 ({{ item.diggCount }})
       </span>
-      <span v-if="!(props.line===userStore.siteInfo.article.commentLine)" key="reply" class="action"
+      <span v-if="!(props.line as number > userStore.siteInfo.article.commentLine-1)" key="reply" class="action"
             @click="apply(item)">
         <i class="iconfont icon-xinxi1"></i> 回复 ({{ item.applyCount }})
       </span>

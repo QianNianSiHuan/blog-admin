@@ -131,7 +131,7 @@ const router = createRouter({
                     name: "home",
                     path: "home",
                     meta: {
-                        title: "首页",
+                        title: "数据统计",
                         role: [1, 2, 3]
                     },
                     component: () => import("@/views/admin/home/index.vue")

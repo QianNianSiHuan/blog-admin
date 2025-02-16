@@ -12,11 +12,10 @@ const props = defineProps<Props>()
 
 const data = reactive<any>({})
 
-const isShow = ref(true)
+const isShow = ref(false)
 
 async function getData() {
   const res = await siteApi(props.name)
-  console.log(res.data)
   if (res.code) {
     Message.error(res.msg)
     return

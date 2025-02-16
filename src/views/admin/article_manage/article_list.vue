@@ -19,7 +19,7 @@ import "md-editor-v3/lib/preview.css"
 
 const columns: columnType[] = [
   {title: "ID", dataIndex: 'id'},
-  {title: "文章标题", dataIndex: 'title'},
+  {title: "文章标题", dataIndex: 'title', width: 150},
   {title: "发布用户", slotName: 'user'},
   {title: "文章封面", slotName: 'cover'},
   {title: "浏览量", dataIndex: 'lookCount'},

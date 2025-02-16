@@ -11,6 +11,10 @@ import {
   type commentTreeType
 } from "@/api/comment_api";
 import {Message} from "@arco-design/web-vue";
+import {showLogin} from "@/components/web/q_login.ts";
+import {userStores} from "@/stores/user_store.ts";
+
+const userStore = userStores();
 
 interface Props {
   articleId: number
@@ -47,6 +51,10 @@ const form = reactive<commentCreateRequest>({
 
 
 async function create() {
+  if (!userStore.isLogin) {
+    showLogin({reload: true})
+    return
+  }
   form.articleID = props.articleId
   if (form.content.trim() === "") {
     Message.warning("评论不能为空")
@@ -86,7 +94,7 @@ defineExpose({
       <a-button size="mini" type="primary" @click="create">发布评论</a-button>
     </div>
     <div class="comment_list">
-      <comment_tree :list="data.list" @ok="getData"></comment_tree>
+      <comment_tree :line="1" :list="data.list" @ok="getData"></comment_tree>
       <div v-if="data.list.length" class="page">
         <a-pagination v-model:current="params.page" :page-size="params.limit" :total="data.count" show-total
                       @change="getData"></a-pagination>

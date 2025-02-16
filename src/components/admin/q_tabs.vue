@@ -26,8 +26,6 @@ function check(item: TabType) {
   saveTabs()
 }
 
-saveTabs()
-
 function saveTabs() {
   localStorage.setItem("q_tabs", JSON.stringify(tabs.value))
 }
@@ -60,7 +58,7 @@ function removeAllItem() {
 }
 
 function loadTabs() {
-  const q_tabs = localStorage.getItem("q_labs")
+  const q_tabs = localStorage.getItem("q_tabs")
   if (q_tabs) {
     try {
       tabs.value = JSON.parse(q_tabs)
@@ -73,6 +71,7 @@ function loadTabs() {
 loadTabs()
 
 watch(() => route.name, () => {
+  saveTabs()
   SelectTabInView()
 })
 

@@ -38,13 +38,6 @@ async function getData() {
 }
 
 watch(() => route.query, () => {
-  const categoryID = Number(route.query.categoryID)
-  if (isNaN(categoryID)) {
-    params.categoryID = undefined
-  } else {
-    params.categoryID = categoryID
-  }
-
   const collect = Number(route.query.collectID)
   if (isNaN(collect)) {
     params.collectID = undefined

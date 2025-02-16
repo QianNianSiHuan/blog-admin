@@ -25,9 +25,7 @@ async function beforeOpen() {
     Message.error(res.msg)
     return
   }
-  console.log(res.data)
   Object.assign(data, res.data)
-  Message.success(res.msg)
 }
 
 function cancel() {

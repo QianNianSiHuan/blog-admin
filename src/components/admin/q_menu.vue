@@ -21,7 +21,7 @@ interface MenuType {
 
 const menuList: MenuType[] = [
   {
-    title: "首页", name: "home", icon: IconHome
+    title: "数据统计", name: "home", icon: IconHome
   },
   {
     title: "用户管理", role: 1, name: "userManage", icon: IconUser, children: [

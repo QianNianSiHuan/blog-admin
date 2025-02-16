@@ -10,6 +10,7 @@ import About from "@/components/web/index/about.vue";
 import Extension from "@/components/web/index/extension.vue";
 import Feedback from "@/components/web/index/feedback.vue";
 import {userStores} from "@/stores/user_store.ts";
+import Music from "@/components/web/index/music.vue";
 
 const userStore = userStores()
 
@@ -20,6 +21,7 @@ interface ComponentMap {
   "关于我们": typeof About;
   "独家推广": typeof Extension;
   "用户反馈": typeof Feedback;
+  "音乐": typeof Music,
 }
 
 const map: ComponentMap = {
@@ -29,6 +31,7 @@ const map: ComponentMap = {
   "关于我们": About,
   "独家推广": Extension,
   "用户反馈": Feedback,
+  "音乐": Music,
 }
 
 </script>

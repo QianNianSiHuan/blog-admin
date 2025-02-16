@@ -19,14 +19,15 @@ async function getData() {
 }
 
 async function goTag(item: tagListType) {
-  let tag = item.tag
-  if (route.query.tag === item.tag) {
-    tag = ""
+  const tag = String(route.query.tag)
+  let _tag: string | undefined = item.tag
+  if (tag === item.tag) {
+    _tag = undefined
   }
   router.push({
     name: route.name as string,
     query: {
-      tag: tag
+      tag: _tag
     }
   })
 }
@@ -41,7 +42,7 @@ getData()
         <span>
           <a-typography-text :ellipsis="{rows: 1, css: true}">{{ item.tag }} </a-typography-text>
         </span>
-        <span>-{{ item.articleCount }}</span>
+        <span>{{ item.articleCount }}</span>
       </div>
     </div>
   </q_card>
