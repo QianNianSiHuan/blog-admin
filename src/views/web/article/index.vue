@@ -7,7 +7,7 @@ import "md-editor-v3/lib/preview.css"
 import {articleCollectApi, articleDetailApi, type articleDetailType, articleDiggApi} from "@/api/article_api.ts";
 import {Message} from "@arco-design/web-vue";
 import {useRoute} from "vue-router";
-import {onMounted, onUnmounted, reactive, ref} from "vue";
+import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {dataTemFormat} from "@/utils/data.ts";
 import {theme} from "@/components/common/q_theme.ts";
 import Q_article_collect_modal from "@/components/web/article/q_article_collect_modal.vue";
@@ -64,13 +64,12 @@ async function getData() {
 
 const userStore = userStores()
 
-// watch(() => route.params.id, () => {
-//   getData()
-// }, {immediate: true})
+watch(() => route.params.id, () => {
+  getData()
+}, {immediate: true})
 
 
 onMounted(() => {
-  getData()
   const id = route.query.id;
   if (id) {
     const div = document.getElementById(id as string) as HTMLDivElement;
@@ -169,12 +168,12 @@ onUnmounted(() => {
                                @select="collectArticle"></q_article_collect_modal>
       <div class="article_container">
         <div class="article_content">
-          <a-skeleton v-if="animation" :animation="animation">
+          <a-skeleton v-if="!data.content" :animation="true">
             <a-space :style="{width:'100%'}" direction="vertical" size="large">
               <a-skeleton-line :rows="18"/>
             </a-space>
           </a-skeleton>
-          <div v-if="!animation" class="head">
+          <div v-if="data.content" class="head">
             <div class="title">
               <span>{{ data.title }}</span>
               <IconEdit v-if="data.userID===userStore.userInfo.userID" style="margin-left: 10px;cursor: pointer"
@@ -186,8 +185,9 @@ onUnmounted(() => {
               <a-tag v-for="item in data.tagList">{{ item }}</a-tag>
             </div>
           </div>
-          <div class="body">
-            <MdPreview :id="`md_${data.id}`" :model-value="data.content" :theme="theme as 'light'|'dark'"></MdPreview>
+          <div v-if="data.content" class="body">
+            <MdPreview :id="`md_${data.id}`" :model-value="data.content"
+                       :theme="theme as 'light'|'dark'"></MdPreview>
           </div>
         </div>
         <article_comment v-if="data.openComment" ref="articleCommentRef"

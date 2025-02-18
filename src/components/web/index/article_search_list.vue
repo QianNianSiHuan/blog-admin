@@ -52,7 +52,6 @@ watch(() => route.query.tag, () => {
   getData()
 }, {immediate: true});
 
-getData()
 </script>
 
 <template>

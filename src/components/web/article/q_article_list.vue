@@ -38,18 +38,26 @@ async function getData() {
 }
 
 watch(() => route.query, () => {
+  const category = Number(route.query.categoryID)
+  if (isNaN(category)) {
+    params.categoryID = undefined
+  } else {
+    params.categoryID = category
+  }
+  if (route.query.key !== undefined) {
+    params.key = route.query.categoryID as string
+  }
   const collect = Number(route.query.collectID)
   if (isNaN(collect)) {
     params.collectID = undefined
   } else {
     params.collectID = collect
   }
-
   if (route.query.key !== undefined) {
-    params.key = route.query.key as string
+    params.key = route.query.collectID as string
   }
   getData()
-}, {deep: true})
+}, {deep: true, immediate: true})
 
 function isCheckHandler() {
   isCheckShow.value = !isCheckShow.value
@@ -72,7 +80,6 @@ watch(() => route.params.id, () => {
 defineExpose({
   getData
 })
-getData()
 </script>
 
 <template>
@@ -83,7 +90,7 @@ getData()
       </a-button>
     </div>
     <div class="q_article_list_com">
-      <a-checkbox-group v-model="checkIDList">
+      <a-checkbox-group v-model="checkIDList" class="checkbox_group">
         <div v-for="item in data.list" class="item">
           <div v-if="props.isCheck && isCheckShow" class="check">
             <a-checkbox :value="item.id"></a-checkbox>
@@ -151,87 +158,92 @@ getData()
   }
 
   .q_article_list_com {
-    .item {
-      padding: 10px 20px;
-      display: flex;
-      position: relative;
+    .checkbox_group {
+      width: 100%;
 
-      &:hover {
-        background-color: var(--color-fill-1);
+      .item {
+        padding: 10px 20px;
+        display: flex;
+        position: relative;
+
+        &:hover {
+          background-color: var(--color-fill-1);
+
+          .more {
+            opacity: 1;
+          }
+        }
+
+        .cover {
+          cursor: pointer;
+
+          img {
+            width: 160px;
+            margin-right: 10px;
+          }
+        }
+
+        .user_top {
+          position: absolute;
+          right: 10px;
+          top: 10px;
+        }
+
+        .info {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          .title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-text-1);
+            cursor: pointer;
+          }
+
+          .abs {
+            margin: 5px 0;
+          }
+
+          .data {
+            display: flex;
+            align-items: center;
+            color: var(--color-text-2);
+
+            .look, .comment {
+              margin-right: 10px;
+
+              span {
+                margin-left: 5px;
+              }
+            }
+
+            .tags {
+              margin-right: 10px;
+              max-width: 400px;
+
+              .tag {
+                margin-right: 10px;
+              }
+            }
+
+            .date {
+              font-size: 12px;
+              color: var(--color-text-2);
+            }
+          }
+        }
 
         .more {
-          opacity: 1;
-        }
-      }
-
-      .cover {
-        cursor: pointer;
-
-        img {
-          width: 160px;
-          margin-right: 10px;
-        }
-      }
-
-      .user_top {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-      }
-
-      .info {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-        .title {
-          font-size: 15px;
-          font-weight: 600;
-          color: var(--color-text-1);
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
           cursor: pointer;
-        }
-
-        .abs {
-          margin: 5px 0;
-        }
-
-        .data {
-          display: flex;
-          align-items: center;
-          color: var(--color-text-2);
-
-          .look, .comment {
-            margin-right: 10px;
-
-            span {
-              margin-left: 5px;
-            }
-          }
-
-          .tags {
-            margin-right: 10px;
-            max-width: 400px;
-
-            .tag {
-              margin-right: 10px;
-            }
-          }
-
-          .date {
-            font-size: 12px;
-            color: var(--color-text-2);
-          }
+          opacity: 0;
         }
       }
 
-      .more {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        opacity: 0;
-      }
     }
 
     .page {
