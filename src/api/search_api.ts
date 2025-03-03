@@ -54,3 +54,8 @@ export interface textSearchType {
 export function textSearchApi(params: paramsType): Promise<baseResponse<listResponse<textSearchType>>> {
     return useAxios.get("/api/search/text", {params})
 }
+
+
+export function searchIndex(idList: number[]): Promise<baseResponse<string>> {
+    return useAxios.post("/api/search/index", {idList})
+}

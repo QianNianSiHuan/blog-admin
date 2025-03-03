@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import Q_list, {type columnType} from "@/components/admin/q_list.vue";
+import Q_list, {type actionGroupType, type columnType} from "@/components/admin/q_list.vue";
 import {reactive, ref} from "vue";
 import {
   articleDetailApi,
@@ -16,6 +16,7 @@ import {userArticleTopApi} from "@/api/user_api.ts";
 import {theme} from "@/components/common/q_theme.ts";
 import {MdPreview} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
+import {searchIndex} from "@/api/search_api.ts";
 
 const columns: columnType[] = [
   {title: "ID", dataIndex: 'id'},
@@ -108,11 +109,33 @@ async function adminArticleTop(record: articleListType) {
   Message.success(res.msg)
 }
 
+const actionGroupOptions: actionGroupType[] = [
+  {
+    label: "索引重建",
+    callback: (keyList: number[]) => {
+      restartSearchIndex(keyList)
+    }
+  },
+]
+
+async function restartSearchIndex(keyList: number[]) {
+  if (keyList.length !== 0) {
+    const res = await searchIndex(keyList)
+    if (res.code) {
+      Message.error(res.msg)
+      return
+    }
+    Message.success(res.msg)
+  }
+}
+
+
 </script>
 
 <template>
   <div>
-    <a-modal v-model:visible="visible" :on-before-ok="handler" modal-class="article_examine_modal" title="文章审核">
+    <a-modal v-model:visible="visible" :on-before-ok="handler" modal-class="article_examine_modal scrollbar"
+             title="文章审核">
       <a-form :model="data" class="article_examine_form">
         <a-form-item label="文章标题">{{ data.title }}</a-form-item>
         <a-form-item label="文章简介">{{ data.abstract }}</a-form-item>
@@ -123,7 +146,9 @@ async function adminArticleTop(record: articleListType) {
         <a-form-item label="文章标签">
           <a-tag v-for="tag in data.tagList" color="blue" style="margin-right: 10px">{{ tag }}</a-tag>
         </a-form-item>
-        <MdPreview :id="`md_${data.id}`" :model-value="data.content" :theme="theme as 'light'|'dark'"></MdPreview>
+        <div class="md_edit scrollbar">
+          <MdPreview :id="`md_${data.id}`" :model-value="data.content" :theme="theme as 'light'|'dark'"></MdPreview>
+        </div>
         <a-form-item v-if="data.status===2" label="审核">
           <a-radio-group v-model="form.status">
             <a-radio :value="3">审核通过</a-radio>
@@ -136,6 +161,7 @@ async function adminArticleTop(record: articleListType) {
       </a-form>
     </a-modal>
     <q_list ref="fListRef"
+            :action-group="actionGroupOptions"
             :columns="columns"
             :default-params="{type:3}"
             :url="articleListApi"
@@ -161,7 +187,13 @@ async function adminArticleTop(record: articleListType) {
 
 <style lang="less">
 .article_examine_modal {
-  width: 30%;
+  overflow: auto;
+  width: 50%;
+
+  .article_examine_form {
+    overflow-y: auto;
+  }
+
 
   .arco-modal-body {
     .arco-form-item-label-col {

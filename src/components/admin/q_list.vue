@@ -15,6 +15,7 @@ import {dataTemFormat, type dateTemType} from "@/utils/data.ts";
 import {type optionsColorType} from "@/options/options.ts";
 import Q_label from "@/components/admin/q_label.vue";
 import type {emitFnType, formListType} from "@/components/admin/q_modal_form.ts";
+import Q_modal_form from "@/components/admin/q_modal_form.vue";
 
 export interface columnType extends TableColumnData {
   dateFormat?: dateTemType

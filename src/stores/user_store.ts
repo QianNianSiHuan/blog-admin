@@ -4,6 +4,7 @@ import {Message} from "@arco-design/web-vue";
 import {parseToken} from "@/utils/parse_token.ts";
 import router from '@/router';
 import {siteApi, type siteResponse} from "@/api/site_api.ts";
+import {ico, title} from "@/conf/global.ts";
 
 interface userInfoType {
     userID: number
@@ -176,6 +177,18 @@ export const userStores = defineStore('userStore', {
                 return
             }
             Object.assign(this.siteInfo, res.data)
+            console.log(this.siteInfo)
+            if (this.siteInfo.siteInfo.title) {
+                console.log(this.siteInfo.siteInfo.title)
+                document.title = title
+            }
+            if (this.siteInfo.siteInfo.logo) {
+                console.log(this.siteInfo.siteInfo.logo)
+                const link = document.querySelector('link[rel="icon"]')
+                if (link) {
+                    link.setAttribute("href", ico)
+                }
+            }
         }
     },
     getters: {
@@ -184,6 +197,6 @@ export const userStores = defineStore('userStore', {
         },
         isAdmin(): boolean {
             return this.userInfo.role == 1
-        }
+        },
     }
 })

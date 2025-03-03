@@ -1,24 +1,17 @@
 <script lang="ts" setup>
 import {Message} from "@arco-design/web-vue";
 import {reactive, ref} from "vue";
-import type {emitFnType, formListType} from "@/components/admin/q_modal_form.ts";
+import type {emitFnType, formListType, qModalFormProps} from "@/components/admin/q_modal_form.ts";
 
 
-interface Props {
-  visible: boolean
-  formList: formListType[]
-  addLabel: string //添加时显示的名字
-  editLabel: string//添加时显示的名字
-}
-
-const props = defineProps<Props>()
+const props = defineProps<qModalFormProps>()
 
 
-const formList = ref<formListType[]>([])
+const formLists = ref<formListType[]>([])
 
 
 async function initForm() {
-  formList.value = []
+  formLists.value = []
   for (const val of props.formList) {
     if (typeof val.source === "function") {
       const res = await val.source()
@@ -31,7 +24,7 @@ async function initForm() {
       val.options = val.source
     }
 
-    formList.value.push(val)
+    formLists.value.push(val)
   }
 }
 

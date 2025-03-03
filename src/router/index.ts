@@ -265,9 +265,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    const store = userStores()
     if (to.meta.role) {
-        const store = userStores()
-
         if (!store.isLogin) {
             // 没有登陆
             Message.warning("需要登陆")
@@ -282,6 +281,7 @@ router.beforeEach((to, from, next) => {
             return
         }
     }
+    store.loadSiteInfo()
     NProgress.start();//开启进度条
     next()
 })

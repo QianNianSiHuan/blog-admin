@@ -47,15 +47,13 @@ let data = reactive<articleDetailType>({
 async function getData() {
   animation.value = true;
   const res = await articleDetailApi(Number(route.params.id));
-  setTimeout(() => {
-    animation.value = false;
-    if (res.code) {
-      Message.error(res.msg)
-      return
-    }
-    Object.assign(data, res.data)
-    //setTimeout(look, 2000)
-  }, 800)
+  animation.value = false;
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Object.assign(data, res.data)
+  //setTimeout(look, 2000)
 }
 
 // async function look() {
@@ -186,8 +184,9 @@ onUnmounted(() => {
             </div>
           </div>
           <div v-if="data.content" class="body">
-            <MdPreview :id="`md_${data.id}`" :model-value="data.content"
-                       :theme="theme as 'light'|'dark'"></MdPreview>
+            <MdPreview :id="`md_${data.id}`" :codeFoldable="false" :modelValue="data.content"
+                       :theme="theme as 'light'|'dark'">
+            </MdPreview>
           </div>
         </div>
         <article_comment v-if="data.openComment" ref="articleCommentRef"
@@ -223,7 +222,8 @@ onUnmounted(() => {
           <div class="catalog">
             <div class="head">文章目录</div>
             <div class="body scrollbar">
-              <MdCatalog :editorId="`md_${data.id}`" :offsetTop="61" :scrollElement="scrollElement"
+              <MdCatalog v-if="data.id" :editorId="`md_${data.id}`" :offsetTop="61"
+                         :scrollElement="scrollElement"
                          :scrollElementOffsetTop="60"
                          :theme="theme as 'light'|'dark'"></MdCatalog>
             </div>
