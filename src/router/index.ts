@@ -2,7 +2,9 @@ import {createRouter, createWebHistory} from 'vue-router'
 import NProgress from "nprogress";
 import {userStores} from "@/stores/user_store.ts";
 import {Message} from "@arco-design/web-vue";
-import {showLogin} from "@/components/web/q_login.ts"; // 导入 nprogress模块
+import {showLogin} from "@/components/web/q_login.ts";
+import {loadTheme} from "@/components/common/q_theme.ts";
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -11,16 +13,22 @@ const router = createRouter({
             path: "/",
             component: () => import("@/views/web/index.vue"),
             redirect: {name: "web_home"},
+            meta: {
+                title: "都是假象",
+            },
             children: [
                 {
                     name: "web_home",
                     path: "",
-                    component: () => import("@/views/web/web_home.vue")
+                    component: () => import("@/views/web/web_home.vue"),
                 },
                 {
                     name: "userCenter",
                     path: "center",
                     component: () => import("@/views/web/user_center/index.vue"),
+                    meta: {
+                        title: "用户中心",
+                    },
                     children: [
                         {
                             name: "userCenterInfo",
@@ -31,21 +39,25 @@ const router = createRouter({
                             name: "userCenterAccount",
                             path: "account",
                             component: () => import("@/views/web/user_center/account.vue"),
+
                         },
                         {
                             name: "userCenterLoginRecord",
                             path: "Login_record",
                             component: () => import("@/views/web/user_center/login_record.vue"),
+
                         },
                         {
                             name: "userCenterPrivacy",
                             path: "privacy",
                             component: () => import("@/views/web/user_center/privacy.vue"),
+
                         },
                         {
                             name: "userCenterHome",
                             path: "home",
                             component: () => import("@/views/web/user_center/home.vue"),
+
                         },
                         {
                             name: "userCenterHistory",
@@ -58,6 +70,9 @@ const router = createRouter({
                     name: "platform",
                     path: "platform",
                     component: () => import("@/views/web/platform/index.vue"),
+                    meta: {
+                        title: "文章管理",
+                    },
                     children: [
                         {
                             name: "platformArticle",
@@ -78,6 +93,9 @@ const router = createRouter({
                             name: "platformComment",
                             path: "comment",
                             component: () => import("@/views/web/platform/comment/index.vue"),
+                            meta: {
+                                title: "评论管理",
+                            },
                             children: [
                                 {
                                     name: "platformCommentArticle",
@@ -97,6 +115,9 @@ const router = createRouter({
                     name: "user",
                     path: "user/:id",
                     component: () => import("@/views/web/user/index.vue"),
+                    meta: {
+                        title: "用户主页",
+                    },
                     children: [
                         {
                             name: "userArticle",
@@ -114,6 +135,9 @@ const router = createRouter({
                     name: "articleDetail",
                     path: "article/:id",
                     component: () => import("@/views/web/article/index.vue"),
+                    meta: {
+                        title: "文章详情",
+                    },
                 }
             ]
         },
@@ -266,6 +290,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const store = userStores()
+    store.loadUserInfo()
+    store.loadSiteInfo()
+    loadTheme()
+    document.title = to.meta.title
+
     if (to.meta.role) {
         if (!store.isLogin) {
             // 没有登陆
@@ -281,7 +310,6 @@ router.beforeEach((to, from, next) => {
             return
         }
     }
-    store.loadSiteInfo()
     NProgress.start();//开启进度条
     next()
 })
