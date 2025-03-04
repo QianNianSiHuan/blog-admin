@@ -14,14 +14,14 @@ export const userBaseStores = defineStore('userBaseStore', {
     state: (): userBaseType => {
         return {
             userBase: {
-                "userID": 10,
-                "codeAge": 10,
+                "userID": 0,
+                "codeAge": 0,
                 "avatar": "",
                 "nickname": "",
                 "lookCount": 0,
                 "articleCount": 0,
-                "fansCount": 10,
-                "followCount": 10,
+                "fansCount": 0,
+                "followCount": 0,
                 "place": "",
                 openCollect: false,
                 openFollow: false,

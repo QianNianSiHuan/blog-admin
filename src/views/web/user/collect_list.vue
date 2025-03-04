@@ -7,10 +7,12 @@ import Q_collect_list from "@/components/web/article/q_collect_list.vue";
 import {collectArticleRemoveApi} from "@/api/collect_api.ts";
 import {Message} from "@arco-design/web-vue";
 import {ref} from "vue";
+import {userStores} from "@/stores/user_store.ts";
 
 const route = useRoute()
 
 const userBaseStore = userBaseStores()
+const userStore = userStores()
 const articleListRef = ref()
 
 async function dispatchDelete(idList: number[]) {
@@ -28,8 +30,8 @@ async function dispatchDelete(idList: number[]) {
 <template>
   <div class="user_article_list_view scrollbar">
     <q_collect_list :is-me="userBaseStore.isMe" :user-i-d="Number(route.params.id)"></q_collect_list>
-    <q_article_list ref="articleListRef" :is-check="userBaseStore.isMe"
-                    @dispatch-delete="dispatchDelete"></q_article_list>
+    <q_article_list ref="articleListRef"
+                    :is-check="userBaseStore.isMe" @dispatch-delete="dispatchDelete"></q_article_list>
   </div>
 </template>
 

@@ -68,13 +68,15 @@ watch(() => route.params.id, () => {
 
 
 onMounted(() => {
-  const id = route.query.id;
-  if (id) {
-    const div = document.getElementById(id as string) as HTMLDivElement;
-    if (div) {
-      document.documentElement.scrollTo({top: div.offsetTop, behavior: "smooth"});
+  setTimeout(() => {
+    const id = route.query.id;
+    if (id) {
+      const div = document.getElementById(id as string) as HTMLDivElement;
+      if (div) {
+        document.documentElement.scrollTo({top: div.offsetTop, behavior: "smooth"});
+      }
     }
-  }
+  }, 800)
 })
 
 const isFixed = ref()
