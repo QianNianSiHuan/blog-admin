@@ -1,8 +1,8 @@
 @font-face {
     font-family: "iconfont"; /* Project id 4813686 */
-    src: url('//at.alicdn.com/t/c/font_4813686_ns7u2m6r2dn.woff2?t=1739192261245') format('woff2'),
-    url('//at.alicdn.com/t/c/font_4813686_ns7u2m6r2dn.woff?t=1739192261245') format('woff'),
-    url('//at.alicdn.com/t/c/font_4813686_ns7u2m6r2dn.ttf?t=1739192261245') format('truetype');
+    src: url('//at.alicdn.com/t/c/font_4813686_0taertqziu6n.woff2?t=1741177613326') format('woff2'),
+    url('//at.alicdn.com/t/c/font_4813686_0taertqziu6n.woff?t=1741177613326') format('woff'),
+    url('//at.alicdn.com/t/c/font_4813686_0taertqziu6n.ttf?t=1741177613326') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dengpao:before {
+    content: "\e610";
 }
 
 .icon-heiye2:before {

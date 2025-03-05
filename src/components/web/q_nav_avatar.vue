@@ -33,7 +33,9 @@ function goRouter(name: string) {
             {{ userStore.userInfo.nickName[0] }}
           </a-avatar>
         </div>
-        <div class="nickname">admin</div>
+        <div class="nickname">
+          <a-typography-text :ellipsis="{rows:1,css:true}">{{ userStore.userInfo.nickName }}</a-typography-text>
+        </div>
         <div class="data">
           <a-statistic :value="userStore.userInfo.fansCount" extra="粉丝"/>
           <a-statistic :value="userStore.userInfo.followCount" extra="关注"/>

@@ -3,6 +3,7 @@ import {ref} from "vue";
 import Q_nav_avatar from "@/components/web/q_nav_avatar.vue";
 import Q_text_search_modal from "@/components/web/q_text_search_modal.vue";
 import {userStores} from "@/stores/user_store.ts";
+import Q_ai_modal from "@/components/web/q_ai_modal.vue";
 
 const userStore = userStores()
 
@@ -33,6 +34,7 @@ function search() {
   }
 }
 
+const aiVisible = ref(false)
 
 </script>
 
@@ -45,9 +47,10 @@ function search() {
           <span class="n2"></span>
         </a>
       </div>
+      <q_ai_modal v-if="userStore.siteInfo.ai.enable" v-model:visible="aiVisible"></q_ai_modal>
       <q_text_search_modal ref="textSearchRef" v-model:visible="visible"></q_text_search_modal>
       <div class="center">
-        <i class="iconfont icon-dengpao"></i>
+        <i v-if="userStore.siteInfo.ai.enable" class="iconfont icon-dengpao" @click="aiVisible=true"></i>
         <a-input-search v-model="key" placeholder="搜索你喜欢的文章" @search="search"
                         @keydown.enter="search"></a-input-search>
       </div>

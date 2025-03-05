@@ -120,3 +120,14 @@ export interface qiniuUploadConfigType {
 export function qiniuUploadConfigApi(): Promise<baseResponse<qiniuUploadConfigType>> {
     return useAxios.post("/api/images/qiniu")
 }
+
+export interface aiSiteInfoType {
+    "enable": boolean,
+    nickname: string,
+    avatar: string,
+    abstract: string,
+}
+
+export function aiSiteInfoApi(): Promise<baseResponse<aiSiteInfoType>> {
+    return useAxios.get("/api/site/ai_info")
+}
