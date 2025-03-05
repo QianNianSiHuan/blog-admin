@@ -100,10 +100,10 @@ async function focus() {
       <div class="user_sub_view">
         <div class="head">
           <div class="left">
-            <router-link :to="{name:'userArticle'}">
+            <router-link v-if="userBaseInfo.isMe" :to="{name:'userArticle'}">
               {{ userBaseInfo.isMe ? '我的文章' : '他的文章' }}
             </router-link>
-            <router-link v-if="userBaseInfo.userBase.openCollect || userBaseInfo.isMe"
+            <router-link v-if="userBaseInfo.userBase.openCollect"
                          :to="{name:'userArticleCollect'}">
               {{ userBaseInfo.isMe ? '我的收藏' : '他的收藏' }}
             </router-link>
