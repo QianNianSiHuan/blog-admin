@@ -47,7 +47,7 @@ const aiVisible = ref(false)
           <span class="n2"></span>
         </a>
       </div>
-      <q_ai_modal v-if="userStore.siteInfo.ai.enable" v-model:visible="aiVisible"></q_ai_modal>
+      <q_ai_modal :type="1" v-if="userStore.siteInfo.ai.enable" v-model:visible="aiVisible"></q_ai_modal>
       <q_text_search_modal ref="textSearchRef" v-model:visible="visible"></q_text_search_modal>
       <div class="center">
         <i v-if="userStore.siteInfo.ai.enable" class="iconfont icon-dengpao" @click="aiVisible=true"></i>
