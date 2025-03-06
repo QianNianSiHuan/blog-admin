@@ -8,11 +8,14 @@ import {showLogin} from "@/components/web/q_login.ts";
 import {theme} from "@/components/common/q_theme.ts";
 import {MdPreview} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 const store = userStores()
 
 interface Props {
   visible: boolean
+  type: number //1.文章推荐2.文章分析
 }
 
 interface chatResponse {
@@ -31,7 +34,6 @@ function cancel() {
   chatList.value = []
   emits("update:visible", false)
 }
-
 
 async function send() {
   if (!store.isLogin) {
@@ -54,15 +56,19 @@ async function send() {
     avatar: aiData.avatar,
     content: "",
   })
-
-  const eventSource = new EventSource(`/api/ai/article?content=${key.value}&token=${store.userInfo.token}`)
+  let articleID = ""
+  if (route.name === "articleDetail") {
+    articleID = route.params.id as string
+  }
+  const eventSource = new EventSource(`/api/ai/article?content=${key.value}&token=${store.userInfo.token}&articleID=${articleID}&type=${props.type}`)
   key.value = ""
   eventSource.onmessage = (e) => {
     const message = JSON.parse(e.data) as baseResponse<string>;
     item.content += message.data
   };
   eventSource.onerror = (e) => {
-    console.log(e)
+    // console.log(e)
+    Message.error("ai调用出错")
     eventSource.close()
     return
   };
@@ -83,6 +89,9 @@ const aiData = reactive<chatResponse>({
 })
 
 async function beforeOpen() {
+  if (props.type === 2) {
+    return
+  }
   chatList.value = []
   aiData.content = ""
   const res = await aiSiteInfoApi()
@@ -105,6 +114,7 @@ async function beforeOpen() {
 }
 
 const key = ref("")
+
 
 </script>
 

@@ -15,6 +15,7 @@ import Article_comment from "@/components/web/comment/article_comment.vue";
 import {userStores} from "@/stores/user_store.ts";
 import {showLogin} from "@/components/web/q_login.ts";
 import {goArticleEdit} from "@/utils/go_router.ts";
+import Q_ai_modal from "@/components/web/q_ai_modal.vue";
 
 const route = useRoute()
 const animation = ref(false)
@@ -156,11 +157,12 @@ function goComment() {
 onUnmounted(() => {
   window.removeEventListener("scroll", scroll)
 })
-
+const aiVisible = ref(false)
 
 </script>
 
 <template>
+
   <div class="article_detail_view">
     <q_nav no-scroll></q_nav>
     <q_main>
@@ -222,7 +224,11 @@ onUnmounted(() => {
         </div>
         <div :class="{isFixed: isFixed}" class="catalog_action">
           <div class="catalog">
-            <div class="head">文章目录</div>
+            <div class="head">
+              <div>文章目录</div>
+              <a-button size="mini" type="primary" @click="aiVisible=true">AI分析</a-button>
+              <q_ai_modal v-model:visible="aiVisible" :type="2"></q_ai_modal>
+            </div>
             <div class="body scrollbar">
               <MdCatalog v-if="data.id" :editorId="`md_${data.id}`" :offsetTop="61"
                          :scrollElement="scrollElement"
@@ -380,9 +386,12 @@ onUnmounted(() => {
       border-radius: 5px;
 
       .head {
-        padding: 20px 20px 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 20px 10px 20px;
         border-bottom: @q_border;
         font-weight: 600;
+        font-size: 16px;
         color: var(--color-text-1);
       }
 
