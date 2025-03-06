@@ -5,6 +5,9 @@ import {userStores} from "@/stores/user_store";
 import type {baseResponse} from "@/api";
 import {aiSiteInfoApi} from "@/api/site_api.ts";
 import {showLogin} from "@/components/web/q_login.ts";
+import {theme} from "@/components/common/q_theme.ts";
+import {MdPreview} from "md-editor-v3";
+import "md-editor-v3/lib/preview.css"
 
 const store = userStores()
 
@@ -36,6 +39,9 @@ async function send() {
     showLogin()
     return
   }
+  if (key.value.trim() === "") {
+    return
+  }
   chatList.value.push({
     isMe: true,
     nickname: store.userInfo.nickName,
@@ -50,10 +56,10 @@ async function send() {
   })
 
   const eventSource = new EventSource(`/api/ai/article?content=${key.value}&token=${store.userInfo.token}`)
+  key.value = ""
   eventSource.onmessage = (e) => {
     const message = JSON.parse(e.data) as baseResponse<string>;
     item.content += message.data
-    console.log(message)
   };
   eventSource.onerror = (e) => {
     console.log(e)
@@ -64,11 +70,8 @@ async function send() {
   eventSource.addEventListener("close", function (e) {
     console.log(e)
   });
-
   chatList.value.push(item)
-
   key.value = ""
-
 }
 
 const textareaRef = ref()
@@ -106,28 +109,39 @@ const key = ref("")
 </script>
 
 <template>
-  <a-modal :footer="false" :visible="props.visible" modal-class="f_ai_modal"
+  <a-modal :footer="false" :visible="props.visible" modal-class="q_ai_modal"
            @cancel="cancel" @before-open="beforeOpen">
     <div class="body scrollbar">
       <div v-for="item in chatList" :class="{isMe: item.isMe}" class="item">
         <a-avatar :image-url="item.avatar"></a-avatar>
-        <div v-if="!item.isMe" class="chat" v-html="item.content"></div>
-        <div v-else class="chat">{{ item.content }}</div>
+        <div v-if="!item.isMe" class="chat">
+          <a-spin v-if="item.content===''" :loading="true"></a-spin>
+          <MdPreview v-else :codeFoldable="false" :modelValue="item.content"
+                     :theme="theme as 'light'|'dark'">
+          </MdPreview>
+        </div>
+        <div v-else class="chat">
+          <MdPreview :codeFoldable="false" :modelValue="item.content"
+                     :theme="theme as 'light'|'dark'">
+          </MdPreview>
+        </div>
       </div>
     </div>
     <div class="menu">
-      <a-textarea ref="textareaRef" v-model="key" :auto-size="{minRows: 4, maxRows: 4}"
+      <a-textarea ref="textareaRef" v-model="key" :auto-size="{minRows: 1, maxRows: 4}"
                   placeholder="请输入你感兴趣的内容"
-                  @keydown.enter="send"></a-textarea>
+                  @keyup.enter="send"></a-textarea>
       <div class="info">
         <span>按Enter发送，按Ctrl+Enter换行</span>
-        <a-button type="primary" @click="send">发送</a-button>
+        <a-button size="mini" type="primary" @click="send">发送</a-button>
       </div>
     </div>
   </a-modal>
 </template>
 <style lang="less">
-.f_ai_modal {
+.q_ai_modal {
+  width: 600px;
+
   .arco-modal-header {
     display: none;
   }
@@ -138,7 +152,7 @@ const key = ref("")
 
   .body {
     min-height: 40vh;
-    max-height: 60px;
+    max-height: 50vh;
     overflow-y: auto;
     padding: 20px;
 
@@ -157,6 +171,27 @@ const key = ref("")
         border-radius: 5px;
         color: var(--color-text-1);
         position: relative;
+        max-width: 460px;
+
+        .arco-spin {
+          .arco-spin-icon {
+            height: 22px;
+          }
+        }
+
+        .md-editor {
+          background-color: var(--color-fill-2);
+          color: var(--color-text-1);
+
+          .md-editor-preview-wrapper {
+            padding: 0;
+
+            p {
+              font-size: 14px;
+              margin: 0;
+            }
+          }
+        }
 
         &::after {
           position: absolute;
