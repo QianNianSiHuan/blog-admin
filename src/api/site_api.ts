@@ -87,6 +87,7 @@ export interface aiResponse {
     "secretKey": string,
     "nickname": string,
     "avatar": string
+    "abstract": string
 }
 
 interface siteBaseResponse {
@@ -130,4 +131,9 @@ export interface aiSiteInfoType {
 
 export function aiSiteInfoApi(): Promise<baseResponse<aiSiteInfoType>> {
     return useAxios.get("/api/site/ai_info")
+}
+
+
+export function aiSearchIndexApi(): Promise<baseResponse<string>> {
+    return useAxios.post("/api/ai/ai_index")
 }

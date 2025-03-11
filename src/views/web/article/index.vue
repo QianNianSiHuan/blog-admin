@@ -227,7 +227,7 @@ const aiVisible = ref(false)
             <div class="head">
               <div>文章目录</div>
               <a-button size="mini" type="primary" @click="aiVisible=true">AI分析</a-button>
-              <q_ai_modal v-model:visible="aiVisible" :type="2"></q_ai_modal>
+              <q_ai_modal v-model:visible="aiVisible" :title="data.title" :type="2"></q_ai_modal>
             </div>
             <div class="body scrollbar">
               <MdCatalog v-if="data.id" :editorId="`md_${data.id}`" :offsetTop="61"

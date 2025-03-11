@@ -47,10 +47,10 @@ const aiVisible = ref(false)
           <span class="n2"></span>
         </a>
       </div>
-      <q_ai_modal :type="1" v-if="userStore.siteInfo.ai.enable" v-model:visible="aiVisible"></q_ai_modal>
+      <q_ai_modal v-if="userStore.siteInfo.ai.enable" v-model:visible="aiVisible" :type="1"></q_ai_modal>
       <q_text_search_modal ref="textSearchRef" v-model:visible="visible"></q_text_search_modal>
       <div class="center">
-        <i v-if="userStore.siteInfo.ai.enable" class="iconfont icon-dengpao" @click="aiVisible=true"></i>
+        <i v-if="userStore.siteInfo.ai.enable" class="iconfont icon-jiqiren" @click="aiVisible=true"></i>
         <a-input-search v-model="key" placeholder="搜索你喜欢的文章" @search="search"
                         @keydown.enter="search"></a-input-search>
       </div>
@@ -134,7 +134,7 @@ const aiVisible = ref(false)
 
       i {
         margin-right: 20px;
-        font-size: 20px;
+        font-size: 26px;
         color: rgb(var(--arcoblue-6));
         cursor: pointer;
       }

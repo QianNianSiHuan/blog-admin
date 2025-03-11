@@ -16,6 +16,7 @@ const store = userStores()
 interface Props {
   visible: boolean
   type: number //1.文章推荐2.文章分析
+  title?: string
 }
 
 interface chatResponse {
@@ -35,7 +36,8 @@ function cancel() {
   emits("update:visible", false)
 }
 
-async function send() {
+
+async function send(type: number) {
   if (!store.isLogin) {
     Message.warning("请登录")
     showLogin()
@@ -60,7 +62,9 @@ async function send() {
   if (route.name === "articleDetail") {
     articleID = route.params.id as string
   }
-  const eventSource = new EventSource(`/api/ai/article?content=${key.value}&token=${store.userInfo.token}&articleID=${articleID}&type=${props.type}`)
+  const eventSource = new EventSource(`/api/ai/article?content=${key.value}&token=${store.userInfo.token}&articleID=${articleID}&type=${type}`)
+  console.log("type:", type)
+  console.log(eventSource)
   key.value = ""
   eventSource.onmessage = (e) => {
     const message = JSON.parse(e.data) as baseResponse<string>;
@@ -68,7 +72,7 @@ async function send() {
   };
   eventSource.onerror = (e) => {
     // console.log(e)
-    Message.error("ai调用出错")
+    //Message.error("ai调用出错")
     eventSource.close()
     return
   };
@@ -89,9 +93,6 @@ const aiData = reactive<chatResponse>({
 })
 
 async function beforeOpen() {
-  if (props.type === 2) {
-    return
-  }
   chatList.value = []
   aiData.content = ""
   const res = await aiSiteInfoApi()
@@ -107,7 +108,10 @@ async function beforeOpen() {
       aiData.content += list[i]
     }, 40 * i)
   }
-
+  if (props.type === 2) {
+    key.value = `请对${props.title}这篇文章进行总结`
+    send(2)
+  }
   nextTick(() => {
     textareaRef.value.focus()
   })
@@ -140,10 +144,10 @@ const key = ref("")
     <div class="menu">
       <a-textarea ref="textareaRef" v-model="key" :auto-size="{minRows: 1, maxRows: 4}"
                   placeholder="请输入你感兴趣的内容"
-                  @keyup.enter="send"></a-textarea>
+                  @keyup.enter="send(1)"></a-textarea>
       <div class="info">
         <span>按Enter发送，按Ctrl+Enter换行</span>
-        <a-button size="mini" type="primary" @click="send">发送</a-button>
+        <a-button size="mini" type="primary" @click="send(1)">发送</a-button>
       </div>
     </div>
   </a-modal>
