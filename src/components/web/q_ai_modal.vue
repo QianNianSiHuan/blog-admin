@@ -64,11 +64,12 @@ async function send(type: number) {
   }
   const eventSource = new EventSource(`/api/ai/article?content=${key.value}&token=${store.userInfo.token}&articleID=${articleID}&type=${type}`)
   console.log("type:", type)
-  console.log(eventSource)
   key.value = ""
   eventSource.onmessage = (e) => {
     const message = JSON.parse(e.data) as baseResponse<string>;
     item.content += message.data
+    console.log("item.content", item.content)
+    console.log("message", message.data)
   };
   eventSource.onerror = (e) => {
     // console.log(e)
