@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import {IconEdit} from "@arco-design/web-vue/es/icon";
 import {nextTick, ref, watch} from "vue";
 
@@ -40,16 +40,14 @@ watch(() => props.value, () => {
 
 <template>
   <div class="q_edit_input_com">
-    <span :class="props.type" v-if="!showEdit">{{ props.value }}</span>
+    <span v-if="!showEdit" :class="props.type">{{ props.value }}</span>
     <template v-else>
-      <a-textarea v-if="props.type === 'textarea'" @change="inputChange" @blur="inputBlur" ref="inputRef"
-                  :auto-size="{minRows: 3, maxRows: 4}" v-model="text" :placeholder="props.placeholder"></a-textarea>
-      <a-input @change="inputChange" @blur="inputBlur" ref="inputRef" v-else v-model="text"
-               :placeholder="props.placeholder"></a-input>
+      <a-textarea v-if="props.type === 'textarea'" ref="inputRef" v-model="text" :auto-size="{minRows: 3, maxRows: 4}"
+                  :placeholder="props.placeholder" @blur="inputBlur" @change="inputChange"></a-textarea>
+      <a-input v-else ref="inputRef" v-model="text" :placeholder="props.placeholder" @blur="inputBlur"
+               @change="inputChange"></a-input>
     </template>
-
-
-    <a class="edit" v-if="!props.noEdit" @click="editClick" href="javascript:void 0">
+    <a v-if="!props.noEdit" class="edit" href="javascript:void 0" @click="editClick">
       <IconEdit></IconEdit>
       编辑</a>
   </div>

@@ -86,7 +86,7 @@ function updateTags(oldTags?: string[]) {
           </a-form-item>
           <a-form-item label="用户名">
             {{ userCenterStore.userDetail.username }}
-            <template #help>登录唯一标识,30天可修改</template>
+            <!--            <template #help>登录唯一标识,30天可修改一次</template>-->
           </a-form-item>
           <a-form-item label="用户简介">
             <q_edit_input :value="userCenterStore.userDetail.abstract" placeholder="用户简介" type="textarea"

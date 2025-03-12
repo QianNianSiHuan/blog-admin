@@ -4,7 +4,6 @@ import {Message} from "@arco-design/web-vue";
 import {userStores} from "@/stores/user_store";
 import type {baseResponse} from "@/api";
 import {aiSiteInfoApi} from "@/api/site_api.ts";
-import {showLogin} from "@/components/web/q_login.ts";
 import {theme} from "@/components/common/q_theme.ts";
 import {MdPreview} from "md-editor-v3";
 import "md-editor-v3/lib/preview.css"
@@ -38,11 +37,6 @@ function cancel() {
 
 
 async function send(type: number) {
-  if (!store.isLogin) {
-    Message.warning("请登录")
-    showLogin()
-    return
-  }
   if (key.value.trim() === "") {
     return
   }
@@ -63,13 +57,10 @@ async function send(type: number) {
     articleID = route.params.id as string
   }
   const eventSource = new EventSource(`/api/ai/article?content=${key.value}&token=${store.userInfo.token}&articleID=${articleID}&type=${type}`)
-  console.log("type:", type)
   key.value = ""
   eventSource.onmessage = (e) => {
     const message = JSON.parse(e.data) as baseResponse<string>;
     item.content += message.data
-    console.log("item.content", item.content)
-    console.log("message", message.data)
   };
   eventSource.onerror = (e) => {
     // console.log(e)
