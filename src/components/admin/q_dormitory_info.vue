@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<router-view/>
+  $END$
 </template>
 
 <style lang="less">
